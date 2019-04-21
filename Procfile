@@ -1,1 +1,1 @@
-web: gunicorn --chdir PredictionMarketsTFG/mercados_de_prediccion_project.wsgi --log-file -
+web: gunicorn PredictionMarketsTFG/mercados_de_prediccion_project.wsgi --log-file -
