@@ -1,0 +1,1 @@
+web: gunicorn mercados_de_prediccion_project.wsgi --log-file -
