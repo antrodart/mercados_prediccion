@@ -1,1 +1,1 @@
-web: gunicorn /PredictionMarketsTFG/mercados_de_prediccion_project.wsgi --log-file -
+web: sh -c 'cd ./PredictionMarketsTFG/ && exec gunicorn mercados_de_prediccion_project.wsgi --log-file -'

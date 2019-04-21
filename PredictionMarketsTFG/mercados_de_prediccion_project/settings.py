@@ -82,10 +82,10 @@ WSGI_APPLICATION = 'mercados_de_prediccion_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mercados_prediccion',
-        'USER': 'antonio',
-        'PASSWORD': '$FC=us23AL8Y',
-        'HOST': 'localhost',
+        'NAME': 'd1f56r9pcr86ds',
+        'USER': 'ktlhjegzgvumcv',
+        'PASSWORD': '0d61ea125dacfb3a7f789d301b7bb0acd21d55a8d51783c5278c1901ed992094',
+        'HOST': 'ec2-184-73-210-189.compute-1.amazonaws.com',
         'PORT': '',
     }
 }
