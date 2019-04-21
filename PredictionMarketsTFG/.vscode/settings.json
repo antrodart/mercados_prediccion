@@ -1,0 +1,8 @@
+{
+    "python.linting.pylintEnabled": true,
+
+    "files.associations": {
+        "templates/*.html": "django-html",
+        "/templates/*": "django-txt",
+    },
+}

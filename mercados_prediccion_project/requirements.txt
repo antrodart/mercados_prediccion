@@ -1,2 +1,0 @@
-Django==2.1.7
-django-babel==0.6.2
