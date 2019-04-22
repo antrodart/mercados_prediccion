@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{% block title %}Mercados de predicción{% endblock %}</title>
+    <title>{% block title %}{% blocktrans %}Prediction Markets{% endblocktrans %}{% endblock %}</title>
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -20,18 +20,18 @@
 </head>
 <body>
 <header>
-    <a href="{% url 'home' %}">Home</a> | <a href="{% url 'about' %}">About</a>
+    <a href="{% url 'home' %}">{% trans "Home" %}</a> | <a href="{% url 'about' %}">{% trans "About" %}</a>
     {% get_available_languages as LANGUAGES %}
     {% for lang in LANGUAGES %}
         <a href="javascript:void(0)" onclick="changeLanguage('{{ lang.0 }}');" >{{ lang.1 }}</a>
     {% endfor %}
 </header>
 {% if user.is_authenticated %}
-    <p>Hi {{user.username}} </p>
-    <a href="{% url 'logout'%}">logout</a>
+    <p>{% trans "Hi" %} {{user.username}} </p>
+    <a href="{% url 'logout'%}">{% trans "Logout" %}</a>
 {% else %}
-    <p>You are not logged in.</p>
-    <a href="{% url 'login'%}">login</a>
+    <p>{% blocktrans %}You are not logged in.{% endblocktrans %}</p>
+    <a href="{% url 'login'%}">{% trans "Login" %}</a>
 {% endif %}
 
 {% block content %}
