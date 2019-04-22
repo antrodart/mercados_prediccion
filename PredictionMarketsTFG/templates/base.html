@@ -32,6 +32,7 @@
 {% else %}
     <p>{% blocktrans %}You are not logged in.{% endblocktrans %}</p>
     <a href="{% url 'login'%}">{% trans "Login" %}</a>
+
 {% endif %}
 
 {% block content %}
