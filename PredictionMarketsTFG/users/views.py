@@ -24,16 +24,16 @@ def signup(request):
 
 
 def edit_profile(request):
+	customUser = CustomUser.objects.get(id=request.user.id)
 	if request.method == "POST":
-		form = EditProfileForm(request.POST)
+		form = EditProfileForm(request.POST, instance=customUser)
 		if form.is_valid():
 			form.save()
 
 			return redirect('home')
 	else:
-		form = EditProfileForm()
+		form = EditProfileForm(instance=customUser)
 
-	customUser = CustomUser.objects.get(id=request.user.id)
 	args = {'form': form, 'model': customUser}
 
 	return render(request, 'editProfile.html', args)

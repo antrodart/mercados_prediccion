@@ -15,7 +15,7 @@ class SignupForm(UserCreationForm):
 		#fields = UserCreationForm.Meta.fields
 
 
-class EditProfileForm(forms.Form):
+class EditProfileForm(forms.ModelForm):
 	first_name = forms.CharField(label=_("First name"), max_length=30, required=True)
 	last_name = forms.CharField(label=_("Last name"), max_length=60, required=True)
 	birth_date = forms.DateField(label=_("Birth date"))
