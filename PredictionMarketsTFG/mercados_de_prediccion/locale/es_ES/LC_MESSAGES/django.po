@@ -1,0 +1,61 @@
+# Spanish (Spain) translations for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2019-04-22 13:46+0200\n"
+"PO-Revision-Date: 2019-04-22 13:43+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es_ES\n"
+"Language-Team: es_ES <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.6.0\n"
+
+#: templates/about.html:5 templates/base.html:23
+msgid "About"
+msgstr "Sobre nosotros"
+
+#: templates/about.html:10
+msgid "About."
+msgstr "Sobre nosotros."
+
+#: templates/base.html:8
+msgid "Prediction Markets"
+msgstr "Mercados de predicción"
+
+#: templates/base.html:23
+msgid "Home"
+msgstr "Inicio"
+
+#: templates/base.html:30
+msgid "Hi"
+msgstr "Hola"
+
+#: templates/base.html:31
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+#: templates/base.html:33
+msgid "You are not logged in."
+msgstr "No has iniciado sesión"
+
+#: templates/base.html:34 templates/registration/login.html:5
+#: templates/registration/login.html:9
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: templates/home.html:6
+msgid "Homepage."
+msgstr "Página de inicio"
+
+#: templates/registration/signup.html:5 templates/registration/signup.html:9
+msgid "Sign up"
+msgstr "Registrarse"
+
