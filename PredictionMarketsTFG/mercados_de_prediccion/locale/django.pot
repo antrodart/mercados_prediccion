@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-04-22 13:46+0200\n"
+"POT-Creation-Date: 2019-04-22 16:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,15 +46,28 @@ msgid "You are not logged in."
 msgstr ""
 
 #: templates/base.html:34 templates/registration/login.html:5
-#: templates/registration/login.html:9
+#: templates/registration/login.html:10 templates/registration/login.html:14
 msgid "Login"
+msgstr ""
+
+#: templates/base.html:35 templates/registration/signup.html:5
+#: templates/registration/signup.html:10 templates/registration/signup.html:14
+msgid "Sign up"
 msgstr ""
 
 #: templates/home.html:6
 msgid "Homepage."
 msgstr ""
 
-#: templates/registration/signup.html:5 templates/registration/signup.html:9
-msgid "Sign up"
+#: users/forms.py:7
+msgid "First name"
+msgstr ""
+
+#: users/forms.py:8
+msgid "Last name"
+msgstr ""
+
+#: users/forms.py:9
+msgid "Birth date"
 msgstr ""
 
