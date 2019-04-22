@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from users.forms import CustomUserCreationForm
+from users.forms import SignupForm, EditProfileForm
+from users.models import CustomUser
 # Create your views here.
 
 def signup(request):
 	if request.method == "POST":
-		form = CustomUserCreationForm(request.POST)
+		form = SignupForm(request.POST)
 		if form.is_valid():
 			form.save()
 			username = form.cleaned_data.get('username')
@@ -15,8 +16,24 @@ def signup(request):
 
 			return redirect('home')
 	else:
-		form = CustomUserCreationForm()
+		form = SignupForm()
 
 	args = {'form': form}
 
 	return render(request,'registration/signup.html', args)
+
+
+def edit_profile(request):
+	if request.method == "POST":
+		form = EditProfileForm(request.POST)
+		if form.is_valid():
+			form.save()
+
+			return redirect('home')
+	else:
+		form = EditProfileForm()
+
+	customUser = CustomUser.objects.get(id=request.user.id)
+	args = {'form': form, 'model': customUser}
+
+	return render(request, 'editProfile.html', args)

@@ -28,6 +28,7 @@
 </header>
 {% if user.is_authenticated %}
     <p>{% trans "Hi" %} {{user.username}} </p>
+    <a href="{% url 'edit_profile'%}">{% blocktrans %}Edit profile{% endblocktrans %}</a>
     <a href="{% url 'logout'%}">{% trans "Logout" %}</a>
 {% else %}
     <p>{% blocktrans %}You are not logged in.{% endblocktrans %}</p>

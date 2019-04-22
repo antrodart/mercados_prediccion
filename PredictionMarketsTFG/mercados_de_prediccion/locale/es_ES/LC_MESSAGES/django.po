@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-04-22 16:55+0200\n"
+"POT-Creation-Date: 2019-04-22 17:48+0200\n"
 "PO-Revision-Date: 2019-04-22 13:43+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -38,37 +38,46 @@ msgstr "Inicio"
 msgid "Hi"
 msgstr "Hola"
 
-#: templates/base.html:31
+#: templates/base.html:31 templates/editProfile.html:5
+#: templates/editProfile.html:10
+msgid "Edit profile"
+msgstr "Editar perfil"
+
+#: templates/base.html:32
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: templates/base.html:33
+#: templates/base.html:34
 msgid "You are not logged in."
 msgstr "No has iniciado sesión"
 
-#: templates/base.html:34 templates/registration/login.html:5
+#: templates/base.html:35 templates/registration/login.html:5
 #: templates/registration/login.html:10 templates/registration/login.html:14
 msgid "Login"
 msgstr "Iniciar sesión"
 
-#: templates/base.html:35 templates/registration/signup.html:5
+#: templates/base.html:36 templates/registration/signup.html:5
 #: templates/registration/signup.html:10 templates/registration/signup.html:14
 msgid "Sign up"
 msgstr "Registrarse"
 
-#: templates/home.html:6
+#: templates/editProfile.html:14
+msgid "Save"
+msgstr "Guardar"
+
+#: templates/home.html:7
 msgid "Homepage."
 msgstr "Página de inicio"
 
-#: users/forms.py:7
+#: users/forms.py:7 users/forms.py:19
 msgid "First name"
 msgstr "Nombre"
 
-#: users/forms.py:8
+#: users/forms.py:8 users/forms.py:20
 msgid "Last name"
 msgstr "Apellidos"
 
-#: users/forms.py:9
+#: users/forms.py:9 users/forms.py:21
 msgid "Birth date"
 msgstr "Fecha de nacimiento"
 
