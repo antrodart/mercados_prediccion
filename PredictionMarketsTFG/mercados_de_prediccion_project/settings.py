@@ -84,11 +84,11 @@ WSGI_APPLICATION = 'mercados_de_prediccion_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd1f56r9pcr86ds',
-        'USER': 'ktlhjegzgvumcv',
-        'PASSWORD': '0d61ea125dacfb3a7f789d301b7bb0acd21d55a8d51783c5278c1901ed992094',
-        'HOST': 'ec2-184-73-210-189.compute-1.amazonaws.com',
-        'PORT': '',
+        'NAME': 'd5rl33vg868tpb',
+        'USER': 'gzaerkelumcqvo',
+        'PASSWORD': 'c659aaa362c15ee59b23b3f1e7cb11aeab0d71f7500781af1663e056ed78555f',
+        'HOST': 'ec2-54-227-245-146.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
