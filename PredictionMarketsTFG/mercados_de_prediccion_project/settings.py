@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'mercados_de_prediccion',
     'users',
     'django_babel',
+	'widget_tweaks',
 ]
 
 MIDDLEWARE = [
