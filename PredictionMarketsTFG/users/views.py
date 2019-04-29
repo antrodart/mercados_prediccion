@@ -23,6 +23,22 @@ def signup(request):
 	return render(request,'registration/signup.html', args)
 
 
+def create_admin(request):
+	if request.method == "POST":
+		form = SignupForm(request.POST)
+		if form.is_valid():
+			form.save()
+
+			return redirect('home')
+	else:
+		form = SignupForm()
+
+		args = {'form': form}
+
+		return render(request, 'registration/signup.html', args)
+
+
+
 def edit_profile(request):
 	customUser = CustomUser.objects.get(id=request.user.id)
 	if request.method == "POST":
