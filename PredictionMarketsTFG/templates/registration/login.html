@@ -8,48 +8,58 @@
 
 {% block content %}
 
-<div class="container login-container">
-            <div class="row">
-                <div class="col-md-6 login-form-1">
-                    <h3>Login for Form 1</h3>
-                    <form method='post'>
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="email" class="text-info">Email:</label><br>
-                           {{ form.email | add_class:'form-control'|attr:'placeholder:Your username' |attr:'id:email'}}
+    <div class="container login-container">
+        <div class="row">
+            <div class="col-md-6 login-form-1">
+                <h3>Login for Form 1</h3>
+                <form method='post'>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="email" class="text-info">Email:</label><br>
+                        {{ form.email | add_class:'form-control'|attr:'placeholder:Your email' |attr:'id:email' }}
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="text-info">Password:</label><br>
+                        {{ form.password | add_class:'form-control'|attr:'placeholder:Your password' |attr:'id:password' }}
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btnSubmit" value="Login"/>
+                    </div>
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {% for err in form.non_field_errors %}
+                                {{ err }}
+                            {% endfor %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <label for="password" class="text-info">Password:</label><br>
-                            {{ form.password | add_class:'form-control'|attr:'placeholder:Your password' |attr:'id:password'}}
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" class="btnSubmit" value="Login" />
-                        </div>
-                        <div class="form-group">
-                            <a href="#" class="ForgetPwd">Forget Password?</a>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-md-6 login-form-2">
-                    <h3>Login for Form 2</h3>
-                    <form>
-                        <div class="form-group">
-                            {{ form.email | add_class:'form-control'|attr:'placeholder:Your email'}}
-                        </div>
-                        <div class="form-group">
-                            <input type="password" class="form-control" placeholder="Your Password *" value="" />
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" class="btnSubmit" value="Login" />
-                        </div>
-                        <div class="form-group">
+                    {% endif %}
+                    <div class="form-group">
+                        <a href="#" class="ForgetPwd">Forget Password?</a>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6 login-form-2">
+                <h3>Login for Form 2</h3>
+                <form>
+                    <div class="form-group">
+                        {{ form.email | add_class:'form-control'|attr:'placeholder:Your email' }}
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="Your Password *" value=""/>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btnSubmit" value="Login"/>
+                    </div>
+                    <div class="form-group">
 
-                            <a href="#" class="ForgetPwd" value="Login">Forget Password?</a>
-                        </div>
-                    </form>
-                </div>
+                        <a href="#" class="ForgetPwd" value="Login">Forget Password?</a>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
 
 {% endblock content %}

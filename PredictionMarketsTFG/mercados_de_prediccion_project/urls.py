@@ -17,14 +17,15 @@ from django.contrib import admin
 from django.urls import include,path
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
-from users.views import signup, edit_profile
+from users.views import signup, edit_profile, create_admin, login_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', auth_views.LoginView.as_view(), name="login"),
+    path('login/', login_view, name="login"),
 	path('logout/', auth_views.LogoutView.as_view(), name="logout"),
 	path('signup/', signup, name="signup"),
 	path('user/edit/', edit_profile, name="edit_profile"),
+	path('create-admin/', create_admin, name='create_admin'),
     path('',include('mercados_de_prediccion.urls')),
 	url(r'^i18n/', include('django.conf.urls.i18n')),
 ]

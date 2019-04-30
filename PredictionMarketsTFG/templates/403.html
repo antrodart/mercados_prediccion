@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+<head>
+    <title>{% block title %}{% trans "Permission denied" %}{% endblock %}</title>
+</head>
+
+{% block content %}
+{% blocktrans %}Error 403 - Permission denied{% endblocktrans %}
+{% endblock %}
