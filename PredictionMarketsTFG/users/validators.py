@@ -3,6 +3,6 @@ from django.utils.translation import gettext_lazy as _
 import datetime
 
 
-def validate_date_of_birth(date_of_birth):
-	if date_of_birth >= datetime.datetime.today().date():
+def validate_date_is_past(date):
+	if date >= datetime.datetime.today().date():
 		raise ValidationError(_('Date of birth must be in the past'))

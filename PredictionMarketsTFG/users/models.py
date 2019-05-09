@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from .validators import validate_date_of_birth
+from .validators import validate_date_is_past
 
 # Create your models here.
 
@@ -38,15 +38,15 @@ class UserManager(BaseUserManager):
 		return self._create_user(email, password, **extra_fields)
 
 
-class CustomUser(AbstractUser):
+class User(AbstractUser):
 	"""User model."""
 	username = None
 	email = models.EmailField(unique=True)
-	date_of_birth = models.DateField(blank=True, null=True, validators=[validate_date_of_birth])
-	verified = models.BooleanField(null=False, default=False)
+	date_of_birth = models.DateField(blank=True, null=True, validators=[validate_date_is_past])
+	public_karma = models.IntegerField(null=False, default=0)
+	is_verified = models.BooleanField(null=False, default=False)
 
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = []
 
 	objects = UserManager()
-

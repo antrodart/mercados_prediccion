@@ -1,10 +1,9 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
-from .admin import *
-from .validators import validate_date_of_birth
+from .validators import validate_date_is_past
 from django.utils.translation import gettext_lazy as _
-from mercados_de_prediccion_project import settings
+from .models import User
 
 
 class LoginForm(forms.Form):
@@ -34,10 +33,10 @@ class SignupForm(UserCreationForm):
 	email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.',
 	                         widget=forms.EmailInput(attrs={'autofocus': None}))
 	date_of_birth = forms.DateField(label=_("Birthdate"), widget=forms.DateInput,
-	                              validators=[validate_date_of_birth])
+	                              validators=[validate_date_is_past])
 
 	class Meta(UserCreationForm.Meta):
-		model = CustomUser
+		model = User
 		fields = ('first_name', 'last_name', 'date_of_birth', 'email', 'password1', 'password2',)
 
 
@@ -47,5 +46,5 @@ class EditProfileForm(forms.ModelForm):
 	date_of_birth = forms.DateField(label=_("Birth date"))
 
 	class Meta:
-		model = CustomUser
+		model = User
 		fields = ('first_name', 'last_name', 'date_of_birth',)

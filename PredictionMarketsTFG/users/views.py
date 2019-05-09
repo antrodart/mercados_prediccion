@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from users.forms import SignupForm, EditProfileForm, LoginForm
-from users.models import CustomUser
+from users.models import User
 
 
 def login_view(request):
@@ -67,16 +67,16 @@ def create_admin(request):
 
 @login_required()
 def edit_profile(request):
-	customUser = CustomUser.objects.get(id=request.user.id)
+	user = User.objects.get(id=request.user.id)
 	if request.method == "POST":
-		form = EditProfileForm(request.POST, instance=customUser)
+		form = EditProfileForm(request.POST, instance=user)
 		if form.is_valid():
 			form.save()
 
 			return redirect('home')
 	else:
-		form = EditProfileForm(instance=customUser)
+		form = EditProfileForm(instance=user)
 
-	args = {'form': form, 'model': customUser}
+	args = {'form': form, 'model': user}
 
 	return render(request, 'editProfile.html', args)
