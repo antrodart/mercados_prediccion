@@ -36,7 +36,7 @@
 
 </head>
 <body>
-
+<div class="container-fluid" style="padding-left: 0px; padding-right: 0px">
 <nav class="navbar navbar-expand-md">
     <!-- This denotes at which point the navigation bar expands from vertical or hamburger icon to a full-size horizontal bar. Set to medium-->
     <a class="navbar-brand" href="{% url 'home' %}">Logo</a>
@@ -93,11 +93,15 @@
         </ul>
     </div>
 </nav>
-
-{% block content %}
-{% endblock %}
+</div>
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
 
 <br/>
+
+<div class="container-fluid" style="padding-left: 0px; padding-right: 0px">
 <footer>
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Bottom navbar</a>
@@ -129,12 +133,13 @@
         </div>
     </nav>
 </footer>
-
+</div>
 <!-- i18n form. Entried by static/js/i18n.js -->
 <form action="{% url 'set_language' %}" method="post" id="form_language">
     {% csrf_token %}
     <input name="next" type="hidden" value="{{ redirect_to }}"/>
     <input name="language" type="hidden" value="" id="form_language_lang"/>
 </form>
+
 </body>
 </html>
