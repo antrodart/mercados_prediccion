@@ -9,14 +9,18 @@
     {% if user.is_authenticated and user.is_staff%}
         <a href='/category/create/' class="btn btn-info" role="button">{% blocktrans %}Create new category{% endblocktrans %}</a>
     {% endif %}
+
     <nav aria-label="Page navigation example">
         <ul class="pagination">
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                </a>
-            </li>
+            {% if categories.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page1" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+            {% endif %}
+
             <li class="page-item"><a class="page-link" href="#">1</a></li>
             <li class="page-item"><a class="page-link" href="#">2</a></li>
             <li class="page-item"><a class="page-link" href="#">3</a></li>
@@ -28,6 +32,28 @@
             </li>
         </ul>
     </nav>
+
+    <ul class="pagination">
+        {% if categories.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ categories.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+            <li class="page-item"><span>&laquo;</span></li>
+        {% endif %}
+
+        {% for page_num in categories.paginator.page_range %}
+            {% if categories.number == page_num %}
+                <li class="page-item">{{ page_num }} <span class="sr-only">(current)</span></li>
+            {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% if categories.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ categories.next_page_number }}">&raquo;</a></li>
+        {% else %}
+            <li class="page-item disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+
 
     {% for category in categories %}
         {{ category.title }}

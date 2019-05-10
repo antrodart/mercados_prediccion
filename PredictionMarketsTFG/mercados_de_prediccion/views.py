@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.utils.encoding import force_text
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import PermissionDenied
 from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required
@@ -24,10 +24,16 @@ class ContactView(TemplateView):
 
 def list_categories_view(request):
 	all_categories = Category.objects.all()
-	paginator = Paginator(all_categories, per_page=10)
-
+	paginator = Paginator(all_categories, per_page=1)
 	page = request.GET.get('page')
-	categories = paginator.get_page(page)
+
+	try:
+		categories = paginator.get_page(page)
+	except PageNotAnInteger:
+		categories = paginator.get_page(1)
+	except EmptyPage:
+		categories = paginator.page(paginator.num_pages)
+
 	args = {'categories': categories}
 
 	return render(request, 'category/list_categories.html', args)
