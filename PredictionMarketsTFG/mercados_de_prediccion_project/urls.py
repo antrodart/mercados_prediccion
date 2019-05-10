@@ -28,4 +28,5 @@ urlpatterns = [
 	path('create-admin/', create_admin, name='create_admin'),
     path('',include('mercados_de_prediccion.urls')),
 	url(r'^i18n/', include('django.conf.urls.i18n')),
+	path('accounts/login/', login_view, name="login"),
 ]

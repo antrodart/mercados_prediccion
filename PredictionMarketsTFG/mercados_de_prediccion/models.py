@@ -1,11 +1,13 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils.translation import ugettext_lazy as _
 import datetime
 
 
 class Category(models.Model):
-	title = models.CharField(max_length=140, blank=False)
+	title = models.CharField(_('Title'), max_length=140, blank=False)
+	picture = models.TextField(_('Picture'))
 
 
 class Market(models.Model):
