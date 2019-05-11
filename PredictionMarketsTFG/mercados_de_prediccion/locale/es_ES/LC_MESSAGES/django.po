@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-05-11 21:08+0200\n"
+"POT-Creation-Date: 2019-05-11 21:40+0200\n"
 "PO-Revision-Date: 2019-04-22 13:43+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -75,85 +75,71 @@ msgstr "Mercados de predicción"
 msgid "Categories"
 msgstr "Categorías"
 
-#: templates/base.html:65
-msgid ""
-"Edit\r\n"
-"                            profile"
-msgstr ""
-"Editar\r\n"
-"                            perfil"
-
-#: templates/base.html:68 templates/registration/signup.html:112
-msgid ""
-"Crear\r\n"
-"                                admin"
-msgstr ""
-
-#: templates/base.html:72
-msgid "Logout"
-msgstr "Cerrar sesión"
-
-#: templates/base.html:77 templates/registration/login.html:6
-msgid "Login"
-msgstr "Iniciar sesión"
-
-#: templates/base.html:80 templates/registration/signup.html:8
-#: templates/registration/signup.html:21
-msgid "Sign up"
-msgstr "Registrarse"
-
-#: templates/base.html:87
-msgid "Admin functions"
-msgstr "Funciones de administrador"
-
-#: templates/base.html:91
-msgid ""
-"Create\r\n"
-"                            category"
-msgstr ""
-"Crear\r\n"
-"                            categoría"
-
-#: templates/base.html:96 templates/contact.html:5 templates/contact.html:10
-msgid "Contact"
-msgstr "Contacto"
-
-#: templates/base.html:102
-msgid "Language"
-msgstr "Idioma"
-
-#: templates/editProfile.html:5 templates/editProfile.html:10
+#: templates/base.html:65 templates/editProfile.html:6
+#: templates/editProfile.html:14 templates/editProfile.html:59
 msgid "Edit profile"
 msgstr "Editar perfil"
 
-#: templates/editProfile.html:14
-msgid "Save"
-msgstr "Guardar"
+#: templates/base.html:68 templates/registration/signup.html:10
+#: templates/registration/signup.html:112
+msgid "Create admin"
+msgstr "Crear admin"
+
+#: templates/base.html:71
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+#: templates/base.html:76 templates/registration/login.html:6
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: templates/base.html:79 templates/registration/signup.html:8
+#: templates/registration/signup.html:21 templates/registration/signup.html:108
+msgid "Sign up"
+msgstr "Registrarse"
+
+#: templates/base.html:86
+msgid "Admin functions"
+msgstr "Funciones de administrador"
+
+#: templates/base.html:90 templates/category/create_category.html:6
+#: templates/category/create_category.html:14
+msgid "Create category"
+msgstr "Crear categoría"
+
+#: templates/base.html:95 templates/contact.html:5 templates/contact.html:10
+msgid "Contact"
+msgstr "Contacto"
+
+#: templates/base.html:101
+msgid "Language"
+msgstr "Idioma"
+
+#: templates/editProfile.html:29 templates/registration/signup.html:44
+msgid "The name is not valid"
+msgstr "El nombre no es válido"
+
+#: templates/editProfile.html:40 templates/registration/signup.html:55
+msgid "The last name is not valid"
+msgstr "El apellido no es válido"
+
+#: templates/editProfile.html:51 templates/registration/signup.html:66
+msgid "The date of birth is not valid"
+msgstr "La fecha de nacimiento no es válida"
 
 #: templates/home.html:7
 msgid "Homepage."
 msgstr "Página de inicio"
 
-#: templates/category/create_category.html:6
-#: templates/category/create_category.html:14
-msgid "Create category"
-msgstr "Crear categoría"
-
 #: templates/category/create_category.html:55
-msgid ""
-"Upload\r\n"
-"                                    picture"
-msgstr ""
-"Subir\r\n"
-"                                    imagen"
+msgid "Upload picture"
+msgstr "Cargar imagen"
 
 #: templates/category/create_category.html:60
-msgid ""
-"\r\n"
-"                                    Choose file"
-msgstr ""
+msgid "Choose file"
+msgstr "Escoge un archivo"
 
-#: templates/category/create_category.html:89
+#: templates/category/create_category.html:88
 msgid "Create"
 msgstr "Crear"
 
@@ -169,25 +155,9 @@ msgstr "mercados"
 msgid "Edit"
 msgstr "Editar"
 
-#: templates/registration/signup.html:10
-msgid "Create admin"
-msgstr "Crear admin"
-
 #: templates/registration/signup.html:29
 msgid "Create admin account"
 msgstr "Crear cuenta de admin"
-
-#: templates/registration/signup.html:44
-msgid "The name is not valid"
-msgstr "El nombre no es válido"
-
-#: templates/registration/signup.html:55
-msgid "The last name is not valid"
-msgstr "El apellido no es válido"
-
-#: templates/registration/signup.html:66
-msgid "The date of birth is not valid"
-msgstr "La fecha de nacimiento no es válida"
 
 #: templates/registration/signup.html:77
 msgid "The email is not valid or is already in use"
@@ -196,14 +166,6 @@ msgstr "El email no es válido o ya está en uso"
 #: templates/registration/signup.html:88 templates/registration/signup.html:99
 msgid "The password is not valid"
 msgstr "La contraseña no es válida"
-
-#: templates/registration/signup.html:108
-msgid ""
-"Sign\r\n"
-"                                up"
-msgstr "Registrarse"
-
-
 
 #: users/admin.py:13
 msgid "Personal info"
@@ -219,7 +181,9 @@ msgstr "Fechas importantes"
 
 #: users/forms.py:18
 msgid "Sorry, that login was invalid. Please try again."
-msgstr "Lo sentimos, el inicio de sesión no fue correcto. Por favor, inténtelo de nuevo"
+msgstr ""
+"Lo sentimos, el inicio de sesión no fue correcto. Por favor, inténtelo de"
+" nuevo"
 
 #: users/forms.py:20
 msgid "Sorry, that user was banned."
@@ -234,7 +198,7 @@ msgid "Last name"
 msgstr "Apellidos"
 
 #: users/forms.py:35
-msgid "Birthdate"
+msgid "Date of birth"
 msgstr "Fecha de nacimiento"
 
 #: users/forms.py:46
@@ -253,4 +217,51 @@ msgstr "La fecha de nacimiento debe ser pasada"
 
 #~ msgid "You are not logged in."
 #~ msgstr "No has iniciado sesión"
+
+#~ msgid ""
+#~ "Crear\r\n"
+#~ "                                admin"
+#~ msgstr ""
+
+#~ msgid "Save"
+#~ msgstr "Guardar"
+
+#~ msgid ""
+#~ "Sign\r\n"
+#~ "                                up"
+#~ msgstr "Registrarse"
+
+#~ msgid "Birthdate"
+#~ msgstr "Fecha de nacimiento"
+
+#~ msgid ""
+#~ "Edit\r\n"
+#~ "                            profile"
+#~ msgstr ""
+#~ "Editar\r\n"
+#~ "                            perfil"
+
+#~ msgid ""
+#~ "Create\r\n"
+#~ "                                admin"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Create\r\n"
+#~ "                            category"
+#~ msgstr ""
+#~ "Crear\r\n"
+#~ "                            categoría"
+
+#~ msgid ""
+#~ "Upload\r\n"
+#~ "                                    picture"
+#~ msgstr ""
+#~ "Subir\r\n"
+#~ "                                    imagen"
+
+#~ msgid ""
+#~ "\r\n"
+#~ "                                    Choose file"
+#~ msgstr ""
 
