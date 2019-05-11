@@ -47,13 +47,12 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="main-navigation">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'about' %}">{% trans "About" %}</a>
-            </li>
+        <ul class="navbar-nav mr-auto">
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'categories' %}">{% trans "Categories" %}</a>
             </li>
+        </ul>
+        <ul class="navbar-nav">
             {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -91,9 +90,6 @@
                     </div>
                 </li>
             {% endif %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'contact' %}">{% trans "Contact" %}</a>
-            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                    data-toggle="dropdown"
@@ -128,7 +124,15 @@
 
 <footer class="footer">
     <div class="container-fluid">
-        <span class="text-muted">Place sticky footer content here.</span>
+        <ul class="list-inline footer-links">
+            <li class="list-inline-item">
+                <a href="{% url 'about' %}">{% trans "About" %}</a>
+            </li>
+            <li class="list-inline-item">
+                <a href="{% url 'contact' %}">{% trans "Contact" %}</a>
+            </li>
+        </ul>
+        <span class="text-muted">Prediction markets framework</span>
     </div>
 </footer>
 
@@ -138,6 +142,13 @@
     <input name="next" type="hidden" value="{{ redirect_to }}"/>
     <input name="language" type="hidden" value="" id="form_language_lang"/>
 </form>
-
+<script>
+    $('ul.navbar a').click( function() {
+    // Remove the class clicked so that we have only one clicked item
+    // Since there might be more than one ul i finde the parent.
+    $(this).closest('ul.navbar').find('a').removeClass('clicked');
+    $(this).addClass('clicked');
+} );
+</script>
 </body>
 </html>

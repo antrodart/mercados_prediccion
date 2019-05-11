@@ -13,6 +13,9 @@
 .nav-link:hover {
   color: #000;
 }
+ul.navbar a.clicked{
+    border-bottom: 3px solid #ff5c00;
+}
 .navbar-collapse {
   justify-content: flex-end;
 }
