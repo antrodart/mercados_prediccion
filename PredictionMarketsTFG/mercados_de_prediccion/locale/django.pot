@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-04-22 17:48+0200\n"
+"POT-Creation-Date: 2019-05-11 21:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,47 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 
-#: templates/about.html:5 templates/base.html:23
+#: mercados_de_prediccion/forms.py:10 mercados_de_prediccion/models.py:9
+msgid "Title in English"
+msgstr ""
+
+#: mercados_de_prediccion/forms.py:11 mercados_de_prediccion/models.py:10
+msgid "Title in Spanish"
+msgstr ""
+
+#: mercados_de_prediccion/forms.py:12
+msgid "Image"
+msgstr ""
+
+#: mercados_de_prediccion/forms.py:12
+msgid "Only .png and .jpg images format are accepted."
+msgstr ""
+
+#: mercados_de_prediccion/models.py:11
+msgid "Picture"
+msgstr ""
+
+#: mercados_de_prediccion/validators.py:8
+msgid "Images must be in PNG or JPG format."
+msgstr ""
+
+#: templates/403.html:6
+msgid "Permission denied"
+msgstr ""
+
+#: templates/403.html:10
+msgid "Error 403 - Permission denied"
+msgstr ""
+
+#: templates/404.html:6
+msgid "Page not found"
+msgstr ""
+
+#: templates/404.html:10
+msgid "Error 404 - Page not found"
+msgstr ""
+
+#: templates/about.html:5 templates/base.html:52
 msgid "About"
 msgstr ""
 
@@ -29,35 +69,56 @@ msgstr ""
 msgid "Prediction Markets"
 msgstr ""
 
-#: templates/base.html:23
-msgid "Home"
+#: templates/base.html:55 templates/category/list_categories.html:5
+#: templates/category/list_categories.html:14
+msgid "Categories"
 msgstr ""
 
-#: templates/base.html:30
-msgid "Hi"
+#: templates/base.html:65
+msgid ""
+"Edit\r\n"
+"                            profile"
 msgstr ""
 
-#: templates/base.html:31 templates/editProfile.html:5
-#: templates/editProfile.html:10
-msgid "Edit profile"
+#: templates/base.html:68 templates/registration/signup.html:112
+msgid ""
+"Create\r\n"
+"                                admin"
 msgstr ""
 
-#: templates/base.html:32
+#: templates/base.html:72
 msgid "Logout"
 msgstr ""
 
-#: templates/base.html:34
-msgid "You are not logged in."
-msgstr ""
-
-#: templates/base.html:35 templates/registration/login.html:5
-#: templates/registration/login.html:10 templates/registration/login.html:14
+#: templates/base.html:77 templates/registration/login.html:6
 msgid "Login"
 msgstr ""
 
-#: templates/base.html:36 templates/registration/signup.html:5
-#: templates/registration/signup.html:10 templates/registration/signup.html:14
+#: templates/base.html:80 templates/registration/signup.html:8
+#: templates/registration/signup.html:21
 msgid "Sign up"
+msgstr ""
+
+#: templates/base.html:87
+msgid "Admin functions"
+msgstr ""
+
+#: templates/base.html:91
+msgid ""
+"Create\r\n"
+"                            category"
+msgstr ""
+
+#: templates/base.html:96 templates/contact.html:5 templates/contact.html:10
+msgid "Contact"
+msgstr ""
+
+#: templates/base.html:102
+msgid "Language"
+msgstr ""
+
+#: templates/editProfile.html:5 templates/editProfile.html:10
+msgid "Edit profile"
 msgstr ""
 
 #: templates/editProfile.html:14
@@ -68,15 +129,112 @@ msgstr ""
 msgid "Homepage."
 msgstr ""
 
-#: users/forms.py:7 users/forms.py:19
+#: templates/category/create_category.html:6
+#: templates/category/create_category.html:14
+msgid "Create category"
+msgstr ""
+
+#: templates/category/create_category.html:55
+msgid ""
+"Upload\r\n"
+"                                    picture"
+msgstr ""
+
+#: templates/category/create_category.html:60
+msgid ""
+"\r\n"
+"                                    Choose file"
+msgstr ""
+
+#: templates/category/create_category.html:89
+msgid ""
+"\r\n"
+"                                Create"
+msgstr ""
+
+#: templates/category/list_categories.html:65
+msgid "market"
+msgstr ""
+
+#: templates/category/list_categories.html:67
+msgid "markets"
+msgstr ""
+
+#: templates/category/list_categories.html:72
+msgid "Edit"
+msgstr ""
+
+#: templates/registration/signup.html:10
+msgid "Create admin"
+msgstr ""
+
+#: templates/registration/signup.html:29
+msgid "Create admin account"
+msgstr ""
+
+#: templates/registration/signup.html:44
+msgid "The name is not valid"
+msgstr ""
+
+#: templates/registration/signup.html:55
+msgid "The last name is not valid"
+msgstr ""
+
+#: templates/registration/signup.html:66
+msgid "The date of birth is not valid"
+msgstr ""
+
+#: templates/registration/signup.html:77
+msgid "The email is not valid or is already in use"
+msgstr ""
+
+#: templates/registration/signup.html:88 templates/registration/signup.html:99
+msgid "The password is not valid"
+msgstr ""
+
+#: templates/registration/signup.html:108
+msgid ""
+"Sign\r\n"
+"                                up"
+msgstr ""
+
+#: users/admin.py:13
+msgid "Personal info"
+msgstr ""
+
+#: users/admin.py:14
+msgid "Permissions"
+msgstr ""
+
+#: users/admin.py:16
+msgid "Important dates"
+msgstr ""
+
+#: users/forms.py:18
+msgid "Sorry, that login was invalid. Please try again."
+msgstr ""
+
+#: users/forms.py:20
+msgid "Sorry, that user was banned."
+msgstr ""
+
+#: users/forms.py:31 users/forms.py:44
 msgid "First name"
 msgstr ""
 
-#: users/forms.py:8 users/forms.py:20
+#: users/forms.py:32 users/forms.py:45
 msgid "Last name"
 msgstr ""
 
-#: users/forms.py:9 users/forms.py:21
+#: users/forms.py:35
+msgid "Birthdate"
+msgstr ""
+
+#: users/forms.py:46
 msgid "Birth date"
+msgstr ""
+
+#: users/validators.py:8
+msgid "Date of birth must be in the past"
 msgstr ""
 
