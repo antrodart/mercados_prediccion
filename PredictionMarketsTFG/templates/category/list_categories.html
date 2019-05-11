@@ -6,9 +6,7 @@
 </head>
 
 {% block content %}
-    {% if user.is_authenticated and user.is_staff%}
-        <a href='/category/create/' class="btn btn-info" role="button">{% blocktrans %}Create new category{% endblocktrans %}</a>
-    {% endif %}
+    {% get_current_language as LANGUAGE_CODE %}
 
     <nav aria-label="Pagination">
         <ul class="pagination">
@@ -47,15 +45,25 @@
                         </a>
                         <div class="card-body">
                             <p class="card-text">
-                                <strong>{{ category.title }}</strong>
-                            </p>
-                            <small class="text-muted">{{ category.market_set.count }}
-                                {% if not category.market_set.count == 1 %}
-                                    {% trans "market" %}
+                                {% if LANGUAGE_CODE == "en" %}
+                                    <strong>{{ category.title }}</strong>
                                 {% else %}
-                                    {% trans "markets" %}
+                                    <strong>{{ category.title_es }}</strong>
                                 {% endif %}
-                            </small>
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">{{ category.market_set.count }}
+                                    {% if not category.market_set.count == 1 %}
+                                        {% trans "market" %}
+                                    {% else %}
+                                        {% trans "markets" %}
+                                    {% endif %}
+                                </small>
+                                {% if user.is_authenticated and user.is_staff %}
+                                    <a href='/category/edit/?categoryId={{ category.id }}' class="btn btn-outline-secondary"
+                                       role="button">{% trans "Edit" %}</a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
