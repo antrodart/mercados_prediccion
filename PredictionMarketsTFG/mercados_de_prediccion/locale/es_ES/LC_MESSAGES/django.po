@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-04-22 17:48+0200\n"
+"POT-Creation-Date: 2019-05-11 21:08+0200\n"
 "PO-Revision-Date: 2019-04-22 13:43+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -18,7 +18,47 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 
-#: templates/about.html:5 templates/base.html:23
+#: mercados_de_prediccion/forms.py:10 mercados_de_prediccion/models.py:9
+msgid "Title in English"
+msgstr "Título en inglés"
+
+#: mercados_de_prediccion/forms.py:11 mercados_de_prediccion/models.py:10
+msgid "Title in Spanish"
+msgstr "Título en español"
+
+#: mercados_de_prediccion/forms.py:12
+msgid "Image"
+msgstr "Imagen"
+
+#: mercados_de_prediccion/forms.py:12
+msgid "Only .png and .jpg images format are accepted."
+msgstr "Sólo se aceptan imágenes con formatos .jpg o .png"
+
+#: mercados_de_prediccion/models.py:11
+msgid "Picture"
+msgstr "Imagen"
+
+#: mercados_de_prediccion/validators.py:8
+msgid "Images must be in PNG or JPG format."
+msgstr "Las imágenes deben estar con formato .PNG o .JPG"
+
+#: templates/403.html:6
+msgid "Permission denied"
+msgstr "Permiso denegado"
+
+#: templates/403.html:10
+msgid "Error 403 - Permission denied"
+msgstr "Error 403 - Permiso denegado"
+
+#: templates/404.html:6
+msgid "Page not found"
+msgstr "Página no encontrada"
+
+#: templates/404.html:10
+msgid "Error 404 - Page not found"
+msgstr "Error 404 - Página no encontrada"
+
+#: templates/about.html:5 templates/base.html:52
 msgid "About"
 msgstr "Sobre nosotros"
 
@@ -30,36 +70,61 @@ msgstr "Sobre nosotros."
 msgid "Prediction Markets"
 msgstr "Mercados de predicción"
 
-#: templates/base.html:23
-msgid "Home"
-msgstr "Inicio"
+#: templates/base.html:55 templates/category/list_categories.html:5
+#: templates/category/list_categories.html:14
+msgid "Categories"
+msgstr "Categorías"
 
-#: templates/base.html:30
-msgid "Hi"
-msgstr "Hola"
+#: templates/base.html:65
+msgid ""
+"Edit\r\n"
+"                            profile"
+msgstr ""
+"Editar\r\n"
+"                            perfil"
 
-#: templates/base.html:31 templates/editProfile.html:5
-#: templates/editProfile.html:10
-msgid "Edit profile"
-msgstr "Editar perfil"
+#: templates/base.html:68 templates/registration/signup.html:112
+msgid ""
+"Crear\r\n"
+"                                admin"
+msgstr ""
 
-#: templates/base.html:32
+#: templates/base.html:72
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: templates/base.html:34
-msgid "You are not logged in."
-msgstr "No has iniciado sesión"
-
-#: templates/base.html:35 templates/registration/login.html:5
-#: templates/registration/login.html:10 templates/registration/login.html:14
+#: templates/base.html:77 templates/registration/login.html:6
 msgid "Login"
 msgstr "Iniciar sesión"
 
-#: templates/base.html:36 templates/registration/signup.html:5
-#: templates/registration/signup.html:10 templates/registration/signup.html:14
+#: templates/base.html:80 templates/registration/signup.html:8
+#: templates/registration/signup.html:21
 msgid "Sign up"
 msgstr "Registrarse"
+
+#: templates/base.html:87
+msgid "Admin functions"
+msgstr "Funciones de administrador"
+
+#: templates/base.html:91
+msgid ""
+"Create\r\n"
+"                            category"
+msgstr ""
+"Crear\r\n"
+"                            categoría"
+
+#: templates/base.html:96 templates/contact.html:5 templates/contact.html:10
+msgid "Contact"
+msgstr "Contacto"
+
+#: templates/base.html:102
+msgid "Language"
+msgstr "Idioma"
+
+#: templates/editProfile.html:5 templates/editProfile.html:10
+msgid "Edit profile"
+msgstr "Editar perfil"
 
 #: templates/editProfile.html:14
 msgid "Save"
@@ -69,15 +134,123 @@ msgstr "Guardar"
 msgid "Homepage."
 msgstr "Página de inicio"
 
-#: users/forms.py:7 users/forms.py:19
+#: templates/category/create_category.html:6
+#: templates/category/create_category.html:14
+msgid "Create category"
+msgstr "Crear categoría"
+
+#: templates/category/create_category.html:55
+msgid ""
+"Upload\r\n"
+"                                    picture"
+msgstr ""
+"Subir\r\n"
+"                                    imagen"
+
+#: templates/category/create_category.html:60
+msgid ""
+"\r\n"
+"                                    Choose file"
+msgstr ""
+
+#: templates/category/create_category.html:89
+msgid "Create"
+msgstr "Crear"
+
+#: templates/category/list_categories.html:65
+msgid "market"
+msgstr "mercado"
+
+#: templates/category/list_categories.html:67
+msgid "markets"
+msgstr "mercados"
+
+#: templates/category/list_categories.html:72
+msgid "Edit"
+msgstr "Editar"
+
+#: templates/registration/signup.html:10
+msgid "Create admin"
+msgstr "Crear admin"
+
+#: templates/registration/signup.html:29
+msgid "Create admin account"
+msgstr "Crear cuenta de admin"
+
+#: templates/registration/signup.html:44
+msgid "The name is not valid"
+msgstr "El nombre no es válido"
+
+#: templates/registration/signup.html:55
+msgid "The last name is not valid"
+msgstr "El apellido no es válido"
+
+#: templates/registration/signup.html:66
+msgid "The date of birth is not valid"
+msgstr "La fecha de nacimiento no es válida"
+
+#: templates/registration/signup.html:77
+msgid "The email is not valid or is already in use"
+msgstr "El email no es válido o ya está en uso"
+
+#: templates/registration/signup.html:88 templates/registration/signup.html:99
+msgid "The password is not valid"
+msgstr "La contraseña no es válida"
+
+#: templates/registration/signup.html:108
+msgid ""
+"Sign\r\n"
+"                                up"
+msgstr "Registrarse"
+
+
+
+#: users/admin.py:13
+msgid "Personal info"
+msgstr "Información personal"
+
+#: users/admin.py:14
+msgid "Permissions"
+msgstr "Permisos"
+
+#: users/admin.py:16
+msgid "Important dates"
+msgstr "Fechas importantes"
+
+#: users/forms.py:18
+msgid "Sorry, that login was invalid. Please try again."
+msgstr "Lo sentimos, el inicio de sesión no fue correcto. Por favor, inténtelo de nuevo"
+
+#: users/forms.py:20
+msgid "Sorry, that user was banned."
+msgstr "Lo sentimos, ese usuario está baneado"
+
+#: users/forms.py:31 users/forms.py:44
 msgid "First name"
 msgstr "Nombre"
 
-#: users/forms.py:8 users/forms.py:20
+#: users/forms.py:32 users/forms.py:45
 msgid "Last name"
 msgstr "Apellidos"
 
-#: users/forms.py:9 users/forms.py:21
+#: users/forms.py:35
+msgid "Birthdate"
+msgstr "Fecha de nacimiento"
+
+#: users/forms.py:46
 msgid "Birth date"
 msgstr "Fecha de nacimiento"
+
+#: users/validators.py:8
+msgid "Date of birth must be in the past"
+msgstr "La fecha de nacimiento debe ser pasada"
+
+#~ msgid "Home"
+#~ msgstr "Inicio"
+
+#~ msgid "Hi"
+#~ msgstr "Hola"
+
+#~ msgid "You are not logged in."
+#~ msgstr "No has iniciado sesión"
 
