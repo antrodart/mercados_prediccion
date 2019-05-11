@@ -32,7 +32,7 @@ class SignupForm(UserCreationForm):
 	last_name = forms.CharField(label=_("Last name"), max_length=60, required=True, widget=forms.TextInput(attrs={}))
 	email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.',
 	                         widget=forms.EmailInput(attrs={'autofocus': None}))
-	date_of_birth = forms.DateField(label=_("Birthdate"), widget=forms.DateInput,
+	date_of_birth = forms.DateField(label=_("Date of birth"), widget=forms.DateInput,
 	                              validators=[validate_date_is_past])
 
 	class Meta(UserCreationForm.Meta):

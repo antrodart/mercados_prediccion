@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load widget_tweaks %}
 
 <head>
     <title>{% block title %}{% blocktrans %}Edit profile{% endblocktrans %}{% endblock %}</title>
@@ -7,11 +8,85 @@
 
 {% block content %}
 
-<h2>{% blocktrans %}Edit profile{% endblocktrans %}</h2>
-<form method='post'>
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit">{% trans "Save" %}</button>
-</form>
+    <div class="col-md-6 mx-auto text-center">
+        <div class="header-title">
+            <h1 class="wv-heading--title">
+                {% blocktrans %}Edit profile{% endblocktrans %}
+            </h1>
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <div class="myform form ">
+                <form method='post'>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="first_name" class="text-info">First name:</label><br>
+                        {% if form.first_name.errors %}
+                            {{ form.first_name | add_class:'form-control my-input is-invalid' |attr:'id:first_name' |attr:'autofocus:true' }}
+                            <div class="invalid-feedback">
+                                {% blocktrans %}The name is not valid{% endblocktrans %}
+                            </div>
+                        {% else %}
+                            {{ form.first_name | add_class:'form-control my-input' |attr:'id:first_name' |attr:'autofocus:true' }}
+                        {% endif %}
+                    </div>
+                     <div class="form-group">
+                        <label for="last_name" class="text-info">Last name:</label><br>
+                        {% if form.last_name.errors %}
+                            {{ form.last_name | add_class:'form-control my-input is-invalid' |attr:'id:last_name' |attr:'autofocus:true' }}
+                            <div class="invalid-feedback">
+                                {% blocktrans %}The last name is not valid{% endblocktrans %}
+                            </div>
+                        {% else %}
+                            {{ form.last_name | add_class:'form-control my-input' |attr:'id:last_name' }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="date_of_birth" class="text-info">Date of birth:</label><br>
+                        {% if form.date_of_birth.errors %}
+                            {{ form.date_of_birth | add_class:'form-control my-input is-invalid' |attr:'id:date_of_birth'|attr:'name:date_of_birth' }}
+                            <div class="invalid-feedback">
+                                {% blocktrans %}The date of birth is not valid{% endblocktrans %}
+                            </div>
+                        {% else %}
+                            {{ form.date_of_birth |add_class:'form-control my-input' |attr:'id:date_of_birth'|attr:'name:date_of_birth' }}
+                        {% endif %}
+                    </div>
+                    <div class="text-center ">
+                        <button type="submit" class=" btn btn-block send-button tx-tfm">
+                            {% blocktrans %}Edit profile{% endblocktrans %}
+                        </button>
+                    </div>
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {% for err in form.non_field_errors %}
+                                {{ err }}
+                            {% endfor %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css"/>
+    <script>
+        $(document).ready(function () {
+            $('#date_of_birth').datepicker({
+                {% get_current_language as LANGUAGE_CODE %}
+                format:
+                    {% if LANGUAGE_CODE == "es" %}
+                        'dd/mm/yyyy',
+                    {% else %}
+                        'mm/dd/yyyy',
+                    {% endif %}
+            })
+        });
+    </script>
 {% endblock %}
