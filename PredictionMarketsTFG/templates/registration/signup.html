@@ -37,7 +37,7 @@
                 <form method="post" name="login">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="first_name" class="text-info">First name:</label><br>
+                        <label for="{{ form.first_name.id_for_label }}" class="text-info">{{ form.first_name.label }}</label><br>
                         {% if form.first_name.errors %}
                             {{ form.first_name | add_class:'form-control my-input is-invalid' |attr:'id:first_name' |attr:'autofocus:true' }}
                             <div class="invalid-feedback">
@@ -48,7 +48,7 @@
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="last_name" class="text-info">Last name:</label><br>
+                        <label for="{{ form.last_name.id_for_label }}" class="text-info">{{ form.last_name.label }}</label><br>
                         {% if form.last_name.errors %}
                             {{ form.last_name | add_class:'form-control my-input is-invalid' |attr:'id:last_name' |attr:'autofocus:true' }}
                             <div class="invalid-feedback">
@@ -59,7 +59,7 @@
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="date_of_birth" class="text-info">Date of birth:</label><br>
+                        <label for="{{ form.date_of_birth.id_for_label }}" class="text-info">{{ form.date_of_birth.label }}</label><br>
                         {% if form.date_of_birth.errors %}
                             {{ form.date_of_birth | add_class:'form-control my-input is-invalid' |attr:'id:date_of_birth'|attr:'name:date_of_birth' }}
                             <div class="invalid-feedback">
@@ -70,7 +70,7 @@
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="email" class="text-info">Email:</label><br>
+                        <label for="{{ form.email.id_for_label }}" class="text-info">{{ form.email.label }}</label><br>
                         {% if form.email.errors %}
                             {{ form.email | add_class:'form-control my-input is-invalid' |attr:'id:email' |attr:'autofocus:true' }}
                             <div class="invalid-feedback">
@@ -81,7 +81,7 @@
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="password1" class="text-info">Password:</label><br>
+                        <label for="{{ form.password1.id_for_label }}" class="text-info">{{ form.password1.label }}</label><br>
                         {% if form.password1.errors %}
                             {{ form.password1 | add_class:'form-control my-input is-invalid' |attr:'id:password1' |attr:'autofocus:true' }}
                             <div class="invalid-feedback">
@@ -92,7 +92,7 @@
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="password2" class="text-info">Repeat password:</label><br>
+                        <label for="{{ form.password2.id_for_label }}" class="text-info">{{ form.password2.label }}</label><br>
                         {% if form.password2.errors %}
                             {{ form.password2 | add_class:'form-control my-input is-invalid' |attr:'id:password2' |attr:'autofocus:true' }}
                             <div class="invalid-feedback">
@@ -104,12 +104,12 @@
                     </div>
                     <div class="text-center ">
                         {% if not admin_creation %}
-                            <button type="submit" class=" btn btn-block send-button tx-tfm">{% blocktrans %}Sign
-                                up{% endblocktrans %}
+                            <button type="submit" class=" btn btn-block send-button tx-tfm">
+                                {% blocktrans %}Sign up{% endblocktrans %}
                             </button>
                         {% else %}
-                            <button type="submit" class=" btn btn-block send-button tx-tfm">{% blocktrans %}Create
-                                admin{% endblocktrans %}
+                            <button type="submit" class=" btn btn-block send-button tx-tfm">
+                                {% blocktrans %}Create admin{% endblocktrans %}
                             </button>
                         {% endif %}
                     </div>
