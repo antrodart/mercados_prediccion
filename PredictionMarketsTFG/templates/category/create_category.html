@@ -51,13 +51,13 @@
                                class="text-info">* {{ form.picture.label }}</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="inputGroupFileAddon01">{% blocktrans %}Upload
-                                    picture{% endblocktrans %}</span>
+                                <span class="input-group-text" id="inputGroupFileAddon01">
+                                    {% blocktrans %}Upload picture{% endblocktrans %}</span>
                             </div>
                             <div class="custom-file">
                                 {{ form.picture |attr:'type:file' | add_class:'custom-file-input' |attr:'aria-describedby:inputPictureHelpTextId' }}
-                                <label class="custom-file-label" for="{{ form.picture.id_for_label }}">{% blocktrans %}
-                                    Choose file{% endblocktrans %}</label>
+                                <label class="custom-file-label" for="{{ form.picture.id_for_label }}">
+                                    {% blocktrans %}Choose file{% endblocktrans %}</label>
                             </div>
                         </div>
                         <small id="inputPictureHelpTextId" class="form-text text-muted">

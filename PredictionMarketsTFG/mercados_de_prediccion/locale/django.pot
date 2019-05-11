@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-05-11 21:08+0200\n"
+"POT-Creation-Date: 2019-05-11 21:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,82 +74,72 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-#: templates/base.html:65
-msgid ""
-"Edit\r\n"
-"                            profile"
-msgstr ""
-
-#: templates/base.html:68 templates/registration/signup.html:112
-msgid ""
-"Create\r\n"
-"                                admin"
-msgstr ""
-
-#: templates/base.html:72
-msgid "Logout"
-msgstr ""
-
-#: templates/base.html:77 templates/registration/login.html:6
-msgid "Login"
-msgstr ""
-
-#: templates/base.html:80 templates/registration/signup.html:8
-#: templates/registration/signup.html:21
-msgid "Sign up"
-msgstr ""
-
-#: templates/base.html:87
-msgid "Admin functions"
-msgstr ""
-
-#: templates/base.html:91
-msgid ""
-"Create\r\n"
-"                            category"
-msgstr ""
-
-#: templates/base.html:96 templates/contact.html:5 templates/contact.html:10
-msgid "Contact"
-msgstr ""
-
-#: templates/base.html:102
-msgid "Language"
-msgstr ""
-
-#: templates/editProfile.html:5 templates/editProfile.html:10
+#: templates/base.html:65 templates/editProfile.html:6
+#: templates/editProfile.html:14 templates/editProfile.html:59
 msgid "Edit profile"
 msgstr ""
 
-#: templates/editProfile.html:14
-msgid "Save"
+#: templates/base.html:68 templates/registration/signup.html:10
+#: templates/registration/signup.html:112
+msgid "Create admin"
+msgstr ""
+
+#: templates/base.html:71
+msgid "Logout"
+msgstr ""
+
+#: templates/base.html:76 templates/registration/login.html:6
+msgid "Login"
+msgstr ""
+
+#: templates/base.html:79 templates/registration/signup.html:8
+#: templates/registration/signup.html:21 templates/registration/signup.html:108
+msgid "Sign up"
+msgstr ""
+
+#: templates/base.html:86
+msgid "Admin functions"
+msgstr ""
+
+#: templates/base.html:90 templates/category/create_category.html:6
+#: templates/category/create_category.html:14
+msgid "Create category"
+msgstr ""
+
+#: templates/base.html:95 templates/contact.html:5 templates/contact.html:10
+msgid "Contact"
+msgstr ""
+
+#: templates/base.html:101
+msgid "Language"
+msgstr ""
+
+#: templates/editProfile.html:29 templates/registration/signup.html:44
+msgid "The name is not valid"
+msgstr ""
+
+#: templates/editProfile.html:40 templates/registration/signup.html:55
+msgid "The last name is not valid"
+msgstr ""
+
+#: templates/editProfile.html:51 templates/registration/signup.html:66
+msgid "The date of birth is not valid"
 msgstr ""
 
 #: templates/home.html:7
 msgid "Homepage."
 msgstr ""
 
-#: templates/category/create_category.html:6
-#: templates/category/create_category.html:14
-msgid "Create category"
-msgstr ""
-
 #: templates/category/create_category.html:55
-msgid ""
-"Upload\r\n"
-"                                    picture"
+msgid "Upload picture"
 msgstr ""
 
 #: templates/category/create_category.html:60
-msgid ""
-"\r\n"
-"                                    Choose file"
+msgid "Choose file"
 msgstr ""
 
-#: templates/category/create_category.html:89
-msgid ""
-"\r\n"
-"                                Create"
+#: templates/category/create_category.html:88
+msgid "Create"
 msgstr ""
 
 #: templates/category/list_categories.html:65
@@ -164,24 +154,8 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: templates/registration/signup.html:10
-msgid "Create admin"
-msgstr ""
-
 #: templates/registration/signup.html:29
 msgid "Create admin account"
-msgstr ""
-
-#: templates/registration/signup.html:44
-msgid "The name is not valid"
-msgstr ""
-
-#: templates/registration/signup.html:55
-msgid "The last name is not valid"
-msgstr ""
-
-#: templates/registration/signup.html:66
-msgid "The date of birth is not valid"
 msgstr ""
 
 #: templates/registration/signup.html:77
@@ -190,12 +164,6 @@ msgstr ""
 
 #: templates/registration/signup.html:88 templates/registration/signup.html:99
 msgid "The password is not valid"
-msgstr ""
-
-#: templates/registration/signup.html:108
-msgid ""
-"Sign\r\n"
-"                                up"
 msgstr ""
 
 #: users/admin.py:13
@@ -227,7 +195,7 @@ msgid "Last name"
 msgstr ""
 
 #: users/forms.py:35
-msgid "Birthdate"
+msgid "Date of birth"
 msgstr ""
 
 #: users/forms.py:46
