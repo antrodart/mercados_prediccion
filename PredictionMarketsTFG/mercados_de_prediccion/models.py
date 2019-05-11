@@ -6,7 +6,8 @@ import datetime
 
 
 class Category(models.Model):
-	title = models.CharField(_('Title'), max_length=140, blank=False)
+	title = models.CharField(_('Title in English'), max_length=140, blank=False)
+	title_es = models.CharField(_('Title in Spanish'), max_length=140, blank=False)
 	picture = models.TextField(_('Picture'))
 
 

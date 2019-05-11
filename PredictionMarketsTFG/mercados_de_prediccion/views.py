@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.encoding import force_text
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import PermissionDenied
 from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required
@@ -25,9 +25,15 @@ class ContactView(TemplateView):
 def list_categories_view(request):
 	all_categories = Category.objects.all()
 	paginator = Paginator(all_categories, per_page=10)
-
 	page = request.GET.get('page')
-	categories = paginator.get_page(page)
+
+	try:
+		categories = paginator.get_page(page)
+	except PageNotAnInteger:
+		categories = paginator.get_page(1)
+	except EmptyPage:
+		categories = paginator.page(paginator.num_pages)
+
 	args = {'categories': categories}
 
 	return render(request, 'category/list_categories.html', args)
@@ -40,8 +46,7 @@ def create_category_view(request):
 	if request.method == "POST":
 		form = CreateCategoryForm(request.POST, request.FILES)
 		if form.is_valid():
-			encoded_picture = force_text(base64.b64encode(request.FILES['picture'].file.read()))
-			form.save(encoded_picture)
+			form.save()
 
 			return redirect('categories')
 	else:
@@ -50,3 +55,21 @@ def create_category_view(request):
 	args = {'form': form}
 	return render(request, 'category/create_category.html', args)
 
+
+@login_required()
+def edit_category_view(request):
+	if not request.user.is_staff:
+		raise PermissionDenied("Must be logged as Admin.")
+	category_id = request.GET.get('categoryId')
+	category = get_object_or_404(Category, pk=category_id)
+	if request.method == "POST":
+		form = CreateCategoryForm(request.POST, request.FILES, instance=category)
+		if form.is_valid():
+			form.save()
+
+			return redirect('categories')
+	else:
+		form = CreateCategoryForm(instance=category)
+
+	args = {'form': form}
+	return render(request, 'category/create_category.html', args)
