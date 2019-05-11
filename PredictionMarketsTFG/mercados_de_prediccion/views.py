@@ -24,7 +24,7 @@ class ContactView(TemplateView):
 
 def list_categories_view(request):
 	all_categories = Category.objects.all()
-	paginator = Paginator(all_categories, per_page=1)
+	paginator = Paginator(all_categories, per_page=10)
 	page = request.GET.get('page')
 
 	try:
