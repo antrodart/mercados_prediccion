@@ -39,7 +39,8 @@
 </head>
 <body>
 
-<header class="navbar navbar-expand-md sticky-top">
+<header>
+<nav class="navbar navbar-expand-md sticky-top">
     <!-- This denotes at which point the navigation bar expands from vertical or hamburger icon to a full-size horizontal bar. Set to medium-->
     <a class="navbar-brand" href="{% url 'home' %}">Logo</a>
     <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse"
@@ -49,7 +50,10 @@
     <div class="collapse navbar-collapse" id="main-navigation">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'categories' %}">{% trans "Categories" %}</a>
+                <a class="nav-link" id="markets_id" href="{% url 'markets' %}">{% trans "Markets" %}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="categories_id" href="{% url 'categories' %}">{% trans "Categories" %}</a>
             </li>
         </ul>
         <ul class="navbar-nav">
@@ -113,6 +117,7 @@
             </li>
         </ul>
     </div>
+</nav>
 </header>
 <main role="main">
     <div class="container">
@@ -142,13 +147,26 @@
     <input name="next" type="hidden" value="{{ redirect_to }}"/>
     <input name="language" type="hidden" value="" id="form_language_lang"/>
 </form>
+
 <script>
-    $('ul.navbar a').click( function() {
-    // Remove the class clicked so that we have only one clicked item
-    // Since there might be more than one ul i finde the parent.
-    $(this).closest('ul.navbar').find('a').removeClass('clicked');
-    $(this).addClass('clicked');
-} );
+   /*$('.nav-link').click(function () {
+        $(this).closest('.nav-link').removeClass('clicked');
+        $(this).addClass('clicked');
+    });*/
+    $(document).ready(function (){
+        var url_str = window.location.pathname;
+        if (url_str.startsWith("/markets/")){
+            activate_link_navbar("markets_id");
+        } else if (url_str.startsWith("/categories/")){
+            activate_link_navbar("categories_id");
+        }
+    });
+    function activate_link_navbar(nav_link_id) {
+        // First we remove the clicked class from all the navs.
+        $('.clicked').removeClass('clicked');
+        // Then we set the clicked class to the current nav.
+        $('#'+nav_link_id).addClass('clicked')
+    }
 </script>
 </body>
 </html>
