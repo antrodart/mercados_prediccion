@@ -73,3 +73,18 @@ def edit_category_view(request):
 
 	args = {'form': form}
 	return render(request, 'category/create_category.html', args)
+
+
+@login_required()
+def create_group_view(request):
+	if request.method == "POST":
+		form = CreateGroupForm(request.POST, request.FILES, user=request.user)
+		if form.is_valid():
+			form.save()
+
+			return redirect('home')
+	else:
+		form = CreateGroupForm(user=request.user)
+
+	args = {'form': form}
+	return render(request, 'group/create_group.html', args)

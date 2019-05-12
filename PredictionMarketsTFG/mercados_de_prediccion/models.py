@@ -53,6 +53,7 @@ class Comment(models.Model):
 class Group(models.Model):
 	name = models.CharField(max_length=140, blank=False)
 	description = models.TextField(blank=False)
+	picture = models.TextField(_('Picture'), blank=True, null=True)
 	moderator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
 
 
