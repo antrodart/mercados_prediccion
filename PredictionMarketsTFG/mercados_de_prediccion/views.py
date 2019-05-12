@@ -76,13 +76,31 @@ def edit_category_view(request):
 
 
 @login_required()
+def list_created_groups_view(request):
+	created_groups = Group.objects.filter(moderator=request.user.id)
+	paginator = Paginator(created_groups, per_page=10)
+	page = request.GET.get('page')
+
+	try:
+		groups = paginator.get_page(page)
+	except PageNotAnInteger:
+		groups = paginator.get_page(1)
+	except EmptyPage:
+		groups = paginator.page(paginator.num_pages)
+
+	args = {'groups': groups, 'view_name':'list_created'}
+
+	return render(request, 'group/list_groups.html', args)
+
+
+@login_required()
 def create_group_view(request):
 	if request.method == "POST":
 		form = CreateGroupForm(request.POST, request.FILES, user=request.user)
 		if form.is_valid():
 			form.save()
 
-			return redirect('home')
+			return redirect('list_created_groups')
 	else:
 		form = CreateGroupForm(user=request.user)
 

@@ -9,4 +9,5 @@ urlpatterns = [
 	path('category/create/', views.create_category_view, name='create_category'),
 	path('category/edit/', views.edit_category_view, name='edit_category'),
 	path('group/create/', views.create_group_view, name='create_group'),
+	path('groups/created/', views.list_created_groups_view, name='list_created_groups'),
 ]

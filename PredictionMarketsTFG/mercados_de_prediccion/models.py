@@ -19,6 +19,7 @@ class Market(models.Model):
 	is_judged = models.BooleanField(default=False, null=False)
 	creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
 	category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+	group = models.ForeignKey('Group', on_delete=models.CASCADE, null=True)
 
 	@property
 	def has_expired(self):
