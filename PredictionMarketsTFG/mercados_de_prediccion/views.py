@@ -42,7 +42,7 @@ def list_categories_view(request):
 @login_required()
 def create_category_view(request):
 	if not request.user.is_staff:
-		raise PermissionDenied("Must be logged as Admin.")
+		raise PermissionDenied(_("Must be logged as Admin."))
 	if request.method == "POST":
 		form = CreateCategoryForm(request.POST, request.FILES)
 		if form.is_valid():
@@ -59,7 +59,7 @@ def create_category_view(request):
 @login_required()
 def edit_category_view(request):
 	if not request.user.is_staff:
-		raise PermissionDenied("Must be logged as Admin.")
+		raise PermissionDenied(_("Must be logged as Admin."))
 	category_id = request.GET.get('categoryId')
 	category = get_object_or_404(Category, pk=category_id)
 	if request.method == "POST":
@@ -106,3 +106,36 @@ def create_group_view(request):
 
 	args = {'form': form}
 	return render(request, 'group/create_group.html', args)
+
+
+@login_required()
+def edit_group_view(request):
+	group_id = request.GET.get('groupId')
+	group = get_object_or_404(Group, pk=group_id)
+	if not group.moderator == request.user:
+		raise PermissionDenied(_("You cannot edit this group."))
+	if request.method == "POST":
+		form = CreateGroupForm(request.POST, request.FILES, instance=group, user=request.user)
+		if form.is_valid():
+			form.save()
+
+			return redirect('list_created_groups')
+	else:
+		form = CreateGroupForm(instance=group, user=request.user)
+
+	args = {'form': form, 'editing':True}
+	return render(request, 'group/create_group.html', args)
+
+
+@login_required()
+def display_group_view(request):
+	group_id = request.GET.get('groupId')
+	user = request.user
+	group = get_object_or_404(Group, pk=group_id)
+	if (not group.moderator == user) and (not user in group.joinedgroup_set):
+		raise PermissionDenied(_("You are not member of this group."))
+
+
+	args = {'group': group}
+
+	return render(request, 'group/display_group.html', args)

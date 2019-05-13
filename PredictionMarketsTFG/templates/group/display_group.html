@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+<head>
+    <title>{% block title %}{{ group.name }}{% endblock %}</title>
+</head>
+
+{% block content %}
+    {{ group.name }}
+    {{ group.description }}
+    <img class="card-img-top" alt="{{ group.name }}" style="height: 225px; width: 100%; display: block;"
+         src="data:image/png;base64,{{ group.picture }}" data-holder-rendered="true">
+{% endblock %}

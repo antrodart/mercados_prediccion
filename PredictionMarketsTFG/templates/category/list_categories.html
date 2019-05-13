@@ -48,7 +48,7 @@
                 {% for category in categories %}
                 <div class="col-md-4">
                     <div class="card mb-4 box-shadow">
-                        <a href="/markets/?category={{ category.id }}">
+                        <a href="/markets/?categoryId={{ category.id }}">
                             <img class="card-img-top" alt="{{ category.title }}" style="height: 225px; width: 100%; display: block;" src="data:image/png;base64,{{ category.picture }}" data-holder-rendered="true">
                         </a>
                         <div class="card-body">

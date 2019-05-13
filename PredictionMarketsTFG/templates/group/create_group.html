@@ -3,14 +3,24 @@
 {% load i18n %}
 
 <head>
-    <title>{% block title %}{% trans "Create group" %}{% endblock %}</title>
+    <title>{% block title %}
+        {% if editing %}
+            {% trans "Edit group" %}
+        {% else %}
+            {% trans "Create group" %}
+        {% endif %}
+    {% endblock %}</title>
 </head>
 
 {% block content %}
     <div class="col-md-6 mx-auto text-center">
         <div class="header-title">
             <h1 class="wv-heading--title">
-                {% blocktrans %}Create private group{% endblocktrans %}
+                {% if editing %}
+                    {% blocktrans %}Edit private group{% endblocktrans %}
+                {% else %}
+                    {% blocktrans %}Create private group{% endblocktrans %}
+                {% endif %}
             </h1>
         </div>
     </div>
@@ -94,9 +104,9 @@
     </div>
 
     <script>
-        // This script makes the name of the file appear on select
+        // This script makes the name of the file appear on upload input
         $(".custom-file-input").on("change", function () {
-            var fileName = $(this).val().split("\\").pop();
+             var fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
     </script>
