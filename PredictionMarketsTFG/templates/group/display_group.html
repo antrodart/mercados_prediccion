@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load static %}
 
 <head>
     <title>{% block title %}{{ group.name }}{% endblock %}</title>
@@ -7,11 +8,11 @@
 
 {% block content %}
     <div class="row top-buffer"> {% comment %}Top buffer adds 20px for top margin{% endcomment %}
-        <div class="col-md-4">
-            <img class="img-fluid img-thumbnail rounded" alt="{{ group.name }}" style="height: 250px;"
+        <div class="col-md-3">
+            <img class="img-fluid img-thumbnail" alt="{{ group.name }}" style="max-height: 255px"
                  src="data:image/png;base64,{{ group.picture }}" data-holder-rendered="true">
         </div>
-        <div class="col-md-8 my-auto"> {% comment %}Puts column and text in the center{% endcomment %}
+        <div class="col-md-9 my-auto"> {% comment %}Puts column and text in the center{% endcomment %}
             <div class="row">
                 <div class="col">
                     <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
@@ -27,12 +28,15 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <hr>
             <div class="row">
                 <div class="col">
                     <div class="header-title">
-                        <h2>{% trans "Description:" %}</h2>
+                        <h2>
+                            <img src="{% static 'img/icons/group-rules.png' %}" alt="Description" style="max-height: 25px;">
+                            {% trans "Description:" %}
+                        </h2>
                     </div>
                     <div>
                         {{ group.description }}
@@ -42,7 +46,10 @@
             <div class="row">
                 <div class="col">
                     <div class="header-title">
-                        <h2>{% trans "Participants:" %}</h2>
+                        <h2>
+                            <img src="{% static 'img/icons/users.png' %}" alt="Users" style="max-height: 25px;">
+                            {% trans "Participants:" %}
+                        </h2>
                         <div>
                             <ul>
                                 <li>Participante 1</li>
@@ -54,10 +61,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-9">
             <hr>
             <div class="header-title">
-                <h2>{% trans "Markets:" %}</h2>
+                <h2>
+                    <img src="{% static 'img/icons/markets.png' %}" alt="Markets" style="max-height: 25px;">
+                    {% trans "Markets:" %}
+                </h2>
             </div>
             <div>
                 {{ group.market_set }}
