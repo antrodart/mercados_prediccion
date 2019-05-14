@@ -7,5 +7,9 @@
 </head>
 
 {% block content %}
-{% blocktrans %}Error 404 - Page not found{% endblocktrans %}
+    {% if exception %}
+        {{ exception }}
+    {% else %}
+        {% blocktrans %}Error 404 - Page not found{% endblocktrans %}
+    {% endif %}
 {% endblock %}

@@ -55,6 +55,7 @@ class Group(models.Model):
 	name = models.CharField(max_length=140, blank=False)
 	description = models.TextField(blank=False)
 	picture = models.TextField(_('Picture'), blank=True, null=True)
+	creation_date = models.DateTimeField(auto_now_add=True)
 	moderator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
 
 

@@ -7,5 +7,9 @@
 </head>
 
 {% block content %}
-{% blocktrans %}Error 403 - Permission denied{% endblocktrans %}
+    {% if exception %}
+        {{ exception }}
+    {% else %}
+        {% blocktrans %}Error 403 - Permission denied{% endblocktrans %}
+    {% endif %}
 {% endblock %}

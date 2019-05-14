@@ -1,12 +1,10 @@
+from django.utils.translation import gettext_lazy as _
 from django.shortcuts import render, redirect, get_object_or_404
-from django.utils.encoding import force_text
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import PermissionDenied
 from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required
-from .models import Category
 from .forms import *
-import base64
 
 
 
@@ -132,7 +130,7 @@ def display_group_view(request):
 	group_id = request.GET.get('groupId')
 	user = request.user
 	group = get_object_or_404(Group, pk=group_id)
-	if (not group.moderator == user) and (not user in group.joinedgroup_set):
+	if (not group.moderator == user) and (not user in group.joinedgroup_set.all()):
 		raise PermissionDenied(_("You are not member of this group."))
 
 
