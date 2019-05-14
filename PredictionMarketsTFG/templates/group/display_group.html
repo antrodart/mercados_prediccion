@@ -22,7 +22,16 @@
             </div>
             <div class="row">
                 <div class="col text-muted">
-                    {% blocktrans %}Created by{% endblocktrans %} {{ group.moderator }} - {{ group.creation_date |date }}
+                    {% blocktrans %}Created by{% endblocktrans %} {{ group.moderator }}
+                    - {{ group.creation_date |date }}
+                    <p>
+                        {{ group.joinedgroup_set.count }}
+                        {% if group.joinedgroup_set.count == 1 %}
+                            {% trans "participant." %}
+                        {% else %}
+                            {% trans "participants." %}
+                        {% endif %}
+                    </p>
                 </div>
             </div>
         </div>
@@ -32,9 +41,10 @@
             <hr>
             <div class="row">
                 <div class="col">
-                    <div class="header-title">
+                    <div style="margin-bottom: 1rem">
                         <h2>
-                            <img src="{% static 'img/icons/group-rules.png' %}" alt="Description" style="max-height: 25px;">
+                            <img src="{% static 'img/icons/group-rules.png' %}" alt="Description"
+                                 style="max-height: 25px;">
                             {% trans "Description:" %}
                         </h2>
                     </div>
@@ -63,16 +73,68 @@
         </div>
         <div class="col-md-9">
             <hr>
-            <div class="header-title">
-                <h2>
-                    <img src="{% static 'img/icons/markets.png' %}" alt="Markets" style="max-height: 25px;">
-                    {% trans "Markets:" %}
-                </h2>
+            <div class="row">
+                <div class="col">
+                    <h2 style="margin-bottom: 1rem">
+                        <img src="{% static 'img/icons/markets.png' %}" alt="Markets" style="max-height: 25px;">
+                        {% trans "Markets:" %}
+                    </h2>
+                </div>
+                <div class="col">
+                    <div class="float-right">
+                        {% if group.moderator == user %}
+                        <a href="/market/create/?groupId={{ group.pk }}">
+                            <button type="button" class="btn btn-primary">
+                                {% blocktrans %}Create market{% endblocktrans %}
+                            </button>
+                        </a>
+                        {% elif not user_is_member %}
+                            <a href="/group/request-join/?groupId={{ group.pk }}">
+                            <button type="button" class="btn btn-primary">
+                                {% blocktrans %}Join group{% endblocktrans %}
+                            </button>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-            <div>
-                {{ group.market_set }}
+
+            <div class="row">
+                <div class="col">
+                    {% if group.market_set.count == 0 %}
+                        <p>{% blocktrans %}This group has no markets yet.{% endblocktrans %}</p>
+                    {% else %}
+                        <ul class="list-unstyled">
+                            {% for market in group.descending_ordered_market_set.all  %}
+                                <li class="media">
+                                    <a href="{% url 'home' %}">
+                                        <img class="mr-3 img-fluid img-thumbnail" style="max-height: 100px;"
+                                             src="data:image/png;base64,{{ market.picture }}" alt="{{ market.title }}">
+                                    </a>
+                                    <div class="media-body">
+                                        <a href="{% url 'home' %}">
+                                            <h5 class="mt-0 mb-1">{{ market.title }}</h5>
+                                        </a>
+                                        {% if market.joinedgroup_set.count == 1 %}
+                                            <p>{{ market.joinedgroup_set.count }} {% trans "participant" %}</p>
+                                        {% else %}
+                                            <p>{{ market.joinedgroup_set.count }} {% trans "participants" %}</p>
+                                        {% endif %}
+                                        {% if market.has_expired %}
+                                            {% blocktrans %}The market is over.{% endblocktrans %}
+                                        {% else %}
+                                            {% blocktrans %}You can place bets on this market until{% endblocktrans %}
+                                            {{ market.end_date }}
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
+
 
 {% endblock %}

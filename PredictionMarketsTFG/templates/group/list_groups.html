@@ -19,13 +19,15 @@
         <div class="col-md-6 mx-auto text-center">
             <div class="header-title">
                 <h1 class="wv-heading--title">
-                    {% blocktrans %}Groups joined{% endblocktrans %}
+                    {% blocktrans %}All groups{% endblocktrans %}
                 </h1>
             </div>
         </div>
     {% endif %}
 
-    <nav aria-label="Pagination">
+    <div class="row">
+        <div class="col">
+             <nav aria-label="Pagination">
         <ul class="pagination">
             {% if groups.has_previous %}
                 <li class="page-item"><a class="page-link"
@@ -50,6 +52,18 @@
             {% endif %}
         </ul>
     </nav>
+        </div>
+        <div class="col">
+            <div class="float-right">
+                <a href="{% url 'create_group' %}">
+                    <button type="button" class="btn btn-primary">
+                            {% blocktrans %}Create group{% endblocktrans %}
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+
 
     <div class="album py-5 bg-light">
         <div class="container">

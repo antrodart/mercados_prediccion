@@ -1,4 +1,5 @@
 import os
+import datetime
 from django.core.exceptions import ValidationError
 
 def validate_file_image_extension(value):
@@ -6,3 +7,13 @@ def validate_file_image_extension(value):
 	valid_extensions = ['.png', '.jpg']
 	if not ext.lower() in valid_extensions:
 		raise ValidationError(_('Images must be in PNG or JPG format.'))
+
+
+def validate_date_is_past(date):
+	if date >= datetime.datetime.today().date():
+		raise ValidationError(_('Date must be past.'))
+
+
+def validate_date_is_future(date):
+	if date <= datetime.datetime.today().date():
+		raise ValidationError(_('Date must be future'))

@@ -12,7 +12,7 @@ class Category(models.Model):
 
 
 class Market(models.Model):
-	title = models.CharField(max_length=280, blank=False)
+	title = models.CharField(max_length=150, blank=False)
 	description = models.TextField(blank=False)
 	end_date = models.DateField(null=False)
 	picture = models.TextField()
@@ -56,13 +56,17 @@ class Group(models.Model):
 	description = models.TextField(blank=False)
 	picture = models.TextField(_('Picture'), blank=True, null=True)
 	creation_date = models.DateTimeField(auto_now_add=True)
+	is_visible = models.BooleanField(null=False, default=True)
 	moderator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
 
+	def descending_ordered_market_set(self):
+		return self.market_set.order_by('-end_date')
 
 class JoinedGroup(models.Model):
 	private_karma = models.IntegerField(null=False, default=0)
 	joined_date = models.DateTimeField(auto_now_add=True)
-	description = models.TextField(blank=False)
+	description = models.TextField(blank=True)
+	is_accepted = models.BooleanField(null=False, default=False)
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
 	group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False)
 

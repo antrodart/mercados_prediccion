@@ -49,14 +49,28 @@
     </button>
     <div class="collapse navbar-collapse" id="main-navigation">
         <ul class="navbar-nav mr-auto">
+             <li class="nav-item">
+                <a class="nav-link" id="market_id" href="{% url 'categories' %}">{% trans "Markets" %}</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="groups_id" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% trans "Groups" %}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'list_all_groups' %}">
+                        {% blocktrans %}All groups{% endblocktrans %}</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'list_created_groups' %}">
+                        {% blocktrans %}Created groups{% endblocktrans %}</a>
+                    {% for group in user.joinedgroup_set.all %}
+                        <a class="dropdown-item" href="/group/?groupId={{ group.pk }}">
+                            {{ group.name }}</a>
+                    {% endfor %}
+                </div>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" id="categories_id" href="{% url 'categories' %}">{% trans "Categories" %}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="groups_id" href="{% url 'list_created_groups' %}">{% trans "Created groups" %}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="groups_id" href="{% url 'create_group' %}">{% trans "Create group" %}</a>
             </li>
         </ul>
         <ul class="navbar-nav">
@@ -162,6 +176,8 @@
             activate_link_navbar("markets_id");
         } else if (url_str.startsWith("/categories/")){
             activate_link_navbar("categories_id");
+        } else if (url_str.startsWith("/group")){
+            activate_link_navbar("groups_id")
         }
     });
     function activate_link_navbar(nav_link_id) {

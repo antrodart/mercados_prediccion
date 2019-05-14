@@ -7,12 +7,144 @@
 </head>
 
 {% block content %}
-    <div class="col-md-6 mx-auto text-center">
-        <div class="header-title">
-            <h1 class="wv-heading--title">
-                {% blocktrans %}Create prediction market{% endblocktrans %}
-            </h1>
+    <div class="row">
+        <div class="col-md-6 mx-auto text-center">
+            <div class="header-title">
+                <h1 class="wv-heading--title">
+                    {% blocktrans %}Create prediction market{% endblocktrans %}
+                </h1>
+            </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="myform form ">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="{{ form.title.id_for_label }}" class="text-info">* {{ form.title.label }}</label>
+                        {% if form.title.errors %}
+                            {{ form.title | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
+                            <small>{{ form.title.help_text }}</small>
+                            <div class="invalid-feedback">
+                                {% for err in form.title.errors %}
+                                    {{ err }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.title | add_class:'form-control my-input' |attr:'autofocus:true' }}
+                            <small>{{ form.title.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.description.id_for_label }}"
+                               class="text-info">{{ form.description.label }}</label>
+                        {% if form.description.errors %}
+                            {{ form.description | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
+                           <small>{{ form.description.help_text }}</small>
+                            <div class="invalid-feedback">
+                                {% for err in form.description.errors %}
+                                    {{ err }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.description | add_class:'form-control my-input' |attr:'autofocus:true' }}
+                            <small>{{ form.description.help_text }}</small>
+                        {% endif %}
+                    </div>
+                     <div class="form-group">
+                        <label for="{{ form.end_date.id_for_label }}" class="text-info">{{ form.end_date.label }}</label><br>
+                        {% if form.end_date.errors %}
+                            {{ form.end_date | add_class:'form-control my-input is-invalid' |attr:'name:end_date' }}
+                            <small>{{ form.description.help_text }}</small>
+                            <div class="invalid-feedback">
+                                {% blocktrans %}The end date is not valid.{% endblocktrans %}
+                            </div>
+                        {% else %}
+                            {{ form.end_date |add_class:'form-control my-input' |attr:'name:end_date' }}
+                            <small>{{ form.description.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.category.id_for_label }}" class="text-info">{{ form.category.label }}</label><br>
+                        {% if form.category.errors %}
+                            {{ form.category | add_class:'form-control my-input is-invalid' |attr:'id:category'|attr:'name:category' }}
+                            <small>{{ form.category.help_text }}</small>
+                            <div class="invalid-feedback">
+                                {% blocktrans %}The category is not valid.{% endblocktrans %}
+                            </div>
+                        {% else %}
+                            {{ form.category |add_class:'form-control my-input' |attr:'id:categoty'|attr:'name:category' }}
+                            <small>{{ form.category.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.picture.id_for_label }}"
+                               class="text-info">* {{ form.picture.label }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroupFileAddon01">
+                                    {% blocktrans %}Upload picture{% endblocktrans %}</span>
+                            </div>
+                            <div class="custom-file">
+                                {{ form.picture |attr:'type:file' | add_class:'custom-file-input' |attr:'aria-describedby:inputPictureHelpTextId' }}
+                                <label class="custom-file-label" for="{{ form.picture.id_for_label }}">
+                                    {% blocktrans %}Choose file{% endblocktrans %}</label>
+                            </div>
+                        </div>
+                        <small id="inputPictureHelpTextId" class="form-text text-muted">
+                            {{ form.picture.help_text }}
+                        </small>
+                        {% for err in form.picture.errors %}
+                            <div class="invalid-feedback">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+                    {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {% if form.errors %}
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            {% endif %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                    <div class="text-center">
+                        <button type="submit" class=" btn btn-primary">{% blocktrans %}Create market{% endblocktrans %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css"/>
+    <script>
+        // This script makes the name of the file appear on upload input
+        $(".custom-file-input").on("change", function () {
+             var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+
+         $(document).ready(function () {
+            $({{ form.end_date.id_for_label }}).datepicker({
+                {% get_current_language as LANGUAGE_CODE %}
+                format:
+                    {% if LANGUAGE_CODE == "es" %}
+                        'dd/mm/yyyy',
+                    {% else %}
+                        'mm/dd/yyyy',
+                    {% endif %}
+            })
+        });
+    </script>
     
 {% endblock %}

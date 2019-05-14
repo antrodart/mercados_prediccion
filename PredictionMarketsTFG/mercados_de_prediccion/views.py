@@ -75,7 +75,7 @@ def edit_category_view(request):
 
 @login_required()
 def list_created_groups_view(request):
-	created_groups = Group.objects.filter(moderator=request.user.id)
+	created_groups = Group.objects.filter(moderator=request.user.id).order_by('creation_date')
 	paginator = Paginator(created_groups, per_page=10)
 	page = request.GET.get('page')
 
@@ -87,6 +87,23 @@ def list_created_groups_view(request):
 		groups = paginator.page(paginator.num_pages)
 
 	args = {'groups': groups, 'view_name':'list_created'}
+
+	return render(request, 'group/list_groups.html', args)
+
+
+def list_all_groups_view(request):
+	all_groups = Group.objects.filter(is_visible=True).order_by('creation_date')
+	paginator = Paginator(all_groups, per_page=10)
+	page = request.GET.get('page')
+
+	try:
+		groups = paginator.get_page(page)
+	except PageNotAnInteger:
+		groups = paginator.get_page(1)
+	except EmptyPage:
+		groups = paginator.page(paginator.num_pages)
+
+	args = {'groups': groups, 'view_name':'list_all'}
 
 	return render(request, 'group/list_groups.html', args)
 
@@ -130,10 +147,63 @@ def display_group_view(request):
 	group_id = request.GET.get('groupId')
 	user = request.user
 	group = get_object_or_404(Group, pk=group_id)
-	if (not group.moderator == user) and (not user in group.joinedgroup_set.all()):
-		raise PermissionDenied(_("You are not member of this group."))
+	try:
+		joined_group = JoinedGroup.objects.get(user=user, group=group)
+	except:
+		joined_group = None
 
+	user_is_member = False
+	if joined_group:
+		user_is_member = True
 
-	args = {'group': group}
+	args = {'group': group, 'user_is_member':user_is_member}
 
 	return render(request, 'group/display_group.html', args)
+
+
+@login_required()
+def create_market_view(request):
+	group_id = request.GET.get('groupId')
+	group = Group.objects.get(pk=group_id)
+	user = request.user
+	if group and (not group.moderator == user):
+		raise PermissionDenied(_("You can't create a market in this group."))
+	if request.method == "POST":
+		form = CreateMarketForm(request.POST, request.FILES, user=request.user, group=group)
+		if form.is_valid():
+			form.save()
+
+			return redirect('list_created_groups')
+	else:
+		form = CreateMarketForm(user=request.user, group=group)
+
+	args = {'form': form}
+	return render(request, 'market/create_market.html', args)
+
+
+@login_required()
+def request_to_join_group(request):
+	user = request.user
+	group_id = request.GET.get('groupId')
+	group = Group.objects.get(pk=group_id)
+	try:
+		joined_group = JoinedGroup.objects.get(user=user, group=group)
+	except:
+		joined_group = None
+
+	if joined_group:
+		raise PermissionDenied(_("You are already member of this group"))
+
+	if request.method == "POST":
+		form = MakeRequestToJoinForm(request.POST, user=user, group=group)
+		if form.is_valid():
+			form.save()
+
+			return redirect('list_all_groups')
+	else:
+		form = MakeRequestToJoinForm(user=user, group=group)
+
+	args = {'form': form, 'group': group}
+	return render(request, 'group/create_request_join.html', args)
+
+
