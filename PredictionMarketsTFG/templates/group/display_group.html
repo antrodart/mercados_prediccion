@@ -14,25 +14,54 @@
         </div>
         <div class="col-md-9 my-auto"> {% comment %}Puts column and text in the center{% endcomment %}
             <div class="row">
-                <div class="col">
-                    <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
-                        <h1>{{ group.name }}</h1>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col">
+                            <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
+                                <h1>{{ group.name }}</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-muted">
+                            {% blocktrans %}Created by{% endblocktrans %} {{ group.moderator }}
+                            - {{ group.creation_date |date }}
+                            <p>
+                                {{ group.joinedgroup_set.count }}
+                                {% if group.joinedgroup_set.count == 1 %}
+                                    {% trans "member" %}.
+                                {% else %}
+                                    {% trans "members" %}.
+                                {% endif %}
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col text-muted">
-                    {% blocktrans %}Created by{% endblocktrans %} {{ group.moderator }}
-                    - {{ group.creation_date |date }}
-                    <p>
-                        {{ group.joinedgroup_set.count }}
-                        {% if group.joinedgroup_set.count == 1 %}
-                            {% trans "participant." %}
-                        {% else %}
-                            {% trans "participants." %}
-                        {% endif %}
-                    </p>
-                </div>
+                {% if group.moderator == user %}
+                    <div class="col-md-3">
+                        <div style="margin-bottom: 1rem">
+                            <h2>
+                                <img src="{% static 'img/icons/options-3.png' %}" alt="Options"
+                                     style="max-height: 25px;">
+                                {% trans "Group options:" %}
+                            </h2>
+                        </div>
+                        <div class="col">
+                            <a href='/group/members/?groupId={{ group.id }}'
+                               class="btn btn-outline-info btn-block text-left">
+                                <img src="{% static 'img/icons/users.png' %}" alt="Members"
+                                     style="max-height: 25px;"/> {% trans "Members" %}</a>
+                            <a href='/group/edit/?groupId={{ group.id }}'
+                               class="btn btn-outline-danger btn-block text-left">
+                                <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
+                                     style="max-height: 25px;"/> {% trans "Edit group" %}</a>
+                            <a href='/group/delete/?groupId={{ group.id }}'
+                               class="btn btn-outline-danger btn-block text-left">
+                                <img src="{% static 'img/icons/delete.png' %}" alt="Delete"
+                                     style="max-height: 25px;"/> {% trans "Delete group" %}</a>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -58,13 +87,14 @@
                     <div class="header-title">
                         <h2>
                             <img src="{% static 'img/icons/users.png' %}" alt="Users" style="max-height: 25px;">
-                            {% trans "Participants:" %}
+                            {% trans "Members:" %}
                         </h2>
                         <div>
                             <ul>
-                                <li>Participante 1</li>
-                                <li>Participante 2</li>
-                                <li>Participante 3</li>
+                                {% for joined_group in group.descending_ordered_joinedgroup_karma_set.all %}
+                                     <li><a href="/user/userId={{ joined_group.user.pk }}">
+                                   {{ joined_group.user.first_name }} {{ joined_group.user.last_name }}</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
@@ -83,17 +113,17 @@
                 <div class="col">
                     <div class="float-right">
                         {% if group.moderator == user %}
-                        <a href="/market/create/?groupId={{ group.pk }}">
-                            <button type="button" class="btn btn-primary">
-                                {% blocktrans %}Create market{% endblocktrans %}
-                            </button>
-                        </a>
+                            <a href="/market/create/?groupId={{ group.pk }}">
+                                <button type="button" class="btn btn-primary">
+                                    {% blocktrans %}Create market{% endblocktrans %}
+                                </button>
+                            </a>
                         {% elif not user_is_member %}
                             <a href="/group/request-join/?groupId={{ group.pk }}">
-                            <button type="button" class="btn btn-primary">
-                                {% blocktrans %}Join group{% endblocktrans %}
-                            </button>
-                        </a>
+                                <button type="button" class="btn btn-primary">
+                                    {% blocktrans %}Join group{% endblocktrans %}
+                                </button>
+                            </a>
                         {% endif %}
                     </div>
                 </div>
@@ -105,7 +135,7 @@
                         <p>{% blocktrans %}This group has no markets yet.{% endblocktrans %}</p>
                     {% else %}
                         <ul class="list-unstyled">
-                            {% for market in group.descending_ordered_market_set.all  %}
+                            {% for market in group.descending_ordered_market_set.all %}
                                 <li class="media">
                                     <a href="{% url 'home' %}">
                                         <img class="mr-3 img-fluid img-thumbnail" style="max-height: 100px;"

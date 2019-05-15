@@ -62,6 +62,9 @@ class Group(models.Model):
 	def descending_ordered_market_set(self):
 		return self.market_set.order_by('-end_date')
 
+	def descending_ordered_joinedgroup_karma_set(self):
+		return self.joinedgroup_set.order_by('-private_karma')
+
 class JoinedGroup(models.Model):
 	private_karma = models.IntegerField(null=False, default=0)
 	joined_date = models.DateTimeField(auto_now_add=True)

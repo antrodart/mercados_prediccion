@@ -57,20 +57,24 @@
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.is_visible.id_for_label }}"
-                               class="text-info">{{ form.is_visible.label }}</label>
-                        {% if form.is_visible.errors %}
-                            {{ form.is_visible | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
-                             <small>{{ form.description.help_text }}</small>
-                            <div class="invalid-feedback">
-                                {% for err in form.is_visible.errors %}
-                                    {{ err }}
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.is_visible | add_class:'form-control my-input' |attr:'autofocus:true' }}
-                             <small>{{ form.description.help_text }}</small>
-                        {% endif %}
+                        <div class="form-check">
+                            {% if form.is_visible.errors %}
+                                {{ form.is_visible | add_class:'form-check-input is-invalid' |attr:'autofocus:true' }}
+                                <label for="{{ form.is_visible.id_for_label }}"
+                                       class="text-info">{{ form.is_visible.label }}</label>
+                                <small>{{ form.description.help_text }}</small>
+                                <div class="invalid-feedback">
+                                    {% for err in form.is_visible.errors %}
+                                        {{ err }}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.is_visible | add_class:'form-check-input' |attr:'autofocus:true' }}
+                                <label for="{{ form.is_visible.id_for_label }}"
+                                       class="text-info">{{ form.is_visible.label }}</label>
+                                <small>{{ form.is_visible.help_text }}</small>
+                            {% endif %}
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="{{ form.picture.id_for_label }}"
@@ -111,8 +115,13 @@
                         </div>
                     {% endif %}
                     <div class="text-center">
-                        <button type="submit" class=" btn btn-primary">{% blocktrans %}Create group{% endblocktrans %}
+                    {% if editing %}
+                        <button type="submit" class=" btn btn-primary">{% trans "Save" %}
                         </button>
+                    {% else %}
+                         <button type="submit" class=" btn btn-primary">{% blocktrans %}Create group{% endblocktrans %}
+                        </button>
+                    {% endif %}
                     </div>
                 </form>
             </div>

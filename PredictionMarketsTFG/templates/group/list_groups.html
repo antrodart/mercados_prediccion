@@ -27,37 +27,39 @@
 
     <div class="row">
         <div class="col">
-             <nav aria-label="Pagination">
-        <ul class="pagination">
-            {% if groups.has_previous %}
-                <li class="page-item"><a class="page-link"
-                                         href="?page={{ groups.previous_page_number }}">&laquo;</a></li>
-            {% else %}
-                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
-            {% endif %}
+            <nav aria-label="Pagination">
+                <ul class="pagination">
+                    {% if groups.has_previous %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ groups.previous_page_number }}">&laquo;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                    {% endif %}
 
-            {% for page_num in groups.paginator.page_range %}
-                {% if groups.number == page_num %}
-                    <li class="page-item active"><span class="page-link">{{ page_num }} <span
-                            class="sr-only">(current)</span></span></li>
-                {% else %}
-                    <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a></li>
-                {% endif %}
-            {% endfor %}
-            {% if groups.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ groups.next_page_number }}">&raquo;</a>
-                </li>
-            {% else %}
-                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
-            {% endif %}
-        </ul>
-    </nav>
+                    {% for page_num in groups.paginator.page_range %}
+                        {% if groups.number == page_num %}
+                            <li class="page-item active"><span class="page-link">{{ page_num }} <span
+                                    class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if groups.has_next %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ groups.next_page_number }}">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
         </div>
         <div class="col">
             <div class="float-right">
                 <a href="{% url 'create_group' %}">
                     <button type="button" class="btn btn-primary">
-                            {% blocktrans %}Create group{% endblocktrans %}
+                        {% blocktrans %}Create group{% endblocktrans %}
                     </button>
                 </a>
             </div>
@@ -69,38 +71,40 @@
         <div class="container">
             <div class="row">
                 {% for group in groups %}
-                <div class="col-md-4">
-                    <div class="card mb-4 box-shadow">
-                        <a href="/group/?groupId={{ group.id }}">
-                            <img class="card-img-top" alt="{{ group.name }}" style="height: 225px; width: 100%; display: block;" src="data:image/png;base64,{{ group.picture }}" data-holder-rendered="true">
-                        </a>
-                        <div class="card-body">
-                            <p class="card-text">
-                                <strong>{{ group.name }}</strong>
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">{{ group.market_set.count }}
-                                    {% if group.market_set.count == 1 %}
-                                        {% trans "market" %}
-                                    {% else %}
-                                        {% trans "markets" %}
+                    <div class="col-md-4">
+                        <div class="card mb-4 box-shadow">
+                            <a href="/group/?groupId={{ group.id }}">
+                                <img class="card-img-top" alt="{{ group.name }}"
+                                     style="height: 225px; width: 100%; display: block;"
+                                     src="data:image/png;base64,{{ group.picture }}" data-holder-rendered="true">
+                            </a>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <strong>{{ group.name }}</strong>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">{{ group.market_set.count }}
+                                        {% if group.market_set.count == 1 %}
+                                            {% trans "market" %}
+                                        {% else %}
+                                            {% trans "markets" %}
+                                        {% endif %}
+                                    </small>
+                                    <small class="text-muted">{{ group.joinedgroup_set.count }}
+                                        {% if group.joinedgroup_set.count == 1 %}
+                                            {% trans "participant" %}
+                                        {% else %}
+                                            {% trans "participants" %}
+                                        {% endif %}
+                                    </small>
+                                    {% if view_name == "list_created" %}
+                                        <a href='/group/edit/?groupId={{ group.id }}' class="btn btn-outline-secondary"
+                                           role="button">{% trans "Edit" %}</a>
                                     {% endif %}
-                                </small>
-                                <small class="text-muted">{{ group.joinedgroup_set.count }}
-                                    {% if group.joinedgroup_set.count == 1 %}
-                                        {% trans "participant" %}
-                                    {% else %}
-                                        {% trans "participants" %}
-                                    {% endif %}
-                                </small>
-                                {% if view_name == "list_created" %}
-                                    <a href='/group/edit/?groupId={{ group.id }}' class="btn btn-outline-secondary"
-                                       role="button">{% trans "Edit" %}</a>
-                                {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 {% endfor %}
             </div>
         </div>

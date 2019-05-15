@@ -16,6 +16,8 @@ urlpatterns = [
 	path('group/edit/', views.edit_group_view, name='edit_group'),
 	path('group/', views.display_group_view, name='display_group'),
 	path('group/request-join/', views.request_to_join_group, name='request_to_join_group'),
+	path('group/accept/', views.accept_user_to_group_view, name='accept_user_to_group'),
+	path('group/members/', views.list_members_group_view, name='list_members_group'),
 
 	path('market/create/', views.create_market_view, name='create_market'),
 ]

@@ -207,3 +207,56 @@ def request_to_join_group(request):
 	return render(request, 'group/create_request_join.html', args)
 
 
+@login_required()
+def accept_user_to_group_view(request):
+	joined_group_id = request.GET.get('joinedGroupId')
+	joined_group = get_object_or_404(JoinedGroup, pk=joined_group_id)
+	if not joined_group.group.moderator == request.user:
+		raise PermissionDenied(_("Only moderatos can access this page."))
+
+	try:
+		joined_group.is_accepted = True
+		joined_group.joined_date = datetime.datetime.now()
+		joined_group.save()
+		return redirect('/group/members/?groupId='+str(joined_group.group.pk))
+	except:
+		raise PermissionDenied(_("Only moderatos can access this page."))
+
+
+@login_required()
+def reject_user_to_group_view(request):
+	joined_group_id = request.GET.get('joinedGroupId')
+	joined_group = get_object_or_404(JoinedGroup, pk=joined_group_id)
+	if not joined_group.group.moderator == request.user:
+		raise PermissionDenied(_("Only moderatos can access this page."))
+
+	try:
+		group_id = str(joined_group.group.pk)
+		joined_group.delete()
+		return redirect('/group/members/?groupId='+group_id)
+	except:
+		raise PermissionDenied(_("Only moderatos can access this page."))
+
+
+@login_required()
+def list_members_group_view(request):
+	group_id = request.GET.get('groupId')
+	group = get_object_or_404(Group, pk=group_id)
+	if not group.moderator == request.user:
+		raise PermissionDenied(_("Only moderators can access this page."))
+	joined_groups = group.joinedgroup_set.all()
+	page = request.GET.get('page')
+	paginator = Paginator(joined_groups, per_page=10)
+
+	try:
+		joined_groups = paginator.get_page(page)
+	except PageNotAnInteger:
+		joined_groups = paginator.get_page(1)
+	except EmptyPage:
+		joined_groups = paginator.page(paginator.num_pages)
+
+	args = {'joined_groups': joined_groups, 'view_name': 'member_list', 'group_id':group_id}
+
+	return render(request, 'group/list_members.html', args)
+
+
