@@ -17,9 +17,9 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4 mx-auto">
+        <div class="col-md-8 mx-auto">
             <div class="myform form ">
-                <form method='post'>
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="first_name" class="text-info">First name:</label><br>
@@ -54,6 +54,27 @@
                             {{ form.date_of_birth |add_class:'form-control my-input' |attr:'id:date_of_birth'|attr:'name:date_of_birth' }}
                         {% endif %}
                     </div>
+                    <div class="form-group">
+                        <label for="{{ form.picture.id_for_label }}"
+                               class="text-info">* {{ form.picture.label }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroupFileAddon01">
+                                    {% blocktrans %}Upload picture{% endblocktrans %}</span>
+                            </div>
+                            <div class="custom-file">
+                                {{ form.picture |attr:'type:file' | add_class:'custom-file-input' |attr:'aria-describedby:inputPictureHelpTextId' }}
+                                <label class="custom-file-label" for="{{ form.picture.id_for_label }}">
+                                    {% blocktrans %}Choose file{% endblocktrans %}</label>
+                            </div>
+                        </div>
+                        <small id="inputPictureHelpTextId" class="form-text text-muted">
+                            {{ form.picture.help_text }}
+                        </small>
+                        {% for err in form.picture.errors %}
+                            <div class="invalid-feedback">{{ err }}</div>
+                        {% endfor %}
+                    </div>
                     <div class="text-center ">
                         <button type="submit" class=" btn btn-block send-button tx-tfm">
                             {% trans "Save" %}
@@ -87,6 +108,12 @@
                         'mm/dd/yyyy',
                     {% endif %}
             })
+        });
+
+        // This script makes the name of the file appear on upload input
+        $(".custom-file-input").on("change", function () {
+             var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
     </script>
 {% endblock %}

@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from .validators import validate_date_is_past
+from mercados_de_prediccion_project.validators import validate_date_is_past
+import json
+import os
 
-# Create your models here.
+DEFAULT_USER_IMG = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_user_img.json')))["data"]
 
 class UserManager(BaseUserManager):
 	"""Define a model manager for User model with no username field."""
@@ -44,6 +46,7 @@ class User(AbstractUser):
 	email = models.EmailField(unique=True)
 	date_of_birth = models.DateField(blank=True, null=True, validators=[validate_date_is_past])
 	public_karma = models.IntegerField(null=False, default=0)
+	picture = models.TextField(default=DEFAULT_USER_IMG)
 	is_verified = models.BooleanField(null=False, default=False)
 
 	USERNAME_FIELD = 'email'

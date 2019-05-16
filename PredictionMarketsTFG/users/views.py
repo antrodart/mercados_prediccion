@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
@@ -27,7 +27,7 @@ def signup(request):
 	if not request.user.is_anonymous:
 		return redirect ('home')
 	if request.method == "POST":
-		form = SignupForm(request.POST)
+		form = SignupForm(request.POST, request.FILES)
 		if form.is_valid():
 			form.save()
 			email = form.cleaned_data.get('email')
@@ -69,14 +69,14 @@ def create_admin(request):
 def edit_profile(request):
 	user = User.objects.get(id=request.user.id)
 	if request.method == "POST":
-		form = EditProfileForm(request.POST, instance=user)
+		form = EditProfileForm(request.POST, request.FILES, instance=user)
 		if form.is_valid():
 			form.save()
 
-			return redirect('home')
+			return redirect('/user/?userId='+str(user.pk))
 	else:
 		form = EditProfileForm(instance=user)
 
 	args = {'form': form, 'model': user}
 
-	return render(request, 'editProfile.html', args)
+	return render(request, 'user/edit_profile.html', args)

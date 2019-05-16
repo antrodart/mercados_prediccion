@@ -5,6 +5,7 @@ from django.core.exceptions import PermissionDenied
 from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required
 from .forms import *
+from users.models import User
 
 
 
@@ -260,3 +261,10 @@ def list_members_group_view(request):
 	return render(request, 'group/list_members.html', args)
 
 
+def display_profile_view(request):
+	user_profile_id = request.GET.get('userId')
+	user_profile = get_object_or_404(User, pk=user_profile_id)
+
+	args = {'user_profile': user_profile}
+
+	return render(request, 'user/display_user.html', args)

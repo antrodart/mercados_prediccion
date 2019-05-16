@@ -2,7 +2,7 @@ from django.utils.translation import gettext_lazy as _, get_language
 from django.utils.encoding import force_text
 from django import forms
 from .models import *
-from .validators import validate_file_image_extension, validate_date_is_future
+from mercados_de_prediccion_project.validators import validate_file_image_extension, validate_date_is_future
 import os
 import json
 import base64

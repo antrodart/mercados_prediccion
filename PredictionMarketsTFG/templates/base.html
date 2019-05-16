@@ -17,7 +17,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/member_list_table.css.css' %}">
 
     <!-- Fontawesome icons-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
@@ -82,8 +81,8 @@
                         {{ user.first_name }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{% url 'edit_profile' %}">
-                            {% blocktrans %}Edit profile{% endblocktrans %}</a>
+                        <a class="dropdown-item" href="/user/?userId={{ user.pk }}">
+                            {% blocktrans %}My profile{% endblocktrans %}</a>
                         {% if user.is_staff %}
                             <a class="dropdown-item" href="{% url 'create_admin' %}">
                                 {% blocktrans %}Create admin{% endblocktrans %}</a>
