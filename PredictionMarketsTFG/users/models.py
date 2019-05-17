@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from mercados_de_prediccion_project.validators import validate_date_is_past
 import json
 import os
-from mercados_de_prediccion_project import settings
+from django.conf import settings
 
 DEFAULT_USER_IMG = json.load(open(os.path.join(settings.STATIC_ROOT, 'img/default_user_img.json')))["data"]
 #DEFAULT_USER_IMG2 = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_user_img.json')))["data"]
