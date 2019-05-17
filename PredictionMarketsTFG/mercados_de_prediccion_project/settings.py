@@ -29,6 +29,13 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
+# Email host for error reporting
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'antonio.rdgz.a@gmail.com'
+EMAIL_HOST_PASSWORD = "@Fifa2007@"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+SERVER_EMAIL = EMAIL_HOST_USER
 
 # Application definition
 
