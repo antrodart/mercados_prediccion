@@ -5,4 +5,4 @@ gunicorn
 whitenoise==4.1.2
 django-widget-tweaks==1.4.3
 django-heroku
-pip install --upgrade sentry-sdk==0.7.14
+sentry-sdk==0.7.14
