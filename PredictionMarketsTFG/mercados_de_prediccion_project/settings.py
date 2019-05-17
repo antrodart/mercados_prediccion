@@ -37,14 +37,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-# Email host for error reporting
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'antonio.rdgz.a@gmail.com'
-EMAIL_HOST_PASSWORD = "@Fifa2007@"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-SERVER_EMAIL = EMAIL_HOST_USER
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -156,9 +148,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 PROJECT_DIR = os.path.dirname(__file__)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    "./mercados_de_prediccion/static",
-]
+
 
 
 AUTH_USER_MODEL = 'users.User'
