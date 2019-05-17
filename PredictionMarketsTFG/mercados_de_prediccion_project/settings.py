@@ -13,6 +13,14 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import django_heroku
 from django.utils.translation import ugettext_lazy as _
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn="https://0182ca349faa43a0a974cdb8b00bf92e@sentry.io/1461871",
+    integrations=[DjangoIntegration()]
+)
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
