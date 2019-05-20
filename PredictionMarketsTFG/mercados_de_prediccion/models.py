@@ -52,7 +52,7 @@ class Comment(models.Model):
 
 
 class Group(models.Model):
-	name = models.CharField(max_length=140, blank=False)
+	name = models.CharField(max_length=70, blank=False)
 	description = models.TextField(blank=False)
 	picture = models.TextField(_('Picture'), blank=True, null=True)
 	creation_date = models.DateTimeField(auto_now_add=True)
@@ -64,6 +64,16 @@ class Group(models.Model):
 
 	def descending_ordered_joinedgroup_karma_set(self):
 		return self.joinedgroup_set.order_by('-private_karma')
+
+	def joinedgroup_accepted_set(self):
+		return self.joinedgroup_set.filter(is_accepted=True)
+
+	def user_accepted_set(self):
+		res = []
+		for joined_group in self.joinedgroup_accepted_set():
+			res.append(joined_group.user)
+		return res
+
 
 class JoinedGroup(models.Model):
 	private_karma = models.IntegerField(null=False, default=0)

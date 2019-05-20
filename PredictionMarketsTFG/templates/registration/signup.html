@@ -23,7 +23,7 @@
             </div>
         </div>
     {% else %}
-        <div class="col-md-6 mx-auto text-center">
+        <div class="col-md-8 mx-auto text-center">
             <div class="header-title">
                 <h1 class="wv-heading--title">
                     {% blocktrans %}Create admin account{% endblocktrans %}
@@ -32,7 +32,7 @@
         </div>
     {% endif %}
     <div class="row">
-        <div class="col-md-4 mx-auto">
+        <div class="col-md-8 mx-auto">
             <div class="myform form ">
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -67,6 +67,20 @@
                             </div>
                         {% else %}
                             {{ form.date_of_birth |add_class:'form-control my-input' |attr:'id:date_of_birth'|attr:'name:date_of_birth' }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.biography.id_for_label }}"
+                               class="text-info">{{ form.biography.label }}</label>
+                        {% if form.biography.errors %}
+                            {{ form.biography | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
+                            <div class="invalid-feedback">
+                                {% for err in form.biography.errors %}
+                                    {{ err }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.biography | add_class:'form-control my-input' |attr:'autofocus:true' }}
                         {% endif %}
                     </div>
                     <div class="form-group">

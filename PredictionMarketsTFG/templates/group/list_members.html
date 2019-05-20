@@ -72,7 +72,7 @@
         {% for joined_group in joined_groups %}
             <tr {% if not joined_group.is_accepted %} class="table-warning" {% endif %}>
                 <th scope="row">{{ joined_group.private_karma }}</th>
-                <td><a href="/user/userId={{ joined_group.user.pk }}">
+                <td><a href="/user/?userId={{ joined_group.user.pk }}">
                     {{ joined_group.user.first_name }} {{ joined_group.user.last_name }}</a></td>
                 <td>{{ joined_group.description }}</td>
                 {% if joined_group.is_accepted %}

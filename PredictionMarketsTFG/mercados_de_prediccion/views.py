@@ -114,9 +114,11 @@ def create_group_view(request):
 	if request.method == "POST":
 		form = CreateGroupForm(request.POST, request.FILES, user=request.user)
 		if form.is_valid():
-			form.save()
+			group = form.save()
+			joined_group = JoinedGroup(is_accepted=True, user=request.user, group=group)
+			joined_group.save()
 
-			return redirect('list_created_groups')
+			return redirect('/group/?groupId='+str(group.pk))
 	else:
 		form = CreateGroupForm(user=request.user)
 
@@ -131,11 +133,15 @@ def edit_group_view(request):
 	if not group.moderator == request.user:
 		raise PermissionDenied(_("You cannot edit this group."))
 	if request.method == "POST":
+		if request.POST.get('delete') is not None:
+			group.delete()
+			return redirect('/groups/created')
+
 		form = CreateGroupForm(request.POST, request.FILES, instance=group, user=request.user)
 		if form.is_valid():
 			form.save()
 
-			return redirect('list_created_groups')
+			return redirect('/group/?groupId='+str(group_id))
 	else:
 		form = CreateGroupForm(instance=group, user=request.user)
 
@@ -266,5 +272,16 @@ def display_profile_view(request):
 	user_profile = get_object_or_404(User, pk=user_profile_id)
 
 	args = {'user_profile': user_profile}
+
+	return render(request, 'user/display_user.html', args)
+
+
+@login_required()
+def cancel_deletion_user_view(request):
+	user = request.user
+	user.deletion_date = None
+	user.save()
+
+	args = {'user_profile': user}
 
 	return render(request, 'user/display_user.html', args)

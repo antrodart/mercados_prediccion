@@ -30,3 +30,6 @@ urlpatterns = [
 	url(r'^i18n/', include('django.conf.urls.i18n')),
 	path('accounts/login/', login_view, name="login"),
 ]
+
+#Do not delete this import, it creates and registers the automatic tasks in tasks.py
+import mercados_de_prediccion_project.tasks

@@ -1,5 +1,10 @@
-from .models import *
+import calendar
+import datetime
 
-def user_is_member_of_group(user, group):
-	joined_group = JoinedGroup.objects.get(user=user, group=group)
-	return joined_group
+
+def add_months(sourcedate, months):
+	month = sourcedate.month - 1 + months
+	year = sourcedate.year + month // 12
+	month = month % 12 + 1
+	day = min(sourcedate.day, calendar.monthrange(year,month)[1])
+	return datetime.date(year, month, day)

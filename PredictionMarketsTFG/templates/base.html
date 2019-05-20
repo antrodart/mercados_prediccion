@@ -60,12 +60,13 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="{% url 'list_all_groups' %}">
                         {% blocktrans %}All groups{% endblocktrans %}</a>
-                    <div class="dropdown-divider"></div>
+                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{% url 'list_created_groups' %}">
                         {% blocktrans %}Created groups{% endblocktrans %}</a>
-                    {% for group in user.joinedgroup_set.all %}
-                        <a class="dropdown-item" href="/group/?groupId={{ group.pk }}">
-                            {{ group.name }}</a>
+                    <div class="dropdown-divider"></div>
+                    {% for joined_group in user.get_joined_group_accepted_set.all %}
+                        <a class="dropdown-item" href="/group/?groupId={{ joined_group.group.pk }}">
+                        {{ joined_group.group.name }}</a>
                     {% endfor %}
                 </div>
             </li>

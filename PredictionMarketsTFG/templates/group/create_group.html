@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 mx-auto">
+        <div class="col-md-8 mx-auto">
             <div class="myform form ">
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -44,7 +44,7 @@
                     </div>
                     <div class="form-group">
                         <label for="{{ form.description.id_for_label }}"
-                               class="text-info">{{ form.description.label }}</label>
+                               class="text-info">* {{ form.description.label }}</label>
                         {% if form.description.errors %}
                             {{ form.description | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
                             <div class="invalid-feedback">
@@ -62,7 +62,7 @@
                                 {{ form.is_visible | add_class:'form-check-input is-invalid' |attr:'autofocus:true' }}
                                 <label for="{{ form.is_visible.id_for_label }}"
                                        class="text-info">{{ form.is_visible.label }}</label>
-                                <small>{{ form.description.help_text }}</small>
+                                <small>{{ form.is_visible.help_text }}</small>
                                 <div class="invalid-feedback">
                                     {% for err in form.is_visible.errors %}
                                         {{ err }}
@@ -78,7 +78,7 @@
                     </div>
                     <div class="form-group">
                         <label for="{{ form.picture.id_for_label }}"
-                               class="text-info">* {{ form.picture.label }}</label>
+                               class="text-info">{{ form.picture.label }}</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="inputGroupFileAddon01">
@@ -116,10 +116,14 @@
                     {% endif %}
                     <div class="text-center">
                     {% if editing %}
-                        <button type="submit" class=" btn btn-primary">{% trans "Save" %}
+                        <button type="submit" class="btn btn-danger" name="delete"
+                           onclick="return deleteConfirm()">
+                            {% trans "Delete" %}
+                        </button>
+                        <button type="submit" class="btn btn-primary">{% trans "Save" %}
                         </button>
                     {% else %}
-                         <button type="submit" class=" btn btn-primary">{% blocktrans %}Create group{% endblocktrans %}
+                         <button type="submit" class="btn btn-primary">{% blocktrans %}Create group{% endblocktrans %}
                         </button>
                     {% endif %}
                     </div>
@@ -134,5 +138,14 @@
              var fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
+        function deleteConfirm() {
+            {% get_current_language as CURRENT_LANGUAGE %}
+            {% if CURRENT_LANGUAGE == "en" %}
+                var result = confirm("Are you sure you want to delete this group?");
+            {% else %}
+                var result = confirm("¿Estás seguro de que quieres borrar este grupo?");
+            {% endif %}
+            return result;
+        }
     </script>
 {% endblock %}

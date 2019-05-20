@@ -6,6 +6,7 @@ urlpatterns = [
     path('about/', views.AboutView.as_view(), name='about'),
 	path('contact/', views.ContactView.as_view(), name='contact'),
 	path('user/', views.display_profile_view, name='display_profile'),
+	path('user/cancel-deletion', views.cancel_deletion_user_view, name='cancel_deletion_user'),
 
 	path('categories/', views.list_categories_view, name='categories'),
 	path('category/create/', views.create_category_view, name='create_category'),

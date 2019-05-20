@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.utils.translation import gettext_lazy as _
 from users.forms import SignupForm, EditProfileForm, LoginForm
 from users.models import User
-
+from mercados_de_prediccion.utils import add_months
+import datetime
 
 def login_view(request):
 	if not request.user.is_anonymous:
@@ -47,7 +49,7 @@ def signup(request):
 @login_required()
 def create_admin(request):
 	if not request.user.is_staff:
-		raise PermissionDenied("Must be logged as Admin.")
+		raise PermissionDenied(_("Must be logged as Admin."))
 	if request.method == "POST":
 		form = SignupForm(request.POST)
 		if form.is_valid():
@@ -68,7 +70,14 @@ def create_admin(request):
 @login_required()
 def edit_profile(request):
 	user = User.objects.get(id=request.user.id)
+	if not user == request.user:
+		raise PermissionDenied(_("You cannot edit other user's profile."))
 	if request.method == "POST":
+		if request.POST.get('delete') is not None:
+			user.deletion_date = add_months(datetime.date.today(), 1)
+			user.save()
+			return redirect('/user/?userId='+str(user.pk))
+
 		form = EditProfileForm(request.POST, request.FILES, instance=user)
 		if form.is_valid():
 			form.save()

@@ -18,7 +18,13 @@
                     <div class="row">
                         <div class="col">
                             <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
-                                <h1>{{ group.name }}</h1>
+                                <h1 style="word-break: break-all;">
+                                   {% if not group.is_visible %}
+                                    <img src="{% static 'img/icons/locked.png' %}" alt="{% trans "Private group" %}"
+                                     style="max-height: 40px;">
+                                    {% endif %}
+                                    {{ group.name }}
+                                </h1>
                             </div>
                         </div>
                     </div>
@@ -27,8 +33,8 @@
                             {% blocktrans %}Created by{% endblocktrans %} {{ group.moderator }}
                             - {{ group.creation_date |date }}
                             <p>
-                                {{ group.joinedgroup_set.count }}
-                                {% if group.joinedgroup_set.count == 1 %}
+                                {{ group.joinedgroup_accepted_set.count }}
+                                {% if group.joinedgroup_accepted_set.count == 1 %}
                                     {% trans "member" %}.
                                 {% else %}
                                     {% trans "members" %}.
@@ -55,10 +61,6 @@
                                class="btn btn-outline-danger btn-block text-left">
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
                                      style="max-height: 25px;"/> {% trans "Edit group" %}</a>
-                            <a href='/group/delete/?groupId={{ group.id }}'
-                               class="btn btn-outline-danger btn-block text-left">
-                                <img src="{% static 'img/icons/delete.png' %}" alt="Delete"
-                                     style="max-height: 25px;"/> {% trans "Delete group" %}</a>
                         </div>
                     </div>
                 {% endif %}
@@ -78,7 +80,7 @@
                         </h2>
                     </div>
                     <div>
-                        {{ group.description }}
+                        <p>{{ group.description }}</p>
                     </div>
                 </div>
             </div>
@@ -91,8 +93,8 @@
                         </h2>
                         <div>
                             <ul>
-                                {% for joined_group in group.descending_ordered_joinedgroup_karma_set.all %}
-                                     <li><a href="/user/userId={{ joined_group.user.pk }}">
+                                {% for joined_group in group.joinedgroup_accepted_set.all %}
+                                     <li><a href="/user/?userId={{ joined_group.user.pk }}">
                                    {{ joined_group.user.first_name }} {{ joined_group.user.last_name }}</a></li>
                                 {% endfor %}
                             </ul>
@@ -124,6 +126,10 @@
                                     {% blocktrans %}Join group{% endblocktrans %}
                                 </button>
                             </a>
+                        {% elif not user in group.user_accepted_set %}
+                            <button type="button" class="btn btn-primary disabled" disabled>
+                                {% blocktrans %}Request sent{% endblocktrans %}
+                            </button>
                         {% endif %}
                     </div>
                 </div>

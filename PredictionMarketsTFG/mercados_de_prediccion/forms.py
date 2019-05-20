@@ -33,13 +33,13 @@ class CreateCategoryForm(forms.ModelForm):
 
 
 class CreateGroupForm(forms.ModelForm):
-	name = forms.CharField(label=_('Name of the group'), required=True, max_length=140)
+	name = forms.CharField(label=_('Group name'), required=True, max_length=70)
 	description = forms.CharField(max_length=300, required=True,
 	                              widget=forms.Textarea(attrs={'placeholder': _('Describe your group: rules, objectives and general information')}),
 	                              label=_('Description'))
 	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))
-	is_visible = forms.BooleanField(label=_('Visible'), help_text=_('Visible groups can be seen by anyone.'))
+	is_visible = forms.BooleanField(label=_('Visible'), help_text=_('Visible groups can be seen by anyone.'), required=False)
 
 	class Meta():
 		model = Group

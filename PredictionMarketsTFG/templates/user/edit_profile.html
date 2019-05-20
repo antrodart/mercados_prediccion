@@ -14,6 +14,11 @@
                 {% blocktrans %}Edit profile{% endblocktrans %}
             </h1>
         </div>
+        {% if form.instance.deletion_date %}
+            <div class="alert alert-danger" role="alert">
+                {% trans "Your account will be deleted on" %} {{ form.instance.deletion_date }}.
+            </div>
+        {% endif %}
     </div>
 
     <div class="row">
@@ -54,6 +59,20 @@
                             {{ form.date_of_birth |add_class:'form-control my-input' |attr:'id:date_of_birth'|attr:'name:date_of_birth' }}
                         {% endif %}
                     </div>
+                     <div class="form-group">
+                        <label for="{{ form.biography.id_for_label }}"
+                               class="text-info">{{ form.biography.label }}</label>
+                        {% if form.biography.errors %}
+                            {{ form.biography | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
+                            <div class="invalid-feedback">
+                                {% for err in form.biography.errors %}
+                                    {{ err }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.biography | add_class:'form-control my-input' |attr:'autofocus:true' }}
+                        {% endif %}
+                    </div>
                     <div class="form-group">
                         <label for="{{ form.picture.id_for_label }}"
                                class="text-info">* {{ form.picture.label }}</label>
@@ -76,7 +95,16 @@
                         {% endfor %}
                     </div>
                     <div class="text-center ">
-                        <button type="submit" class=" btn btn-block send-button tx-tfm">
+                        {% if form.instance.deletion_date %}
+                            <a href="/user/cancel-deletion" class="btn btn-success">
+                                {% trans "Cancel account deletion" %}
+                            </a>
+                        {% else %}
+                            <button type="submit" class="btn btn-danger" name="delete" onclick="return deleteConfirm()">
+                                {% trans "Delete" %}
+                            </button>
+                        {% endif %}
+                        <button type="submit" class="btn btn-primary">
                             {% trans "Save" %}
                         </button>
                     </div>
@@ -115,5 +143,17 @@
              var fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
+
+        function deleteConfirm() {
+            {% get_current_language as CURRENT_LANGUAGE %}
+            {% if CURRENT_LANGUAGE == "en" %}
+                var result = confirm("Are you sure you want to delete your account? If you decide so, it will be marked for " +
+                    "its full deletion in 30 days. Until then, you can change your mind and cancel the process.");
+            {% else %}
+                var result = confirm("¿Estás seguro de que quieres borrar tu cuenta? Si así decides, ésta quedará marcada para " +
+                    "su borrado de aquí a 30 días. Hasta entonces, puedes cambiar de opinión y cancelar el proceso.");
+            {% endif %}
+            return result;
+        }
     </script>
 {% endblock %}

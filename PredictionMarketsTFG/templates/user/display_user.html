@@ -18,17 +18,42 @@
                     <div class="row">
                         <div class="col">
                             <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
-                                <h1>{{ user_profile.first_name }} {{ user_profile.last_name }}</h1>
+                                <h1>{{ user_profile.first_name }} {{ user_profile.last_name }}
+                                    {% if user_profile.is_verified %}
+                                        <img src="{% static 'img/icons/verified-green.png' %}"
+                                             alt="{% trans "User is verified" %}"
+                                             title="{% trans "User is verified" %}"
+                                             style="max-height: 40px;">
+                                    {% elif user_profile.is_staff %}
+                                        <img src="{% static 'img/icons/crown.png' %}"
+                                             alt="{% trans "User is staff" %}"
+                                             title="{% trans "User is staff" %}"
+                                             style="max-height: 40px;">
+                                    {% endif %}
+                                </h1>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col text-muted">
-                            {% blocktrans %}Joined on{% endblocktrans %} {{ user_profile.joined_date }}
+                            {% if user_profile.biography %}
+                                {{ user_profile.biography }}<br/>
+                            {% endif %}
+                            {% trans "Email" %}: {{ user_profile.email }}<br/>
+                            {% if user_profile.date_of_birth %}
+                                {% trans "Date of birth" %}: {{ user_profile.date_of_birth }}<br/>
+                            {% endif %}
+                            {% blocktrans %}Joined on{% endblocktrans %} {{ user_profile.date_joined|date }}.
                             <p>
                                 {{ user_profile.public_karma }} {% trans "public Karma" %}.
                             </p>
                         </div>
+                        {% if user_profile.deletion_date %}
+                            <div class="alert alert-danger" role="alert">
+                                {% trans "Your account will be deleted on" %} {{ user_profile.deletion_date }}.
+                                {% trans "You can cancel this by" %} <a href="/user/cancel-deletion">{% trans "clicking here" %}</a>.
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% if user == user_profile %}
@@ -49,13 +74,81 @@
                                class="btn btn-outline-danger btn-block text-left">
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Export"
                                      style="max-height: 25px;"/> {% trans "Export data" %}</a>
-                            <a href='/user/delete/'
-                               class="btn btn-outline-danger btn-block text-left">
-                                <img src="{% static 'img/icons/delete.png' %}" alt="Delete"
-                                     style="max-height: 25px;"/> {% trans "Delete account" %}</a>
                         </div>
                     </div>
                 {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <div style="margin-bottom: 1rem">
+                        <h2>
+                            <img src="{% static 'img/icons/groups.png' %}" alt="Groups"
+                                 style="max-height: 25px;">
+                            {% trans "Groups:" %}
+                        </h2>
+                    </div>
+                    <div>
+                        <ul>
+                            {% for joined_group in user_profile.get_joined_group_accepted_set.all %}
+                                {% if joined_group.group.is_visible or user_profile == user %}
+                                    <li>
+                                        <a href="/group/?groupId={{ joined_group.group.id }}">{{ joined_group.group.name }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <h2 style="margin-bottom: 1rem">
+                        <img src="{% static 'img/icons/markets.png' %}" alt="Markets" style="max-height: 25px;">
+                        {% trans "Bets placed:" %}
+                    </h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {% if user_profile.asset_set.count == 0 %}
+                        <p>{% blocktrans %}This user has not placed any bet yet.{% endblocktrans %}</p>
+                    {% else %}
+                        <ul class="list-unstyled">
+                            {% for market in user_profile.asset_set.all %}
+                                <li class="media">
+                                    <a href="{% url 'home' %}">
+                                        <img class="mr-3 img-fluid img-thumbnail" style="max-height: 100px;"
+                                             src="data:image/png;base64,{{ market.picture }}" alt="{{ market.title }}">
+                                    </a>
+                                    <div class="media-body">
+                                        <a href="{% url 'home' %}">
+                                            <h5 class="mt-0 mb-1">{{ market.title }}</h5>
+                                        </a>
+                                        {% if market.joinedgroup_set.count == 1 %}
+                                            <p>{{ market.joinedgroup_set.count }} {% trans "participant" %}</p>
+                                        {% else %}
+                                            <p>{{ market.joinedgroup_set.count }} {% trans "participants" %}</p>
+                                        {% endif %}
+                                        {% if market.has_expired %}
+                                            {% blocktrans %}The market is over.{% endblocktrans %}
+                                        {% else %}
+                                            {% blocktrans %}You can place bets on this market until{% endblocktrans %}
+                                            {{ market.end_date }}
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
