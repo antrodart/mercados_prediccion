@@ -15,8 +15,10 @@ class Market(models.Model):
 	title = models.CharField(max_length=150, blank=False)
 	description = models.TextField(blank=False)
 	end_date = models.DateField(null=False)
+	creation_date = models.DateField(auto_now_add=True)
 	picture = models.TextField()
 	is_judged = models.BooleanField(default=False, null=False)
+	is_binary = models.BooleanField(default=True, null=False)
 	creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
 	category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
 	group = models.ForeignKey('Group', on_delete=models.CASCADE, null=True)
@@ -89,4 +91,5 @@ class Asset(models.Model):
 	is_judged = models.BooleanField(null=False, default=False)
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
 	option = models.ForeignKey(Option, on_delete=models.CASCADE, null=False)
+	market = models.ForeignKey(Market, on_delete=models.CASCADE, null=False)
 

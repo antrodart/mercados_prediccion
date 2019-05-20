@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+<head>
+    <title>{% block title %}{{ market.title }}{% endblock %}</title>
+</head>
+
+{% block content %}
+    <div class="row top-buffer"> {% comment %}Top buffer adds 20px for top margin{% endcomment %}
+        <div class="col-md-3">
+            <img class="img-fluid img-thumbnail" alt="{{ market.title }}" title="{{ market.title }}"
+                 style="max-height: 255px"
+                 src="data:image/png;base64,{{ market.picture }}" data-holder-rendered="true">
+        </div>
+        <div class="col-md-9 my-auto"> {% comment %}Puts column and text in the center{% endcomment %}
+            <div class="row">
+                <div class="col-md">
+                    <div class="row">
+                        <div class="col">
+                            <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
+                                <h1 style="word-break: break-all;">
+                                    {{ market.title }}
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-muted">
+                            {% blocktrans %}Created by{% endblocktrans %} {{ market.creator }}
+                            - {{ market.creation_date |date }}
+                            <p>
+                                {{ assets_number }}
+                                {% if assets_number == 1 %}
+                                    {% trans "asset sold" %}.
+                                {% else %}
+                                    {% trans "assets sold" %}.
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% if market.creator == user %}
+                    <div class="col-md-3">
+                        <div style="margin-bottom: 1rem">
+                            <h2>
+                                <img src="{% static 'img/icons/options-3.png' %}" alt="Options"
+                                     style="max-height: 25px;">
+                                {% trans "Market options:" %}
+                            </h2>
+                        </div>
+                        <div class="col">
+                            <a href='/market/edit/?marketId={{ market.id }}'
+                               class="btn btn-outline-danger btn-block text-left">
+                                <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
+                                     style="max-height: 25px;"/> {% trans "Edit market" %}</a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <div style="margin-bottom: 1rem">
+                        <h2>
+                            <img src="{% static 'img/icons/group-rules.png' %}" alt="Description"
+                                 style="max-height: 25px;">
+                            {% trans "Description:" %}
+                        </h2>
+                    </div>
+                    <div>
+                        <p>{{ market.description }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="header-title">
+                        <h2>
+                            <img src="{% static 'img/icons/users.png' %}" alt="Mercados relacionados"
+                                 style="max-height: 25px;">
+                            {% trans "Related markets" %}:
+                        </h2>
+                        <div class="album py-5 bg-light">
+                            <div class="container">
+                                <div class="row">
+                                    {% for related_market in related_markets %}
+                                        <div class="col-md-4">
+                                            <div class="card mb-4 box-shadow">
+                                                <a href="/market/?marketId={{ related_market.id }}">
+                                                    <img class="card-img-top" alt="{{ related_market.title }}"
+                                                         style="max-height: 225px;object-fit: contain; display: block;"
+                                                         src="data:image/png;base64,{{ related_market.picture }}"
+                                                         data-holder-rendered="true">
+                                                </a>
+                                                <div class="card-body">
+                                                    <p class="card-text">
+                                                        <a href="/market/?marketId={{ related_market.id }}"
+                                                           style="color:unset;"><strong>{{ related_market.title }}</strong></a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <h2 style="margin-bottom: 1rem">
+                        <img src="{% static 'img/icons/markets.png' %}" alt="Contracts" style="max-height: 25px;">
+                        {% trans "Contracts" %}:
+                    </h2>
+                </div>
+                <div class="col">
+                    <div class="float-right">
+                        <a href="/market/create/?groupId={{ group.pk }}">
+                            <button type="button" class="btn btn-primary">
+                                {% blocktrans %}Create market{% endblocktrans %}
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <ul class="list-group">
+                        {% for option in market.option_set.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {% trans "Buy" %} "{{ option.title }}"
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

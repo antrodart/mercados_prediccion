@@ -6,6 +6,7 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from users.models import User
+import random
 
 
 
@@ -285,3 +286,24 @@ def cancel_deletion_user_view(request):
 	args = {'user_profile': user}
 
 	return render(request, 'user/display_user.html', args)
+
+
+def display_market_view(request):
+	market_id = request.GET.get('marketId')
+	market = get_object_or_404(Market, pk=market_id)
+	group = market.group
+
+	if group and (not group.is_visible and (not request.user in group.user_accepted_set())):
+		raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
+
+	assets_number = Asset.objects.filter(market=market).count()
+	category = market.category
+
+	if category:
+		related_markets = Market.objects.filter(category=category, is_judged=False).order_by('?')[0:5]
+	else:
+		related_markets = Market.objects.filter(is_judged=False)
+
+	args = {'market': market, 'assets_number': assets_number, 'related_markets': related_markets}
+
+	return render(request, 'market/display_market.html', args)

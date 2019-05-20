@@ -90,10 +90,12 @@ class CreateMarketForm(forms.ModelForm):
 	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))
 	category = CategoryChoiceField(label=_("category"), queryset=Category.objects.all(), required=False)
+	CHOICES = [(True, _('Binary')), (False, _('Multiple'))]
+	is_binary = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect, required=True)
 
 	class Meta():
 		model = Market
-		fields = ('title', 'description', 'end_date', 'picture', 'category')
+		fields = ('title', 'description', 'end_date', 'picture', 'category', 'is_binary')
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
@@ -106,6 +108,7 @@ class CreateMarketForm(forms.ModelForm):
 		market.description = self.cleaned_data['description']
 		market.end_date = self.cleaned_data['end_date']
 		market.category = self.cleaned_data['category']
+		market.is_binary = self.cleaned_data['is_binary']
 		market.creator = self.user
 		market.group = self.group
 		picture = self.cleaned_data['picture']

@@ -148,7 +148,7 @@
                                              src="data:image/png;base64,{{ market.picture }}" alt="{{ market.title }}">
                                     </a>
                                     <div class="media-body">
-                                        <a href="{% url 'home' %}">
+                                        <a href="/market/?marketId={{ market.id }}">
                                             <h5 class="mt-0 mb-1">{{ market.title }}</h5>
                                         </a>
                                         {% if market.joinedgroup_set.count == 1 %}
