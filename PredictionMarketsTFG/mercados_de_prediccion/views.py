@@ -1,4 +1,6 @@
+from django.db import IntegrityError, transaction
 from django.utils.translation import gettext_lazy as _
+from django.forms.formsets import formset_factory
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import PermissionDenied
@@ -6,8 +8,6 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from users.models import User
-import random
-
 
 
 class HomePageView(TemplateView):
@@ -172,21 +172,78 @@ def display_group_view(request):
 @login_required()
 def create_market_view(request):
 	group_id = request.GET.get('groupId')
-	group = Group.objects.get(pk=group_id)
+	group = get_object_or_404(Group, pk=group_id)
 	user = request.user
 	if group and (not group.moderator == user):
 		raise PermissionDenied(_("You can't create a market in this group."))
+
+	# Create the formset, specifying the form and formset we want to use.
+	OptionFormSet = formset_factory(CreateOptionForm, formset=BaseOptionFormSet)
+
+	# Get our existing option names data for this market.  This is used as initial data.
+	# options_name = Option.objects.filter(market=market).order_by('name')
+	# options_name_set = [{'name': o.name, 'image': o.image} for o in options_name]
+
 	if request.method == "POST":
-		form = CreateMarketForm(request.POST, request.FILES, user=request.user, group=group)
-		if form.is_valid():
-			form.save()
+		market_form = CreateMarketForm(request.POST, request.FILES, user=request.user, group=group)
+		option_formset = OptionFormSet(request.POST)
 
-			return redirect('list_created_groups')
+		if market_form.is_valid() and option_formset.is_valid():
+			if market_form.cleaned_data['is_binary'] == 1:
+				market = market_form.save()
+				Option.objects.create(title='Yes', market=market)
+				Option.objects.create(title='No', market=market)
+
+			else:
+				#Save market info
+				market = market_form.save()
+
+				#Now save the data for each option in the formset
+				new_options = []
+
+				for option_form in option_formset:
+					name = option_form.cleaned_data.get('name')
+
+					new_options.append(Option(name=name, market=market))
+
+				try:
+					with transaction.atomic():
+						# Replace the old with the new
+						for option in new_options:
+							option.save()
+
+				except IntegrityError:
+					return redirect('/market/?marketId='+str(market.pk))
+
+			return redirect('/market/?marketId='+str(market.pk))
 	else:
-		form = CreateMarketForm(user=request.user, group=group)
+		market_form = CreateMarketForm(user=request.user, group=group)
+		option_formset = OptionFormSet()
 
-	args = {'form': form}
+	args = {'form': market_form, 'option_formset': option_formset}
 	return render(request, 'market/create_market.html', args)
+
+
+@login_required()
+def edit_market_view(request):
+	market_id = request.GET.get('marketId')
+	market = get_object_or_404(Market, pk=market_id)
+	user = request.user
+	if not market.creator == user:
+		raise PermissionDenied(_("You can't edit this market."))
+
+	if request.method == "POST":
+		market_form = EditMarketForm(request.POST, request.FILES, instance=market)
+
+		if market_form.is_valid():
+			market = market_form.save()
+
+			return redirect('/market/?marketId='+str(market.pk))
+	else:
+		market_form = EditMarketForm(instance=market)
+
+	args = {'form': market_form}
+	return render(request, 'market/edit_market.html', args)
 
 
 @login_required()

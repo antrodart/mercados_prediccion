@@ -32,9 +32,8 @@ class Market(models.Model):
 
 
 class Option(models.Model):
-	title = models.CharField(max_length=140, blank=False)
-	picture = models.TextField(blank=True)
-	is_correct = models.BooleanField(default=None, null=True)
+	name = models.CharField(max_length=140, blank=False)
+	is_correct = models.BooleanField(default=False, null=True)
 	market = models.ForeignKey(Market, on_delete=models.CASCADE, null=False)
 
 

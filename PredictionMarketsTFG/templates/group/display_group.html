@@ -140,32 +140,24 @@
                     {% if group.market_set.count == 0 %}
                         <p>{% blocktrans %}This group has no markets yet.{% endblocktrans %}</p>
                     {% else %}
-                        <ul class="list-unstyled">
-                            {% for market in group.descending_ordered_market_set.all %}
-                                <li class="media">
-                                    <a href="{% url 'home' %}">
-                                        <img class="mr-3 img-fluid img-thumbnail" style="max-height: 100px;"
-                                             src="data:image/png;base64,{{ market.picture }}" alt="{{ market.title }}">
+                        {% for market in group.descending_ordered_market_set.all %}
+                            <div class="block">
+                                <img class="img-fluid img-thumbnail" src="data:image/png;base64,{{ market.picture }}" alt="">
+                                <div>
+                                    <a href="/market/?marketId={{ market.id }}">
+                                        <h2>{{ market.title }}</h2>
                                     </a>
-                                    <div class="media-body">
-                                        <a href="/market/?marketId={{ market.id }}">
-                                            <h5 class="mt-0 mb-1">{{ market.title }}</h5>
-                                        </a>
-                                        {% if market.joinedgroup_set.count == 1 %}
-                                            <p>{{ market.joinedgroup_set.count }} {% trans "participant" %}</p>
-                                        {% else %}
-                                            <p>{{ market.joinedgroup_set.count }} {% trans "participants" %}</p>
-                                        {% endif %}
+                                    <p>
                                         {% if market.has_expired %}
                                             {% blocktrans %}The market is over.{% endblocktrans %}
                                         {% else %}
                                             {% blocktrans %}You can place bets on this market until{% endblocktrans %}
-                                            {{ market.end_date }}
+                                            {{ market.end_date }}.
                                         {% endif %}
-                                    </div>
-                                </li>
-                            {% endfor %}
-                        </ul>
+                                    </p>
+                                </div>
+                            </div>
+                        {% endfor %}
                     {% endif %}
                 </div>
             </div>

@@ -1,6 +1,7 @@
 from django.utils.translation import gettext_lazy as _, get_language
 from django.utils.encoding import force_text
 from django import forms
+from django.forms.formsets import BaseFormSet
 from .models import *
 from mercados_de_prediccion_project.validators import validate_file_image_extension, validate_date_is_future
 import os
@@ -75,6 +76,8 @@ class CategoryChoiceField(forms.ModelChoiceField):
 			return str(obj.title)
 		else:
 			return str(obj.title_es)
+	def widget_attrs(self, widget):
+		return {'class':'custom-select',}
 
 
 class CreateMarketForm(forms.ModelForm):
@@ -89,9 +92,11 @@ class CreateMarketForm(forms.ModelForm):
 	                            validators=[validate_date_is_future])
 	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))
-	category = CategoryChoiceField(label=_("category"), queryset=Category.objects.all(), required=False)
-	CHOICES = [(True, _('Binary')), (False, _('Multiple'))]
-	is_binary = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect, required=True)
+	category = CategoryChoiceField(label=_("Category"), queryset=Category.objects.all(), required=False,)
+	CHOICES = [(1, _('Binary')), (0, _('Multiple'))]
+	is_binary = forms.ChoiceField(label=_("Type of market"), choices=CHOICES,
+	                              widget=forms.RadioSelect(attrs={'id': 'value', 'class': 'custom-control-input'}),
+	                              required=True, help_text=_('Binary markets only accept yes/no contract options. Multiple markets accept more than one predefined options.'))
 
 	class Meta():
 		model = Market
@@ -123,6 +128,76 @@ class CreateMarketForm(forms.ModelForm):
 		if commit:
 			market.save()
 		return market
+
+
+class EditMarketForm(forms.ModelForm):
+	description = forms.CharField(required=True,
+	                              widget=forms.Textarea(attrs={'placeholder': _(
+		                              'It must contain all the possible information of the event to be predicted, so that no user has any doubt.')}),
+	                              label=_('Description'))
+	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
+	                           help_text=_('Only .png and .jpg images format are accepted.'))
+	category = CategoryChoiceField(label=_("Category"), queryset=Category.objects.all(), required=False, )
+
+	class Meta():
+		model = Market
+		fields = ('description', 'picture', 'category',)
+
+	def save(self, commit=True):
+		market = super(EditMarketForm,self).save(commit=False)
+		market.description = self.cleaned_data['description']
+		market.category = self.cleaned_data['category']
+		picture = self.cleaned_data['picture']
+		if not picture:
+			market.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_group_img.json')))["data"]
+		else:
+			if isinstance(picture, str):
+				market.picture = picture
+			else:
+				encoded_picture = force_text(base64.b64encode(picture.file.read()))
+				market.picture = encoded_picture
+		if commit:
+			market.save()
+		return market
+
+
+class CreateOptionForm(forms.Form):
+	"""
+	    Form for individual options
+	    """
+	name = forms.CharField(label=_('Option'),
+	                        help_text=_('The option that participants can bet on'),
+	                        required=False, max_length=150)
+
+
+class BaseOptionFormSet(BaseFormSet):
+    def clean(self):
+        """
+        Adds validation to check that no two options have the same name
+        """
+        if any(self.errors):
+            return
+
+        names = []
+        duplicates = False
+
+        for form in self.forms:
+            if form.cleaned_data:
+                name = form.cleaned_data['name']
+                image = form.cleaned_data['image']
+
+                # Check that no two options have the same name
+                if name in names:
+                    duplicates = True
+                names.append(name)
+
+                if duplicates:
+                    raise forms.ValidationError(
+                        'Options must have unique names.',
+                        code='duplicate_names'
+                    )
+
+
 
 
 class MakeRequestToJoinForm(forms.ModelForm):

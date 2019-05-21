@@ -22,5 +22,6 @@ urlpatterns = [
 	path('group/members/', views.list_members_group_view, name='list_members_group'),
 
 	path('market/create/', views.create_market_view, name='create_market'),
+	path('market/edit/', views.edit_market_view, name='edit_market'),
 	path('market/', views.display_market_view, name='display_market'),
 ]

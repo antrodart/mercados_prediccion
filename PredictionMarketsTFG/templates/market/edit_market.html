@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+
+<head>
+    <title>{% block title %}{% trans "Edit market" %}{% endblock %}</title>
+</head>
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 mx-auto text-center">
+            <div class="header-title">
+                <h1 class="wv-heading--title">
+                    {% blocktrans %}Edit prediction market{% endblocktrans %}
+                </h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="myform form ">
+                <form method="post" id="market_form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="text-info">{% trans "Title" %}</label>
+                        <input type="text" class="form-control my-input" value="{{ form.instance.title }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.description.id_for_label }}"
+                               class="text-info">{{ form.description.label }}</label>
+                        {% if form.description.errors %}
+                            {{ form.description | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
+                            <small>{{ form.description.help_text }}</small>
+                            <div class="invalid-feedback">
+                                {% for err in form.description.errors %}
+                                    {{ err }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.description | add_class:'form-control my-input' |attr:'autofocus:true' }}
+                            <small class="form-text text-muted">{{ form.description.help_text }}</small>
+                        {% endif %}
+                    </div>
+                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="text-info">{% trans "End date" %}</label><br>
+                                    <input type="text" class="form-control my-input" value="{{ form.instance.end_date }}" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.category.id_for_label }}" class="text-info">
+                                    {{ form.category.label }}
+                                    <span class="text-muted">{% trans "(Optional)" %}</span>
+                                </label><br>
+                                {{ form.category |add_class:'form-control my-input' |attr:'name:category' }}
+                                <small>{{ form.category.help_text }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.picture.id_for_label }}"
+                               class="text-info">{{ form.picture.label }}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroupFileAddon01">
+                                    {% blocktrans %}Upload picture{% endblocktrans %}</span>
+                            </div>
+                            <div class="custom-file">
+                                {{ form.picture |attr:'type:file' | add_class:'custom-file-input' |attr:'aria-describedby:inputPictureHelpTextId' }}
+                                <label class="custom-file-label" for="{{ form.picture.id_for_label }}">
+                                    {% blocktrans %}Choose file{% endblocktrans %}</label>
+                            </div>
+                        </div>
+                        <small id="inputPictureHelpTextId" class="form-text text-muted">
+                            {{ form.picture.help_text }}
+                        </small>
+                        {% for err in form.picture.errors %}
+                            <div class="invalid-feedback">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        <label class="text-info">{% trans "Type of market" %}:
+                            {% if form.instance.is_binary %}
+                                {% trans "binary" %}
+                            {% else %}
+                                {% trans "multiple" %}
+                            {% endif %}
+                        </label><br>
+                        <small class="form-text text-muted">
+                            {% trans "Binary markets only accept yes/no contract options. Multiple markets accept more than one predefined options." %}
+                        </small>
+                    </div>
+                    {% if not form.instance.is_binary %}
+                        <div class="form-group">
+                            {% for option in form.instance.option_set.all %}
+                                <label class="text-info">{% trans "Option" %}</label>
+                                <input type="text" class="form-control my-input" value="{{ option.name }}" disabled>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {% if form.errors %}
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            {% endif %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                    <div class="text-center">
+                        <button type="submit" class=" btn btn-primary">
+                            {% trans "Save" %}
+                        </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
