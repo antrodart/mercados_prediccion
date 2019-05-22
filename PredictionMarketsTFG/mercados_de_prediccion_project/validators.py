@@ -1,6 +1,7 @@
 import os
 import datetime
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 def validate_file_image_extension(value):
 	ext = os.path.splitext(value.name)[1]  # [0] returns path + filename

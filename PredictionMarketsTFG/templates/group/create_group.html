@@ -62,7 +62,7 @@
                                 {{ form.is_visible | add_class:'form-check-input is-invalid' |attr:'autofocus:true' }}
                                 <label for="{{ form.is_visible.id_for_label }}"
                                        class="text-info">{{ form.is_visible.label }}</label>
-                                <small>{{ form.is_visible.help_text }}</small>
+                                <small class="form-text text-muted">{{ form.is_visible.help_text }}</small>
                                 <div class="invalid-feedback">
                                     {% for err in form.is_visible.errors %}
                                         {{ err }}
@@ -72,7 +72,7 @@
                                 {{ form.is_visible | add_class:'form-check-input' |attr:'autofocus:true' }}
                                 <label for="{{ form.is_visible.id_for_label }}"
                                        class="text-info">{{ form.is_visible.label }}</label>
-                                <small>{{ form.is_visible.help_text }}</small>
+                                <small class="form-text text-muted">{{ form.is_visible.help_text }}</small>
                             {% endif %}
                         </div>
                     </div>

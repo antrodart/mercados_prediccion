@@ -31,7 +31,7 @@
                                class="text-info">{{ form.description.label }}</label>
                         {% if form.description.errors %}
                             {{ form.description | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
-                            <small>{{ form.description.help_text }}</small>
+                            <small class="form-text text-muted">{{ form.description.help_text }}</small>
                             <div class="invalid-feedback">
                                 {% for err in form.description.errors %}
                                     {{ err }}
@@ -51,12 +51,12 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="{{ form.category.id_for_label }}" class="text-info">
-                                    {{ form.category.label }}
+                                <label for="{{ form.categories.id_for_label }}" class="text-info">
+                                    {{ form.categories.label }}
                                     <span class="text-muted">{% trans "(Optional)" %}</span>
                                 </label><br>
-                                {{ form.category |add_class:'form-control my-input' |attr:'name:category' }}
-                                <small>{{ form.category.help_text }}</small>
+                                {{ form.categories |add_class:'form-control my-input' |attr:'name:category' }}
+                                <small class="form-text text-muted">{{ form.categories.help_text }}</small>
                             </div>
                         </div>
                     </div>

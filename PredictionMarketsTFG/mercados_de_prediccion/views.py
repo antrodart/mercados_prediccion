@@ -1,4 +1,5 @@
 from django.db import IntegrityError, transaction
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django.forms.formsets import formset_factory
 from django.shortcuts import render, redirect, get_object_or_404
@@ -8,6 +9,7 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from users.models import User
+import math
 
 
 class HomePageView(TemplateView):
@@ -88,7 +90,7 @@ def list_created_groups_view(request):
 	except EmptyPage:
 		groups = paginator.page(paginator.num_pages)
 
-	args = {'groups': groups, 'view_name':'list_created'}
+	args = {'groups': groups, 'view_name': 'list_created'}
 
 	return render(request, 'group/list_groups.html', args)
 
@@ -105,7 +107,7 @@ def list_all_groups_view(request):
 	except EmptyPage:
 		groups = paginator.page(paginator.num_pages)
 
-	args = {'groups': groups, 'view_name':'list_all'}
+	args = {'groups': groups, 'view_name': 'list_all'}
 
 	return render(request, 'group/list_groups.html', args)
 
@@ -119,7 +121,7 @@ def create_group_view(request):
 			joined_group = JoinedGroup(is_accepted=True, user=request.user, group=group)
 			joined_group.save()
 
-			return redirect('/group/?groupId='+str(group.pk))
+			return redirect('/group/?groupId=' + str(group.pk))
 	else:
 		form = CreateGroupForm(user=request.user)
 
@@ -142,11 +144,11 @@ def edit_group_view(request):
 		if form.is_valid():
 			form.save()
 
-			return redirect('/group/?groupId='+str(group_id))
+			return redirect('/group/?groupId=' + str(group_id))
 	else:
 		form = CreateGroupForm(instance=group, user=request.user)
 
-	args = {'form': form, 'editing':True}
+	args = {'form': form, 'editing': True}
 	return render(request, 'group/create_group.html', args)
 
 
@@ -164,7 +166,7 @@ def display_group_view(request):
 	if joined_group:
 		user_is_member = True
 
-	args = {'group': group, 'user_is_member':user_is_member}
+	args = {'group': group, 'user_is_member': user_is_member}
 
 	return render(request, 'group/display_group.html', args)
 
@@ -178,7 +180,7 @@ def create_market_view(request):
 		raise PermissionDenied(_("You can't create a market in this group."))
 
 	# Create the formset, specifying the form and formset we want to use.
-	OptionFormSet = formset_factory(CreateOptionForm, formset=BaseOptionFormSet)
+	OptionFormSet = formset_factory(CreateOptionForm, formset=BaseOptionFormSet, min_num=2,max_num=10)
 
 	# Get our existing option names data for this market.  This is used as initial data.
 	# options_name = Option.objects.filter(market=market).order_by('name')
@@ -188,34 +190,36 @@ def create_market_view(request):
 		market_form = CreateMarketForm(request.POST, request.FILES, user=request.user, group=group)
 		option_formset = OptionFormSet(request.POST)
 
-		if market_form.is_valid() and option_formset.is_valid():
-			if market_form.cleaned_data['is_binary'] == 1:
+		if market_form.is_valid():
+			if market_form.cleaned_data['is_binary'] == '1':
 				market = market_form.save()
-				Option.objects.create(title='Yes', market=market)
-				Option.objects.create(title='No', market=market)
+				Option.objects.create(name='Yes', market=market)
+				Option.objects.create(name='No', market=market)
+
+				return redirect('/market/?marketId=' + str(market.pk))
 
 			else:
-				#Save market info
-				market = market_form.save()
+				if option_formset.is_valid():
+					# Save market info
+					market = market_form.save()
 
-				#Now save the data for each option in the formset
-				new_options = []
+					# Now save the data for each option in the formset
+					new_options = []
 
-				for option_form in option_formset:
-					name = option_form.cleaned_data.get('name')
+					for option_form in option_formset:
+						name = option_form.cleaned_data.get('name')
 
-					new_options.append(Option(name=name, market=market))
+						new_options.append(Option(name=name, market=market))
 
-				try:
-					with transaction.atomic():
-						# Replace the old with the new
-						for option in new_options:
-							option.save()
+					try:
+						with transaction.atomic():
+							# Replace the old with the new
+							for option in new_options:
+								option.save()
 
-				except IntegrityError:
-					return redirect('/market/?marketId='+str(market.pk))
+					except IntegrityError:
+						return redirect('/market/?marketId=' + str(market.pk))
 
-			return redirect('/market/?marketId='+str(market.pk))
 	else:
 		market_form = CreateMarketForm(user=request.user, group=group)
 		option_formset = OptionFormSet()
@@ -238,7 +242,7 @@ def edit_market_view(request):
 		if market_form.is_valid():
 			market = market_form.save()
 
-			return redirect('/market/?marketId='+str(market.pk))
+			return redirect('/market/?marketId=' + str(market.pk))
 	else:
 		market_form = EditMarketForm(instance=market)
 
@@ -283,7 +287,7 @@ def accept_user_to_group_view(request):
 		joined_group.is_accepted = True
 		joined_group.joined_date = datetime.datetime.now()
 		joined_group.save()
-		return redirect('/group/members/?groupId='+str(joined_group.group.pk))
+		return redirect('/group/members/?groupId=' + str(joined_group.group.pk))
 	except:
 		raise PermissionDenied(_("Only moderatos can access this page."))
 
@@ -298,7 +302,7 @@ def reject_user_to_group_view(request):
 	try:
 		group_id = str(joined_group.group.pk)
 		joined_group.delete()
-		return redirect('/group/members/?groupId='+group_id)
+		return redirect('/group/members/?groupId=' + group_id)
 	except:
 		raise PermissionDenied(_("Only moderatos can access this page."))
 
@@ -320,7 +324,7 @@ def list_members_group_view(request):
 	except EmptyPage:
 		joined_groups = paginator.page(paginator.num_pages)
 
-	args = {'joined_groups': joined_groups, 'view_name': 'member_list', 'group_id':group_id}
+	args = {'joined_groups': joined_groups, 'view_name': 'member_list', 'group_id': group_id}
 
 	return render(request, 'group/list_members.html', args)
 
@@ -354,12 +358,23 @@ def display_market_view(request):
 		raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
 
 	assets_number = Asset.objects.filter(market=market).count()
-	category = market.category
+	categories = market.categories.all()
+	q = Q()
 
-	if category:
-		related_markets = Market.objects.filter(category=category, is_judged=False).order_by('?')[0:5]
+	if market.group:
+		if categories:
+			for category in categories.all():
+				q |= (Q(is_judged=False) & Q(categories=category) & (Q(group=None) | Q(group=market.group)))
+		else:
+			q |= (Q(is_judged=False) & (Q(group=None) | Q(group=market.group)))
 	else:
-		related_markets = Market.objects.filter(is_judged=False)
+		if categories:
+			for category in categories.all():
+				q |= (Q(is_judged=False) & Q(categories=category) & Q(group=None))
+		else:
+			q |= (Q(is_judged=False) & Q(group=None))
+	q &= (~Q(id=market_id))
+	related_markets = Market.objects.filter(q).distinct()
 
 	args = {'market': market, 'assets_number': assets_number, 'related_markets': related_markets}
 

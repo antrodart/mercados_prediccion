@@ -70,7 +70,7 @@ class CreateGroupForm(forms.ModelForm):
 		return group
 
 
-class CategoryChoiceField(forms.ModelChoiceField):
+class CategoryChoiceField(forms.ModelMultipleChoiceField):
 	def label_from_instance(self, obj):
 		if get_language() == "en":
 			return str(obj.title)
@@ -88,11 +88,11 @@ class CreateMarketForm(forms.ModelForm):
 	                              widget=forms.Textarea(attrs={'placeholder': _('It must contain all the possible information of the event to be predicted, so that no user has any doubt.')}),
 	                              label=_('Description'))
 	end_date = forms.DateField(label=_("End date"), widget=forms.DateInput, required=True,
-	                           help_text=_("The date on which the market is finished and you can no longer bet."),
+	                           help_text=_("The date on which the market is finished and you can no longer bet. Must be format mm/dd/yyyy."),
 	                            validators=[validate_date_is_future])
 	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))
-	category = CategoryChoiceField(label=_("Category"), queryset=Category.objects.all(), required=False,)
+	categories = CategoryChoiceField(label=_("Categories"), queryset=Category.objects.all(), required=False,)
 	CHOICES = [(1, _('Binary')), (0, _('Multiple'))]
 	is_binary = forms.ChoiceField(label=_("Type of market"), choices=CHOICES,
 	                              widget=forms.RadioSelect(attrs={'id': 'value', 'class': 'custom-control-input'}),
@@ -100,7 +100,7 @@ class CreateMarketForm(forms.ModelForm):
 
 	class Meta():
 		model = Market
-		fields = ('title', 'description', 'end_date', 'picture', 'category', 'is_binary')
+		fields = ('title', 'description', 'end_date', 'picture', 'categories', 'is_binary')
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
@@ -112,7 +112,6 @@ class CreateMarketForm(forms.ModelForm):
 		market.title = self.cleaned_data['title']
 		market.description = self.cleaned_data['description']
 		market.end_date = self.cleaned_data['end_date']
-		market.category = self.cleaned_data['category']
 		market.is_binary = self.cleaned_data['is_binary']
 		market.creator = self.user
 		market.group = self.group
@@ -127,6 +126,7 @@ class CreateMarketForm(forms.ModelForm):
 				market.picture = encoded_picture
 		if commit:
 			market.save()
+			market.categories.set(self.cleaned_data['categories'])
 		return market
 
 
@@ -137,16 +137,16 @@ class EditMarketForm(forms.ModelForm):
 	                              label=_('Description'))
 	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))
-	category = CategoryChoiceField(label=_("Category"), queryset=Category.objects.all(), required=False, )
+	categories = CategoryChoiceField(label=_("Category"), queryset=Category.objects.all(), required=False, )
 
 	class Meta():
 		model = Market
-		fields = ('description', 'picture', 'category',)
+		fields = ('description', 'picture', 'categories',)
 
 	def save(self, commit=True):
 		market = super(EditMarketForm,self).save(commit=False)
 		market.description = self.cleaned_data['description']
-		market.category = self.cleaned_data['category']
+		market.categories.set(self.cleaned_data['categories'])
 		picture = self.cleaned_data['picture']
 		if not picture:
 			market.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_group_img.json')))["data"]
@@ -167,7 +167,7 @@ class CreateOptionForm(forms.Form):
 	    """
 	name = forms.CharField(label=_('Option'),
 	                        help_text=_('The option that participants can bet on'),
-	                        required=False, max_length=150)
+	                        required=True, max_length=150)
 
 
 class BaseOptionFormSet(BaseFormSet):
@@ -184,7 +184,6 @@ class BaseOptionFormSet(BaseFormSet):
         for form in self.forms:
             if form.cleaned_data:
                 name = form.cleaned_data['name']
-                image = form.cleaned_data['image']
 
                 # Check that no two options have the same name
                 if name in names:
