@@ -6,6 +6,10 @@
     <title>{% block title %}{% blocktrans %}Edit profile{% endblocktrans %}{% endblock %}</title>
 </head>
 
+{% block css %}
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css"/>
+{% endblock %}
+
 {% block content %}
 
     <div class="col-md-6 mx-auto text-center">
@@ -123,8 +127,10 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css"/>
+{% endblock %}
+
+{% block javascript %}
+     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#date_of_birth').datepicker({

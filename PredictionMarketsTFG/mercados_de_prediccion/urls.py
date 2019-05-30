@@ -24,4 +24,8 @@ urlpatterns = [
 	path('market/create/', views.create_market_view, name='create_market'),
 	path('market/edit/', views.edit_market_view, name='edit_market'),
 	path('market/', views.display_market_view, name='display_market'),
+
+	path('asset/buy/', views.buy_asset_view, name='buy_asset'),
+
+	path('ajax/related_markets', views.ajax_related_markets, name='related_markets')
 ]

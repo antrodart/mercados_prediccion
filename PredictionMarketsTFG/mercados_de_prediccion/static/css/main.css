@@ -157,3 +157,18 @@ font-size: 20px;
   font-weight: 500;
   margin: 0 0 0.5rem 0;
 }
+
+.innerdivtoggle{
+    margin: 0 auto;
+    display: flex;
+}
+
+.padding-0 {
+   padding-left: 0 !important;
+   padding-right: 0 !important;
+}
+
+.padding-top-bottom {
+   padding-top: 0.5rem !important;
+   padding-bottom: 0.5rem !important;
+}

@@ -167,7 +167,7 @@ class CreateOptionForm(forms.Form):
 	    """
 	name = forms.CharField(label=_('Option'),
 	                        help_text=_('The option that participants can bet on'),
-	                        required=True, max_length=150)
+	                        required=True, max_length=40)
 
 
 class BaseOptionFormSet(BaseFormSet):
@@ -224,3 +224,28 @@ class MakeRequestToJoinForm(forms.ModelForm):
 		if commit:
 			joined_group.save()
 		return joined_group
+
+
+class CreateAssetForm(forms.ModelForm):
+	#is_yes = forms.BooleanField(label=_("Buy yes or no"))
+	quantity = forms.IntegerField(label=_("Quantity"), help_text=_('The quantity of assets you want to buy.'), required=True)
+	class Meta():
+		model = Asset
+		fields = ('quantity',)
+
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user')
+		self.market = kwargs.pop('market')
+		super(CreateAssetForm, self).__init__(*args, **kwargs)
+
+	def save(self, commit=True):
+		asset = super(CreateAssetForm, self).save(commit=False)
+		asset.quantity = self.cleaned_data['quantity']
+		asset.has_expired = False
+		asset.is_judged = False
+		asset.market = self.market
+		asset.user = self.user
+
+		if commit:
+			asset.save()
+		return asset

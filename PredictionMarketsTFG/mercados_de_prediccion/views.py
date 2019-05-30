@@ -1,8 +1,10 @@
+from django.http import JsonResponse
 from django.db import IntegrityError, transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django.forms.formsets import formset_factory
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import PermissionDenied
 from django.views.generic.base import TemplateView
@@ -376,6 +378,77 @@ def display_market_view(request):
 	q &= (~Q(id=market_id))
 	related_markets = Market.objects.filter(q).distinct()
 
-	args = {'market': market, 'assets_number': assets_number, 'related_markets': related_markets}
+	asset_form = CreateAssetForm(user=request.user, market=market)
+	args = {'market': market, 'assets_number': assets_number, 'related_markets': related_markets, 'asset_form': asset_form}
 
 	return render(request, 'market/display_market.html', args)
+
+
+def ajax_related_markets(request):
+	market_id = request.GET.get('marketId', None)
+	market = get_object_or_404(Market, pk=market_id)
+
+	categories = market.categories.all()
+	q = Q()
+
+	if market.group:
+		if categories:
+			for category in categories.all():
+				q |= (Q(is_judged=False) & Q(categories=category) & (Q(group=None) | Q(group=market.group)))
+		else:
+			q |= (Q(is_judged=False) & (Q(group=None) | Q(group=market.group)))
+	else:
+		if categories:
+			for category in categories.all():
+				q |= (Q(is_judged=False) & Q(categories=category) & Q(group=None))
+		else:
+			q |= (Q(is_judged=False) & Q(group=None))
+	q &= (~Q(id=market_id))
+	related_markets = Market.objects.filter(q).distinct()
+
+	related_markets_list = []
+
+	for market in related_markets:
+		json_dummy = {
+			'id': market.pk,
+			'title': market.title,
+			'picture': market.picture,
+		}
+		related_markets_list.append(json_dummy)
+
+	data = json.dumps(related_markets_list)
+	res = JsonResponse(data, safe=False)
+
+	return res
+
+
+
+@login_required()
+def buy_asset_view(request):
+	user = request.user
+	market_id = request.GET.get('marketId')
+	market = get_object_or_404(Market, pk=market_id)
+	group = market.group
+
+	if group and (not group.is_visible and (not request.user in group.user_accepted_set())):
+		raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
+
+	if request.method == "POST":
+		form = CreateAssetForm(request.POST, user=user, market=market)
+		if form.is_valid():
+			option_id = request.POST.get('optionId')
+			option = get_object_or_404(Option, pk=option_id)
+			is_yes = request.POST.get('is_yes')
+
+			asset = form.save(commit=False)
+			asset.option = option
+			if is_yes:
+				asset.is_yes = True
+			else:
+				asset.is_yes = False
+
+			asset.save()
+
+			return redirect('/market/?marketId=' + str(market_id))
+	else:
+		return redirect('/market/?marketId=' + str(market_id))

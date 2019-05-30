@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+{% load widget_tweaks %}
 
 <head>
     <title>{% block title %}{{ market.title }}{% endblock %}</title>
 </head>
+
+{% block css %}
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css"
+          rel="stylesheet">
+{% endblock %}
 
 {% block content %}
     <div class="row top-buffer"> {% comment %}Top buffer adds 20px for top margin{% endcomment %}
@@ -89,25 +95,8 @@
                         </h2>
                         <div class="album bg-light">
                             <div class="container">
-                                <div class="row">
-                                    {% for related_market in related_markets %}
-                                        <div class="col-md-12">
-                                            <div class="card mb-4 box-shadow">
-                                                <a href="/market/?marketId={{ related_market.id }}">
-                                                    <img class="card-img-top img-thumbnail" alt="{{ related_market.title }}"
-                                                         style="max-height: 150px;object-fit:scale-down; display: block;"
-                                                         src="data:image/png;base64,{{ related_market.picture }}"
-                                                         data-holder-rendered="true">
-                                                </a>
-                                                <div class="card-body">
-                                                    <p class="card-text">
-                                                        <a href="/market/?marketId={{ related_market.id }}"
-                                                           style="color:unset;"><strong>{{ related_market.title }}</strong></a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
+                                <div class="row" id="relatedMarketsContainerRowId">
+
                                 </div>
                             </div>
                         </div>
@@ -138,11 +127,149 @@
                 <div class="col">
                     {% for option in market.option_set.all %}
                         <div class="block">
-                            {{ option.name }}
+                            <div class="row">
+                                {% if market.is_binary %}
+                                    <div class="col-md-2 mx-auto my-auto">
+                                        {% if option.name == "Yes" %}
+                                            <h4>
+                                            <img src="{% static 'img/icons/yes-check.png' %}" alt="Yes" style="max-height: 50px;"/>
+                                                {% trans "Yes" %}
+                                            </h4>
+                                        {% else %}
+                                            <h4>
+                                            <img src="{% static 'img/icons/no-cross.png' %}" alt="No" style="max-height: 50px;"/>
+                                                {% trans "No" %}
+                                            </h4>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-8">
+                                        <form method="post" action="/asset/buy/?marketId={{ market.pk }}"
+                                              class="form-inline">
+                                            <div class="row" style="width:100%;">
+                                                {% csrf_token %}
+                                                <input type="hidden" id="optionId" name="optionId"
+                                                       value="{{ option.pk }}">
+                                                <div class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                    <h6>{% trans "Price" %}</h6>
+                                                    60 k
+                                                </div>
+                                                <div class="col-md-4 my-auto mx-auto text-center padding-top-bottom">
+                                                    <h6>{% trans "Quantity" %}</h6>
+                                                    {{ asset_form.quantity | add_class:'form-control' | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
+                                                </div>
+                                                <div class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                    <h6>Total: 5813647k</h6>
+                                                    <button type="submit" class=" btn btn-primary">
+                                                        <img src="{% static 'img/icons/buy.png' %}" alt="Buy"
+                                                             style="max-height: 25px;"/>
+                                                        {% trans "Buy" %}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                {% else %}
+                                    <div class="col-md-2 mx-auto my-auto">
+                                        <h5>{{ option.name }}</h5>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <form method="post" action="/asset/buy/?marketId={{ market.pk }}"
+                                              class="form-inline">
+                                            <div class="row" style="width:100%;">
+                                                {% csrf_token %}
+                                                <input type="hidden" id="optionId" name="optionId"
+                                                       value="{{ option.pk }}">
+                                                <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                    <h6>{% trans "'Yes' price" %}</h6>
+                                                    60 k
+                                                </div>
+                                                <div class="col-md-3 my-auto text-center padding-0 padding-top-bottom">
+                                                    <h6>{% trans "Yes or no" %}</h6>
+                                                    <div class="form-group">
+                                                        <input type="checkbox" checked data-toggle="toggle"
+                                                               data-on="{% trans "Buy yes" %}"
+                                                               data-off="{% trans "Buy no" %}"
+                                                               data-onstyle="success" data-offstyle="danger"
+                                                               name="is_yes"
+                                                               data-size="sm" data-style="innerdivtoggle"
+                                                        >
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                    <h6>{% trans "'No' price" %}</h6>
+                                                    40 k
+                                                </div>
+                                                <div class="col-md-3 my-auto mx-auto text-center padding-top-bottom">
+                                                    <h6>{% trans "Quantity" %}</h6>
+                                                    {{ asset_form.quantity | add_class:'form-control' | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
+                                                </div>
+                                                <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                    <button type="submit" class=" btn btn-primary">
+                                                        {% trans "Buy" %}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                                <div class="col-md-2 mx-auto my-auto text-center padding-top-bottom">
+                                    {% trans "You can earn up to" %} 131615164k
+                                </div>
+                            </div>
                         </div>
                     {% endfor %}
                 </div>
             </div>
         </div>
     </div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
+    <script>
+        $(function () {
+            $('#is_yes_toggle').bootstrapToggle({
+                on: 'Buy yes',
+                off: 'Buy no',
+                onstyle: 'success',
+                offstyle: 'danger',
+                size: 'sm'
+            });
+        });
+
+        $(document).ready(function () {
+            $.ajax({
+                url: "/ajax/related_markets",
+                data: {
+                    'marketId': {{ market.pk|stringformat:"s" }}
+                },
+                dataType: 'json',
+                success: function (data){
+                    var returnedData = JSON.parse(data);
+					var list_html = "";
+                    for(var i=0; i<returnedData.length; i++){
+						list_html += "<div class='col-md-12'>";
+						list_html += "<div class='card mb-4 box-shadow'>";
+						list_html += "<a href='/market/?marketId="+ returnedData[i].id +"'>";
+						list_html += "<img class='card-img-top img-thumbnail'";
+						list_html += "alt='" + returnedData[i].title + "'";
+						list_html += "style='max-height: 150px;object-fit:scale-down; display: block;'";
+						list_html += "src='data:image/png;base64," + returnedData[i].picture + "'";
+						list_html += "data-holder-rendered='true'>";
+						list_html += "</a>";
+						list_html += "<div class='card-body'>";
+						list_html += "<p class='card-text'>";
+						list_html += "<a href='/market/?marketId=" + returnedData[i].id + "'";
+						list_html += " style='color:unset;'><strong>" + returnedData[i].title + "</strong></a>";
+						list_html += "</p></div></div></div>";
+                    }
+					 $("#relatedMarketsContainerRowId").html(list_html);
+                },
+                error: function (data) {
+                }
+            });
+            return false;
+        });
+    </script>
 {% endblock %}

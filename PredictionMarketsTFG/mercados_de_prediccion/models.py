@@ -33,9 +33,13 @@ class Market(models.Model):
 
 
 class Option(models.Model):
-	name = models.CharField(max_length=140, blank=False)
+	name = models.CharField(max_length=40, blank=False)
 	is_correct = models.BooleanField(default=False, null=True)
 	market = models.ForeignKey(Market, on_delete=models.CASCADE, null=False)
+
+	@property
+	def get_todays_price(self):
+		return self.price_set.order_by('-date').first()
 
 
 class Price(models.Model):
@@ -87,6 +91,8 @@ class JoinedGroup(models.Model):
 
 
 class Asset(models.Model):
+	quantity = models.IntegerField(null=False, default=1)
+	is_yes = models.BooleanField(null=False, default=True)
 	has_expired = models.BooleanField(null=False, default=False)
 	is_judged = models.BooleanField(null=False, default=False)
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)

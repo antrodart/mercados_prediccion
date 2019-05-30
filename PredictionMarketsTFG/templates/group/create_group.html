@@ -132,7 +132,10 @@
         </div>
     </div>
 
-    <script>
+{% endblock %}
+
+{% block javascript %}
+     <script>
         // This script makes the name of the file appear on upload input
         $(".custom-file-input").on("change", function () {
              var fileName = $(this).val().split("\\").pop();
