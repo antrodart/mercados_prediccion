@@ -209,10 +209,10 @@ def create_market_view(request):
 
 				try:
 					with transaction.atomic():
-						yes_option = Option.objects.create(name='Yes', market=market)
-						no_option = Option.objects.create(name='No', market=market)
-						Price.objects.create(option=yes_option, is_yes=True)
-						Price.objects.create(option=no_option, is_yes=False)
+						yes_option = Option.objects.create(name='Yes', binary_yes=True, market=market)
+						no_option = Option.objects.create(name='No', binary_yes=False, market=market)
+						Price.objects.create(option=yes_option, is_yes=True, is_last=True)
+						Price.objects.create(option=no_option, is_yes=False, is_last=True)
 
 						return redirect('/market/?marketId=' + str(market.pk))
 
@@ -235,9 +235,9 @@ def create_market_view(request):
 					try:
 						with transaction.atomic():
 							for option in new_options:
-								saved_option = option.save()
-								Price.objects.create(option=saved_option, is_yes=True)
-								Price.objects.create(option=saved_option, is_yes=False)
+								option.save()
+								price_yes = Price.objects.create(option=option, is_yes=True, is_last=True)
+								price_no = Price.objects.create(option=option, is_yes=False, is_last=True)
 
 						return redirect('/market/?marketId=' + str(market.pk))
 
@@ -261,6 +261,14 @@ def edit_market_view(request):
 		raise PermissionDenied(_("You can't edit this market."))
 
 	if request.method == "POST":
+		if request.POST.get('delete') is not None:
+			group = market.group
+			market.delete()
+			if group:
+				return redirect('/group/?groupId=' + str(group.pk))
+			else:
+				return redirect('/')
+
 		market_form = EditMarketForm(request.POST, request.FILES, instance=market)
 
 		if market_form.is_valid():

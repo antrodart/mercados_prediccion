@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'users',
     'django_babel',
 	'widget_tweaks',
+	'chartjs',
 ]
 
 MIDDLEWARE = [

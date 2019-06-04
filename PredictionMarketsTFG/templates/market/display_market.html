@@ -25,7 +25,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
-                                <h1 style="word-break: break-all;">
+                                <h1 style="overflow-wrap: break-word;">
                                     {{ market.title }}
                                 </h1>
                             </div>
@@ -113,15 +113,6 @@
                         {% trans "Contracts" %}:
                     </h2>
                 </div>
-                <div class="col">
-                    <div class="float-right">
-                        <a href="/market/create/?groupId={{ group.pk }}">
-                            <button type="button" class="btn btn-primary">
-                                {% blocktrans %}Create market{% endblocktrans %}
-                            </button>
-                        </a>
-                    </div>
-                </div>
             </div>
             <div class="row">
                 <div class="col">
@@ -132,12 +123,14 @@
                                     <div class="col-md-2 mx-auto my-auto">
                                         {% if option.name == "Yes" %}
                                             <h4>
-                                            <img src="{% static 'img/icons/yes-check.png' %}" alt="Yes" style="max-height: 50px;"/>
+                                                <img src="{% static 'img/icons/yes-check.png' %}" alt="Yes"
+                                                     style="max-height: 50px;"/>
                                                 {% trans "Yes" %}
                                             </h4>
                                         {% else %}
                                             <h4>
-                                            <img src="{% static 'img/icons/no-cross.png' %}" alt="No" style="max-height: 50px;"/>
+                                                <img src="{% static 'img/icons/no-cross.png' %}" alt="No"
+                                                     style="max-height: 50px;"/>
                                                 {% trans "No" %}
                                             </h4>
                                         {% endif %}
@@ -151,7 +144,11 @@
                                                        value="{{ option.pk }}">
                                                 <div class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
                                                     <h6>{% trans "Price" %}</h6>
-                                                    60 k
+                                                    {% if option.binary_yes %}
+                                                        {{ option.get_todays_price_yes.buy_price }} karma
+                                                    {% else %}
+                                                        {{ option.get_todays_price_no.buy_price }} karma
+                                                    {% endif %}
                                                 </div>
                                                 <div class="col-md-4 my-auto mx-auto text-center padding-top-bottom">
                                                     <h6>{% trans "Quantity" %}</h6>
@@ -181,7 +178,7 @@
                                                        value="{{ option.pk }}">
                                                 <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
                                                     <h6>{% trans "'Yes' price" %}</h6>
-                                                    60 k
+                                                    {{ option.get_todays_price_yes.buy_price }} karma
                                                 </div>
                                                 <div class="col-md-3 my-auto text-center padding-0 padding-top-bottom">
                                                     <h6>{% trans "Yes or no" %}</h6>
@@ -197,7 +194,7 @@
                                                 </div>
                                                 <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
                                                     <h6>{% trans "'No' price" %}</h6>
-                                                    40 k
+                                                    {{ option.get_todays_price_no.buy_price }} karma
                                                 </div>
                                                 <div class="col-md-3 my-auto mx-auto text-center padding-top-bottom">
                                                     <h6>{% trans "Quantity" %}</h6>
@@ -220,6 +217,13 @@
                     {% endfor %}
                 </div>
             </div>
+            <div class="row">
+                <div class="col">
+                    <canvas id="myChart" width="400" height="400">
+
+                    </canvas>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -227,6 +231,7 @@
 
 {% block javascript %}
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
     <script>
         /*
         $(function () {
@@ -247,26 +252,26 @@
                     'marketId': {{ market.pk|stringformat:"s" }}
                 },
                 dataType: 'json',
-                success: function (data){
+                success: function (data) {
                     var returnedData = JSON.parse(data);
-					var list_html = "";
-                    for(var i=0; i<returnedData.length; i++){
-						list_html += "<div class='col-md-12'>";
-						list_html += "<div class='card mb-4 box-shadow'>";
-						list_html += "<a href='/market/?marketId="+ returnedData[i].id +"'>";
-						list_html += "<img class='card-img-top img-thumbnail'";
-						list_html += "alt='" + returnedData[i].title + "'";
-						list_html += "style='max-height: 150px;object-fit:scale-down; display: block;'";
-						list_html += "src='data:image/png;base64," + returnedData[i].picture + "'";
-						list_html += "data-holder-rendered='true'>";
-						list_html += "</a>";
-						list_html += "<div class='card-body'>";
-						list_html += "<p class='card-text'>";
-						list_html += "<a href='/market/?marketId=" + returnedData[i].id + "'";
-						list_html += " style='color:unset;'><strong>" + returnedData[i].title + "</strong></a>";
-						list_html += "</p></div></div></div>";
+                    var list_html = "";
+                    for (var i = 0; i < returnedData.length; i++) {
+                        list_html += "<div class='col-md-12'>";
+                        list_html += "<div class='card mb-4 box-shadow'>";
+                        list_html += "<a href='/market/?marketId=" + returnedData[i].id + "'>";
+                        list_html += "<img class='card-img-top img-thumbnail'";
+                        list_html += "alt='" + returnedData[i].title + "'";
+                        list_html += "style='max-height: 150px;object-fit:scale-down; display: block;'";
+                        list_html += "src='data:image/png;base64," + returnedData[i].picture + "'";
+                        list_html += "data-holder-rendered='true'>";
+                        list_html += "</a>";
+                        list_html += "<div class='card-body'>";
+                        list_html += "<p class='card-text'>";
+                        list_html += "<a href='/market/?marketId=" + returnedData[i].id + "'";
+                        list_html += " style='color:unset;'><strong>" + returnedData[i].title + "</strong></a>";
+                        list_html += "</p></div></div></div>";
                     }
-					 $("#relatedMarketsContainerRowId").html(list_html);
+                    $("#relatedMarketsContainerRowId").html(list_html);
                 },
                 error: function (data) {
                 }
@@ -274,4 +279,12 @@
             return false;
         });
     </script>
+    <script type="text/javascript">
+            $.get('{% url "line_chart_json" %}', function(data) {
+                var ctx = $("#myChart").get(0).getContext("2d");
+                new Chart(ctx, {
+                    type: 'line', data: data
+                });
+            });
+        </script>
 {% endblock %}

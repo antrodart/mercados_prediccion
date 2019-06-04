@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, charts
 
 urlpatterns = [
     path('', views.HomePageView.as_view(), name='home'),
@@ -27,5 +27,6 @@ urlpatterns = [
 
 	path('asset/buy/', views.buy_asset_view, name='buy_asset'),
 
-	path('ajax/related_markets', views.ajax_related_markets, name='related_markets')
+	path('ajax/related_markets', views.ajax_related_markets, name='related_markets'),
+	path('ajax/chart', charts.LineChartJSONView, name='line_chart_json')
 ]
