@@ -45,7 +45,8 @@ class Option(models.Model):
 class Price(models.Model):
 	buy_price = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(1)], default=50)
 	sell_price = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(1)], default=50)
-	date = models.DateField(null=False)
+	date = models.DateField(null=False, auto_now_add=True)
+	is_yes = models.BooleanField(null=False)
 	option = models.ForeignKey(Option, on_delete=models.CASCADE, null=False)
 
 

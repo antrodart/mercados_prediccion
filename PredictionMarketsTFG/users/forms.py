@@ -40,7 +40,7 @@ class SignupForm(UserCreationForm):
 	                              widget=forms.Textarea(attrs={'placeholder': _(
 		                              'Describe yourself: your hobbies, life goals, preferences, interests...')}),
 	                              label=_('Biography'))
-	date_of_birth = forms.DateField(label=_("Date of birth"), widget=forms.DateInput,
+	date_of_birth = forms.DateField(label=_("Date of birth"), widget=forms.DateInput, required=False,
 	                              validators=[validate_date_is_past])
 	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))

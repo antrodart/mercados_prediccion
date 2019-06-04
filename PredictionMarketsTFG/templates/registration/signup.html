@@ -48,7 +48,7 @@
                                 {% blocktrans %}The name is not valid{% endblocktrans %}
                             </div>
                         {% else %}
-                            {{ form.first_name | add_class:'form-control my-input' |attr:'id:first_name' |attr:'autofocus:true' }}
+                            {{ form.first_name | add_class:'form-control my-input' |attr:'autofocus:true' }}
                         {% endif %}
                     </div>
                     <div class="form-group">
@@ -59,11 +59,13 @@
                                 {% blocktrans %}The last name is not valid{% endblocktrans %}
                             </div>
                         {% else %}
-                            {{ form.last_name | add_class:'form-control my-input' |attr:'id:last_name' }}
+                            {{ form.last_name | add_class:'form-control my-input' }}
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.date_of_birth.id_for_label }}" class="text-info">{{ form.date_of_birth.label }}</label><br>
+                        <label for="date_of_birth" class="text-info">{{ form.date_of_birth.label }}
+                            <span class="text-muted">{% trans "(Optional)" %}</span>
+                        </label><br>
                         {% if form.date_of_birth.errors %}
                             {{ form.date_of_birth | add_class:'form-control my-input is-invalid' |attr:'id:date_of_birth'|attr:'name:date_of_birth' }}
                             <div class="invalid-feedback">
@@ -74,8 +76,9 @@
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.biography.id_for_label }}"
-                               class="text-info">{{ form.biography.label }}</label>
+                        <label for="{{ form.biography.id_for_label }}" class="text-info">{{ form.biography.label }}
+                            <span class="text-muted">{% trans "(Optional)" %}</span>
+                        </label>
                         {% if form.biography.errors %}
                             {{ form.biography | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
                             <div class="invalid-feedback">
@@ -88,8 +91,9 @@
                         {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.picture.id_for_label }}"
-                               class="text-info">* {{ form.picture.label }}</label>
+                        <label for="{{ form.picture.id_for_label }}" class="text-info">{{ form.picture.label }}
+                            <span class="text-muted">{% trans "(Optional)" %}</span>
+                        </label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="inputGroupFileAddon01">
@@ -116,7 +120,7 @@
                                 {% blocktrans %}The email is not valid or is already in use{% endblocktrans %}
                             </div>
                         {% else %}
-                            {{ form.email | add_class:'form-control my-input' |attr:'id:email' }}
+                            {{ form.email | add_class:'form-control my-input' }}
                         {% endif %}
                     </div>
                     <div class="form-group">
@@ -127,7 +131,7 @@
                                 {% blocktrans %}The password is not valid{% endblocktrans %}
                             </div>
                         {% else %}
-                            {{ form.password1 |add_class:'form-control my-input' |attr:'id:password1' }}
+                            {{ form.password1 |add_class:'form-control my-input' }}
                         {% endif %}
                     </div>
                     <div class="form-group">
@@ -138,7 +142,7 @@
                                 {% blocktrans %}The password is not valid{% endblocktrans %}
                             </div>
                         {% else %}
-                            {{ form.password2 |add_class:'form-control my-input' |attr:'id:password2' }}
+                            {{ form.password2 |add_class:'form-control my-input' }}
                         {% endif %}
                     </div>
                     <div class="text-center ">

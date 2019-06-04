@@ -119,8 +119,16 @@ def create_group_view(request):
 	if request.method == "POST":
 		form = CreateGroupForm(request.POST, request.FILES, user=request.user)
 		if form.is_valid():
-			group = form.save()
-			joined_group = JoinedGroup(is_accepted=True, user=request.user, group=group)
+			group = form.save(commit=False)
+			is_visible = request.POST.get('is_visible')
+			if is_visible:
+				group.is_visible = True
+			else:
+				group.is_visible = False
+
+			group.save()
+
+			joined_group = JoinedGroup(is_accepted=True, user=request.user, group_id=group.pk)
 			joined_group.save()
 
 			return redirect('/group/?groupId=' + str(group.pk))
@@ -144,7 +152,14 @@ def edit_group_view(request):
 
 		form = CreateGroupForm(request.POST, request.FILES, instance=group, user=request.user)
 		if form.is_valid():
-			form.save()
+			group = form.save(commit=False)
+			is_visible = request.POST.get('is_visible')
+			if is_visible:
+				group.is_visible = True
+			else:
+				group.is_visible = False
+
+			group.save()
 
 			return redirect('/group/?groupId=' + str(group_id))
 	else:
@@ -184,10 +199,6 @@ def create_market_view(request):
 	# Create the formset, specifying the form and formset we want to use.
 	OptionFormSet = formset_factory(CreateOptionForm, formset=BaseOptionFormSet, min_num=2,max_num=10)
 
-	# Get our existing option names data for this market.  This is used as initial data.
-	# options_name = Option.objects.filter(market=market).order_by('name')
-	# options_name_set = [{'name': o.name, 'image': o.image} for o in options_name]
-
 	if request.method == "POST":
 		market_form = CreateMarketForm(request.POST, request.FILES, user=request.user, group=group)
 		option_formset = OptionFormSet(request.POST)
@@ -195,10 +206,18 @@ def create_market_view(request):
 		if market_form.is_valid():
 			if market_form.cleaned_data['is_binary'] == '1':
 				market = market_form.save()
-				Option.objects.create(name='Yes', market=market)
-				Option.objects.create(name='No', market=market)
 
-				return redirect('/market/?marketId=' + str(market.pk))
+				try:
+					with transaction.atomic():
+						yes_option = Option.objects.create(name='Yes', market=market)
+						no_option = Option.objects.create(name='No', market=market)
+						Price.objects.create(option=yes_option, is_yes=True)
+						Price.objects.create(option=no_option, is_yes=False)
+
+						return redirect('/market/?marketId=' + str(market.pk))
+
+				except IntegrityError:
+					return redirect('/market/?marketId=' + str(market.pk))
 
 			else:
 				if option_formset.is_valid():
@@ -215,9 +234,12 @@ def create_market_view(request):
 
 					try:
 						with transaction.atomic():
-							# Replace the old with the new
 							for option in new_options:
-								option.save()
+								saved_option = option.save()
+								Price.objects.create(option=saved_option, is_yes=True)
+								Price.objects.create(option=saved_option, is_yes=False)
+
+						return redirect('/market/?marketId=' + str(market.pk))
 
 					except IntegrityError:
 						return redirect('/market/?marketId=' + str(market.pk))
@@ -360,26 +382,9 @@ def display_market_view(request):
 		raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
 
 	assets_number = Asset.objects.filter(market=market).count()
-	categories = market.categories.all()
-	q = Q()
-
-	if market.group:
-		if categories:
-			for category in categories.all():
-				q |= (Q(is_judged=False) & Q(categories=category) & (Q(group=None) | Q(group=market.group)))
-		else:
-			q |= (Q(is_judged=False) & (Q(group=None) | Q(group=market.group)))
-	else:
-		if categories:
-			for category in categories.all():
-				q |= (Q(is_judged=False) & Q(categories=category) & Q(group=None))
-		else:
-			q |= (Q(is_judged=False) & Q(group=None))
-	q &= (~Q(id=market_id))
-	related_markets = Market.objects.filter(q).distinct()
 
 	asset_form = CreateAssetForm(user=request.user, market=market)
-	args = {'market': market, 'assets_number': assets_number, 'related_markets': related_markets, 'asset_form': asset_form}
+	args = {'market': market, 'assets_number': assets_number, 'asset_form': asset_form}
 
 	return render(request, 'market/display_market.html', args)
 

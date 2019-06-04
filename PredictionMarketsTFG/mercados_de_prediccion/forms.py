@@ -40,11 +40,11 @@ class CreateGroupForm(forms.ModelForm):
 	                              label=_('Description'))
 	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))
-	is_visible = forms.BooleanField(label=_('Visible'), help_text=_('Visible groups can be seen by anyone.'), required=False)
+	is_visible = forms.BooleanField(label=_('Visibility'), help_text=_('Visible groups can be seen by anyone.'), required=False)
 
 	class Meta():
 		model = Group
-		fields = ('name', 'description', 'picture','is_visible',)
+		fields = ('name', 'description', 'picture',)
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
@@ -54,7 +54,6 @@ class CreateGroupForm(forms.ModelForm):
 		group = super(CreateGroupForm,self).save(commit=False)
 		group.name = self.cleaned_data['name']
 		group.description = self.cleaned_data['description']
-		group.is_visible = self.cleaned_data['is_visible']
 		group.moderator = self.user
 		picture = self.cleaned_data['picture']
 		if not picture:
