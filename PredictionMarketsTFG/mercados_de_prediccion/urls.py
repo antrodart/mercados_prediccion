@@ -27,6 +27,7 @@ urlpatterns = [
 
 	path('asset/buy/', views.buy_asset_view, name='buy_asset'),
 
-	path('ajax/related_markets', views.ajax_related_markets, name='related_markets'),
-	path('ajax/chart', charts.LineChartJSONView, name='line_chart_json')
+	path('ajax/related_markets/', views.ajax_related_markets, name='related_markets'),
+	path('ajax/chart/', views.line_chart_json, name='line_chart_json'),
+
 ]

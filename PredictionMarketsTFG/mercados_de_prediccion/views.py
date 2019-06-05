@@ -1,18 +1,20 @@
 from django.http import JsonResponse
 from django.db import IntegrityError, transaction
 from django.db.models import Q
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, get_language
 from django.forms.formsets import formset_factory
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from users.models import User
 import math
-
+from django.views.generic import TemplateView
+from chartjs.views.lines import BaseLineChartView
+import datetime
 
 class HomePageView(TemplateView):
 	template_name = 'home.html'
@@ -434,6 +436,114 @@ def ajax_related_markets(request):
 
 	return res
 
+
+def ajax_charts(request):
+	market_id = request.GET.get('marketId', None)
+	market = get_object_or_404(Market, pk=market_id)
+	labels = ['Antes de ayer','Ayer','Hoy']
+
+
+class LineChartJSONView(BaseLineChartView):
+
+	def get_labels(self):
+		"""Return the labels for the x-axis, these are, the dates."""
+		if get_language() == "es":
+			date_format = "%d/%m/%Y"
+		else:
+			date_format = "%Y-%m-%d"
+
+		days_label = []
+		today = datetime.date.today()
+		days_picked = self.days_picked
+		days_between_dates = (today - self.market.creation_date).days + 1
+		if days_picked > days_between_dates:
+			days_picked = days_between_dates
+
+		for i in range(days_picked-1,0,-1):
+			days_label.append((today - datetime.timedelta(days=i)).strftime(date_format))
+		days_label.append(today.strftime(date_format))
+
+		return days_label
+
+	def get_providers(self):
+		"""Return names of datasets, these are, the market options."""
+		market = self.market
+		if market.is_binary:
+			options = [_("Yes"), _("No"),]
+		else:
+			options = []
+			for option in market.option_set.all():
+				options.append(option.name)
+
+		return options
+		#return ["Central", "Eastside", "Westside"]
+
+	def get_data(self):
+		"""Return 3 datasets to plot., these are, the prices of the options"""
+		market = self.market
+		prices = []
+		if market.is_binary:
+			option_yes = market.option_set.get(binary_yes=True)
+			option_no = market.option_set.get(binary_yes=False)
+			prices_yes = []
+			prices_no = []
+
+			#Checks that we dont try to get the prices of the days the market did not exist.
+			days_picked = self.days_picked
+			today = datetime.date.today()
+			days_between_dates = (today - market.creation_date).days + 1
+			if days_picked > days_between_dates:
+				days_picked = days_between_dates
+
+			for i in range(days_picked - 1, 0, -1):
+				price_date = (today - datetime.timedelta(days=i))
+
+				price_yes = option_yes.price_set.get(date=price_date).buy_price
+				price_no = option_no.price_set.get(date=price_date).buy_price
+				prices_yes.append(price_yes)
+				prices_no.append(price_no)
+
+			prices_yes.append(option_yes.price_set.get(is_last=True).buy_price)
+			prices_no.append(option_no.price_set.get(is_last=True).buy_price)
+			prices.append(prices_yes)
+			prices.append(prices_no)
+		#else:
+			#TODO
+		return prices
+
+
+	def get_colors(self):
+		COLORS = [
+			(124,252,0), # Green,
+			(238,33,33), # Red
+			(202, 201, 197),  # Light gray
+			(171, 9, 0),  # Red
+			(166, 78, 46),  # Light orange
+			(255, 190, 67),  # Yellow
+			(163, 191, 63),  # Light green
+			(122, 159, 191),  # Light blue
+			(140, 5, 84),  # Pink
+			(166, 133, 93),  # Light brown
+			(75, 64, 191),  # Red blue
+			(237, 124, 60),  # orange
+		]
+
+		step = 1
+		while True:
+			for color in COLORS:
+				yield map(lambda base: (base + step) % 256, color)
+			step += 197
+
+	@property
+	def market(self):
+		return Market.objects.get(pk=self.request.GET['marketId'])
+
+	@property
+	def days_picked(self):
+	    return int(self.request.GET['days'])
+
+line_chart = TemplateView.as_view(template_name='market/display_market.html')
+line_chart_json = LineChartJSONView.as_view()
 
 
 @login_required()

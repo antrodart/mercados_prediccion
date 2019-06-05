@@ -219,7 +219,7 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <canvas id="myChart" width="400" height="400">
+                    <canvas id="myChart" width="400" height="200">
 
                     </canvas>
                 </div>
@@ -232,6 +232,32 @@
 {% block javascript %}
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <script type="text/javascript">
+        $.get('/ajax/chart/?marketId={{ market.pk }}&days=7', function (data) {
+            var ctx = $("#myChart").get(0).getContext("2d");
+            new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    scales: {
+                        yAxes: [{
+                            display: true,
+                            ticks: {
+                                beginAtZero: true, // minimum value will be 0.
+                                suggestedMax: 100
+                            }
+                        }]
+                    },
+                     elements: {
+                        line: {
+                                fill: false
+                        }
+                    }
+                }
+            });
+        });
+    </script>
     <script>
         /*
         $(function () {
@@ -247,7 +273,7 @@
 
         $(document).ready(function () {
             $.ajax({
-                url: "/ajax/related_markets",
+                url: "/ajax/related_markets/",
                 data: {
                     'marketId': {{ market.pk|stringformat:"s" }}
                 },
@@ -279,12 +305,5 @@
             return false;
         });
     </script>
-    <script type="text/javascript">
-            $.get('{% url "line_chart_json" %}', function(data) {
-                var ctx = $("#myChart").get(0).getContext("2d");
-                new Chart(ctx, {
-                    type: 'line', data: data
-                });
-            });
-        </script>
+
 {% endblock %}

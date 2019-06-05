@@ -137,19 +137,6 @@
 </main>
 <br/>
 
-<footer class="footer">
-    <div class="container-fluid">
-        <ul class="list-inline footer-links">
-            <li class="list-inline-item">
-                <a href="{% url 'about' %}">{% trans "About" %}</a>
-            </li>
-            <li class="list-inline-item">
-                <a href="{% url 'contact' %}">{% trans "Contact" %}</a>
-            </li>
-        </ul>
-        <span class="text-muted">Prediction markets framework</span>
-    </div>
-</footer>
 
 <!-- i18n form. Entried by static/js/i18n.js -->
 <form action="{% url 'set_language' %}" method="post" id="form_language">
