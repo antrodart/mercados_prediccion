@@ -440,110 +440,50 @@ def ajax_related_markets(request):
 def ajax_charts(request):
 	market_id = request.GET.get('marketId', None)
 	market = get_object_or_404(Market, pk=market_id)
-	labels = ['Antes de ayer','Ayer','Hoy']
 
+	#  First, we must get the days of the duration of the market.
+	if get_language() == "es":
+		date_format = "%d/%m/%Y"
+	else:
+		date_format = "%Y-%m-%d"
 
-class LineChartJSONView(BaseLineChartView):
+	if market.has_expired:
+		end = market.end_date
+	else:
+		end = datetime.date.today()
+	start = market.creation_date
+	delta = end - start
 
-	def get_labels(self):
-		"""Return the labels for the x-axis, these are, the dates."""
-		if get_language() == "es":
-			date_format = "%d/%m/%Y"
-		else:
-			date_format = "%Y-%m-%d"
+	days = [(start + datetime.timedelta(days=x)) for x in range(delta.days + 1)]
 
-		days_label = []
-		today = datetime.date.today()
-		days_picked = self.days_picked
-		days_between_dates = (today - self.market.creation_date).days + 1
-		if days_picked > days_between_dates:
-			days_picked = days_between_dates
+	#  Then, we can get the labels for the x axis (labels).
+	labels = [x.strftime(date_format) for x in days]
 
-		for i in range(days_picked-1,0,-1):
-			days_label.append((today - datetime.timedelta(days=i)).strftime(date_format))
-		days_label.append(today.strftime(date_format))
+	# [ ['option 1', ['3', '4', '30']], ['option 2', ['3', '4', '30']], 'option 3', 'option 4']
+	options = []
+	for option in market.option_set.all():
+		#  After that, we get the data for the y axis.
+		price_list = []
+		#price_list.append(price.buy_price for price in Price.objects.filter(option=option).order_by('date').all())
+		price_per_day = Price.objects.filter(option=option).order_by('date')
+		for price in price_per_day:
+			price_list.append(price.buy_price)
+		options_json = {
+			'name': option.name,
+			'values': price_list,
+			'binary_yes': option.binary_yes
+		}
+		options.append(options_json)
 
-		return days_label
+	json_dummy = {
+		'labels': labels,
+		'options': options
+	}
 
-	def get_providers(self):
-		"""Return names of datasets, these are, the market options."""
-		market = self.market
-		if market.is_binary:
-			options = [_("Yes"), _("No"),]
-		else:
-			options = []
-			for option in market.option_set.all():
-				options.append(option.name)
-
-		return options
-		#return ["Central", "Eastside", "Westside"]
-
-	def get_data(self):
-		"""Return 3 datasets to plot., these are, the prices of the options"""
-		market = self.market
-		prices = []
-		if market.is_binary:
-			option_yes = market.option_set.get(binary_yes=True)
-			option_no = market.option_set.get(binary_yes=False)
-			prices_yes = []
-			prices_no = []
-
-			#Checks that we dont try to get the prices of the days the market did not exist.
-			days_picked = self.days_picked
-			today = datetime.date.today()
-			days_between_dates = (today - market.creation_date).days + 1
-			if days_picked > days_between_dates:
-				days_picked = days_between_dates
-
-			for i in range(days_picked - 1, 0, -1):
-				price_date = (today - datetime.timedelta(days=i))
-
-				price_yes = option_yes.price_set.get(date=price_date).buy_price
-				price_no = option_no.price_set.get(date=price_date).buy_price
-				prices_yes.append(price_yes)
-				prices_no.append(price_no)
-
-			prices_yes.append(option_yes.price_set.get(is_last=True).buy_price)
-			prices_no.append(option_no.price_set.get(is_last=True).buy_price)
-			prices.append(prices_yes)
-			prices.append(prices_no)
-		#else:
-			#TODO
-		return prices
-
-
-	def get_colors(self):
-		COLORS = [
-			(124,252,0), # Green,
-			(238,33,33), # Red
-			(202, 201, 197),  # Light gray
-			(171, 9, 0),  # Red
-			(166, 78, 46),  # Light orange
-			(255, 190, 67),  # Yellow
-			(163, 191, 63),  # Light green
-			(122, 159, 191),  # Light blue
-			(140, 5, 84),  # Pink
-			(166, 133, 93),  # Light brown
-			(75, 64, 191),  # Red blue
-			(237, 124, 60),  # orange
-		]
-
-		step = 1
-		while True:
-			for color in COLORS:
-				yield map(lambda base: (base + step) % 256, color)
-			step += 197
-
-	@property
-	def market(self):
-		return Market.objects.get(pk=self.request.GET['marketId'])
-
-	@property
-	def days_picked(self):
-	    return int(self.request.GET['days'])
-
-line_chart = TemplateView.as_view(template_name='market/display_market.html')
-line_chart_json = LineChartJSONView.as_view()
+	print(json_dummy)
+	data = json.dumps(json_dummy)
+	res = JsonResponse(data, safe=False)
+	return res
 
 
 @login_required()
