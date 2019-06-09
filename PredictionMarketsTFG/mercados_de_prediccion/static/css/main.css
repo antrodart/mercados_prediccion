@@ -133,3 +133,42 @@ font-size: 20px;
     margin-top: 20px;
 }
 
+.block {
+  display: flex;
+  align-items: flex-start;
+  background: #8AF3D9;
+  padding: 1rem;
+  margin: 0 0 1rem 0;
+}
+.block > img {
+    width: 100px;
+    height: 100px;
+    object-fit:scale-down;
+    margin: 0 1rem 0 0;
+
+}
+.block > .img-thumbnail{
+    background: #D03561;
+}
+.block > div {
+  flex: 1;
+}
+.block h2 {
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
+}
+
+.innerdivtoggle{
+    margin: 0 auto;
+    display: flex;
+}
+
+.padding-0 {
+   padding-left: 0 !important;
+   padding-right: 0 !important;
+}
+
+.padding-top-bottom {
+   padding-top: 0.5rem !important;
+   padding-bottom: 0.5rem !important;
+}

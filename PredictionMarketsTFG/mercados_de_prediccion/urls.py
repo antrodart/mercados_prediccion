@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, charts
 
 urlpatterns = [
     path('', views.HomePageView.as_view(), name='home'),
@@ -22,4 +22,12 @@ urlpatterns = [
 	path('group/members/', views.list_members_group_view, name='list_members_group'),
 
 	path('market/create/', views.create_market_view, name='create_market'),
+	path('market/edit/', views.edit_market_view, name='edit_market'),
+	path('market/', views.display_market_view, name='display_market'),
+
+	path('asset/buy/', views.buy_asset_view, name='buy_asset'),
+
+	path('ajax/related_markets/', views.ajax_related_markets, name='related_markets'),
+	path('ajax/chart/', views.ajax_charts, name='ajax_charts'),
+
 ]

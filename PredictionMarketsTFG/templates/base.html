@@ -11,131 +11,123 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{%  static 'img/favicon.ico' %}">
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static "css/header.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/footer.css" %}">
+    {% block css %}{% endblock %}
 
     <!-- Fontawesome icons-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
           integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
-    <!-- Import js -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
-
-    <script src="{% static 'js/main.js' %}"></script>
-    <script src="{% static 'js/i18n.js' %}"></script>
-
 </head>
 <body>
 
 <header>
-<nav class="navbar navbar-expand-md sticky-top">
-    <!-- This denotes at which point the navigation bar expands from vertical or hamburger icon to a full-size horizontal bar. Set to medium-->
-    <a class="navbar-brand" href="{% url 'home' %}">Logo</a>
-    <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse"
-            data-target="#main-navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="main-navigation">
-        <ul class="navbar-nav mr-auto">
-             <li class="nav-item">
-                <a class="nav-link" id="market_id" href="{% url 'categories' %}">{% trans "Markets" %}</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="groups_id" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {% trans "Groups" %}
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{% url 'list_all_groups' %}">
-                        {% blocktrans %}All groups{% endblocktrans %}</a>
-                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'list_created_groups' %}">
-                        {% blocktrans %}Created groups{% endblocktrans %}</a>
-                    <div class="dropdown-divider"></div>
-                    {% for joined_group in user.get_joined_group_accepted_set.all %}
-                        <a class="dropdown-item" href="/group/?groupId={{ joined_group.group.pk }}">
-                        {{ joined_group.group.name }}</a>
-                    {% endfor %}
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="categories_id" href="{% url 'categories' %}">{% trans "Categories" %}</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav">
-            {% if user.is_authenticated %}
+    <nav class="navbar navbar-expand-md sticky-top">
+        <!-- This denotes at which point the navigation bar expands from vertical or hamburger icon to a full-size horizontal bar. Set to medium-->
+        <a class="navbar-brand" href="{% url 'home' %}">Logo</a>
+        <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse"
+                data-target="#main-navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="main-navigation">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" id="market_id" href="{% url 'categories' %}">{% trans "Markets" %}</a>
+                </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                    <a class="nav-link dropdown-toggle" href="#" id="groups_id" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ user.first_name }}
+                        {% trans "Groups" %}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/user/?userId={{ user.pk }}">
-                            {% blocktrans %}My profile{% endblocktrans %}</a>
-                        {% if user.is_staff %}
-                            <a class="dropdown-item" href="{% url 'create_admin' %}">
-                                {% blocktrans %}Create admin{% endblocktrans %}</a>
-                        {% endif %}
+                        <a class="dropdown-item" href="{% url 'list_all_groups' %}">
+                            {% blocktrans %}All groups{% endblocktrans %}</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{% url 'logout' %}">{% trans "Logout" %}</a>
+                        {% if user.is_authenticated %}
+                            <a class="dropdown-item" href="{% url 'list_created_groups' %}">
+                                {% blocktrans %}Created groups{% endblocktrans %}</a>
+                            <div class="dropdown-divider"></div>
+                            {% for joined_group in user.get_joined_group_accepted_set.all %}
+                                <a class="dropdown-item" href="/group/?groupId={{ joined_group.group.pk }}">
+                                    {{ joined_group.group.name }}</a>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </li>
-            {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">{% trans "Login" %}</a>
+                    <a class="nav-link" id="categories_id" href="{% url 'categories' %}">{% trans "Categories" %}</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'signup' %}">{% blocktrans %}Sign up{% endblocktrans %}</a>
-                </li>
-            {% endif %}
-            {% if user.is_authenticated and user.is_staff %}
+            </ul>
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ user.first_name }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/user/?userId={{ user.pk }}">
+                                {% blocktrans %}My profile{% endblocktrans %}</a>
+                            {% if user.is_staff %}
+                                <a class="dropdown-item" href="{% url 'create_admin' %}">
+                                    {% blocktrans %}Create admin{% endblocktrans %}</a>
+                            {% endif %}
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'logout' %}">{% trans "Logout" %}</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">{% trans "Login" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signup' %}">{% blocktrans %}Sign up{% endblocktrans %}</a>
+                    </li>
+                {% endif %}
+                {% if user.is_authenticated and user.is_staff %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% blocktrans %}Admin functions{% endblocktrans %}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'create_category' %}">
+                                {% blocktrans %}Create category{% endblocktrans %}</a>
+                        </div>
+                    </li>
+                {% endif %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {% blocktrans %}Admin functions{% endblocktrans %}
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        {% trans "Language" %}
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{% url 'create_category' %}">
-                            {% blocktrans %}Create category{% endblocktrans %}</a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        {% get_available_languages as LANGUAGES %}
+                        {% for lang in LANGUAGES %}
+                            <a class="dropdown-item" href="javascript:void(0)"
+                               onclick="changeLanguage('{{ lang.0 }}');">
+                                {% if lang.0 == "es" %}
+                                    <img class="img-flag" src="{% static 'img/flag-ES.png' %}" alt="es"/>
+                                {% else %}
+                                    <img class="img-flag" src="{% static 'img/flag-EN.png' %}" alt="en"/>
+                                {% endif %}
+                                {{ lang.1 }}
+                            </a>
+                        {% endfor %}
                     </div>
                 </li>
-            {% endif %}
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                   data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    {% trans "Language" %}
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    {% get_available_languages as LANGUAGES %}
-                    {% for lang in LANGUAGES %}
-                        <a class="dropdown-item" href="javascript:void(0)"
-                           onclick="changeLanguage('{{ lang.0 }}');">
-                            {% if lang.0 == "es" %}
-                                <img class="img-flag" src="{% static 'img/flag-ES.png' %}" alt="es"/>
-                            {% else %}
-                                <img class="img-flag" src="{% static 'img/flag-EN.png' %}" alt="en"/>
-                            {% endif %}
-                            {{ lang.1 }}
-                        </a>
-                    {% endfor %}
-                </div>
-            </li>
-        </ul>
-    </div>
-</nav>
+            </ul>
+        </div>
+    </nav>
 </header>
 <main role="main">
     <div class="container">
@@ -145,19 +137,6 @@
 </main>
 <br/>
 
-<footer class="footer">
-    <div class="container-fluid">
-        <ul class="list-inline footer-links">
-            <li class="list-inline-item">
-                <a href="{% url 'about' %}">{% trans "About" %}</a>
-            </li>
-            <li class="list-inline-item">
-                <a href="{% url 'contact' %}">{% trans "Contact" %}</a>
-            </li>
-        </ul>
-        <span class="text-muted">Prediction markets framework</span>
-    </div>
-</footer>
 
 <!-- i18n form. Entried by static/js/i18n.js -->
 <form action="{% url 'set_language' %}" method="post" id="form_language">
@@ -166,27 +145,37 @@
     <input name="language" type="hidden" value="" id="form_language_lang"/>
 </form>
 
+<!-- Import js -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/i18n.js' %}"></script>
 <script>
-   /*$('.nav-link').click(function () {
-        $(this).closest('.nav-link').removeClass('clicked');
-        $(this).addClass('clicked');
-    });*/
-    $(document).ready(function (){
+    /*$('.nav-link').click(function () {
+         $(this).closest('.nav-link').removeClass('clicked');
+         $(this).addClass('clicked');
+     });*/
+    $(document).ready(function () {
         var url_str = window.location.pathname;
-        if (url_str.startsWith("/markets/")){
+        if (url_str.startsWith("/markets/")) {
             activate_link_navbar("markets_id");
-        } else if (url_str.startsWith("/categories/")){
+        } else if (url_str.startsWith("/categories/")) {
             activate_link_navbar("categories_id");
-        } else if (url_str.startsWith("/group")){
+        } else if (url_str.startsWith("/group")) {
             activate_link_navbar("groups_id")
         }
     });
+
     function activate_link_navbar(nav_link_id) {
         // First we remove the clicked class from all the navs.
         $('.clicked').removeClass('clicked');
         // Then we set the clicked class to the current nav.
-        $('#'+nav_link_id).addClass('clicked')
+        $('#' + nav_link_id).addClass('clicked')
     }
 </script>
+{% block javascript %}{% endblock %}
 </body>
 </html>

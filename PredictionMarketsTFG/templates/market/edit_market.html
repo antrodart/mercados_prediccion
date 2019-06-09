@@ -1,57 +1,37 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% load i18n %}
+{% load static %}
 
 <head>
-    <title>{% block title %}
-        {% if editing %}
-            {% trans "Edit group" %}
-        {% else %}
-            {% trans "Create group" %}
-        {% endif %}
-    {% endblock %}</title>
+    <title>{% block title %}{% trans "Edit market" %}{% endblock %}</title>
 </head>
 
-{% block css %}
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css"
-          rel="stylesheet">
-{% endblock %}
-
 {% block content %}
-    <div class="col-md-6 mx-auto text-center">
-        <div class="header-title">
-            <h1 class="wv-heading--title">
-                {% if editing %}
-                    {% blocktrans %}Edit private group{% endblocktrans %}
-                {% else %}
-                    {% blocktrans %}Create private group{% endblocktrans %}
-                {% endif %}
-            </h1>
+    <div class="row">
+        <div class="col-md-6 mx-auto text-center">
+            <div class="header-title">
+                <h1 class="wv-heading--title">
+                    {% blocktrans %}Edit prediction market{% endblocktrans %}
+                </h1>
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-8 mx-auto">
             <div class="myform form ">
-                <form method="post" enctype="multipart/form-data">
+                <form method="post" id="market_form" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="{{ form.name.id_for_label }}" class="text-info">{{ form.name.label }}</label>
-                        {% if form.name.errors %}
-                            {{ form.name | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
-                            <div class="invalid-feedback">
-                                {% for err in form.name.errors %}
-                                    {{ err }}
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.name | add_class:'form-control my-input' |attr:'autofocus:true' }}
-                        {% endif %}
+                        <label class="text-info">{% trans "Title" %}</label>
+                        <input type="text" class="form-control my-input" value="{{ form.instance.title }}" disabled>
                     </div>
                     <div class="form-group">
                         <label for="{{ form.description.id_for_label }}"
                                class="text-info">{{ form.description.label }}</label>
                         {% if form.description.errors %}
                             {{ form.description | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
+                            <small class="form-text text-muted">{{ form.description.help_text }}</small>
                             <div class="invalid-feedback">
                                 {% for err in form.description.errors %}
                                     {{ err }}
@@ -59,24 +39,30 @@
                             </div>
                         {% else %}
                             {{ form.description | add_class:'form-control my-input' |attr:'autofocus:true' }}
+                            <small class="form-text text-muted">{{ form.description.help_text }}</small>
                         {% endif %}
                     </div>
-                    <div class="form-group">
-                        <label for="{{ form.is_visible.id_for_label }}"
-                               class="text-info">{{ form.is_visible.label }}</label>
-                        <input type="checkbox" checked data-toggle="toggle"
-                               data-on="{% trans "Visible" %}"
-                               data-off="{% trans "Not visible" %}"
-                               data-onstyle="success" data-offstyle="danger"
-                               id="{{ form.is_visible.id_for_label }}"
-                               name="is_visible"
-                               data-style="innerdivtoggle">
-                        <small class="form-text text-muted">{{ form.is_visible.help_text }}</small>
+                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="text-info">{% trans "End date" %}</label><br>
+                                    <input type="text" class="form-control my-input" value="{{ form.instance.end_date }}" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.categories.id_for_label }}" class="text-info">
+                                    {{ form.categories.label }}
+                                    <span class="text-muted">{% trans "(Optional)" %}</span>
+                                </label><br>
+                                {{ form.categories |add_class:'form-control my-input' |attr:'name:category' }}
+                                <small class="form-text text-muted">{{ form.categories.help_text }}</small>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.picture.id_for_label }}" class="text-info">{{ form.picture.label }}
-                            <span class="text-muted">{% trans "(Optional)" %}</span>
-                        </label>
+                        <label for="{{ form.picture.id_for_label }}"
+                               class="text-info">{{ form.picture.label }}</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="inputGroupFileAddon01">
@@ -95,6 +81,26 @@
                             <div class="invalid-feedback">{{ err }}</div>
                         {% endfor %}
                     </div>
+                    <div class="form-group">
+                        <label class="text-info">{% trans "Type of market" %}:
+                            {% if form.instance.is_binary %}
+                                {% trans "binary" %}
+                            {% else %}
+                                {% trans "multiple" %}
+                            {% endif %}
+                        </label><br>
+                        <small class="form-text text-muted">
+                            {% trans "Binary markets only accept yes/no contract options. Multiple markets accept more than one predefined options." %}
+                        </small>
+                    </div>
+                    {% if not form.instance.is_binary %}
+                        <div class="form-group">
+                            {% for option in form.instance.option_set.all %}
+                                <label class="text-info">{% trans "Option" %}</label>
+                                <input type="text" class="form-control my-input" value="{{ option.name }}" disabled>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                     {% if form.errors %}
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             {% if form.errors %}
@@ -113,18 +119,13 @@
                         </div>
                     {% endif %}
                     <div class="text-center">
-                    {% if editing %}
                         <button type="submit" class="btn btn-danger" name="delete"
                            onclick="return deleteConfirm()">
                             {% trans "Delete" %}
                         </button>
-                        <button type="submit" class="btn btn-primary">{% trans "Save" %}
+                        <button type="submit" class=" btn btn-primary">
+                            {% trans "Save" %}
                         </button>
-                    {% else %}
-                         <button type="submit" class="btn btn-primary">{% blocktrans %}Create group{% endblocktrans %}
-                        </button>
-                    {% endif %}
-                    </div>
                 </form>
             </div>
         </div>
@@ -133,21 +134,21 @@
 {% endblock %}
 
 {% block javascript %}
-     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
-     <script>
-        // This script makes the name of the file appear on upload input
-        $(".custom-file-input").on("change", function () {
-             var fileName = $(this).val().split("\\").pop();
-            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-        });
+    <script>
         function deleteConfirm() {
             {% get_current_language as CURRENT_LANGUAGE %}
             {% if CURRENT_LANGUAGE == "en" %}
-                var result = confirm("Are you sure you want to delete this group?");
+                var result = confirm("Are you sure you want to delete this market?");
             {% else %}
-                var result = confirm("¿Estás seguro de que quieres borrar este grupo?");
+                var result = confirm("¿Estás seguro de que quieres borrar este mercado?");
             {% endif %}
             return result;
         }
+
+        // This script makes the name of the file appear on upload input
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
     </script>
 {% endblock %}

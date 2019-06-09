@@ -1,12 +1,19 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% load i18n %}
+{% load static %}
 
 <head>
     <title>{% block title %}{% trans "Create market" %}{% endblock %}</title>
 </head>
 
+{% block css %}
+     <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css"/>
+{% endblock %}
+
 {% block content %}
+
     <div class="row">
         <div class="col-md-6 mx-auto text-center">
             <div class="header-title">
@@ -19,122 +26,188 @@
     <div class="row">
         <div class="col-md-8 mx-auto">
             <div class="myform form ">
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="{{ form.title.id_for_label }}" class="text-info">* {{ form.title.label }}</label>
-                        {% if form.title.errors %}
-                            {{ form.title | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
-                            <small>{{ form.title.help_text }}</small>
-                            <div class="invalid-feedback">
-                                {% for err in form.title.errors %}
-                                    {{ err }}
-                                {% endfor %}
+                <form method="post" id="market_form" enctype="multipart/form-data">
+                    <div>
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="{{ form.title.id_for_label }}" class="text-info">{{ form.title.label }}</label>
+                            {% if form.title.errors %}
+                                {{ form.title | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
+                                <small class="form-text text-muted">{{ form.title.help_text }}</small>
+                                <div class="invalid-feedback">
+                                    {% for err in form.title.errors %}
+                                        {{ err }}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.title | add_class:'form-control my-input' |attr:'autofocus:true' }}
+                                <small class="form-text text-muted">{{ form.title.help_text }}</small>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.description.id_for_label }}"
+                                   class="text-info">{{ form.description.label }}</label>
+                            {% if form.description.errors %}
+                                {{ form.description | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
+                                <small class="form-text text-muted">{{ form.description.help_text }}</small>
+                                <div class="invalid-feedback">
+                                    {% for err in form.description.errors %}
+                                        {{ err }}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.description | add_class:'form-control my-input' |attr:'autofocus:true' }}
+                                <small class="form-text text-muted">{{ form.description.help_text }}</small>
+                            {% endif %}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.end_date.id_for_label }}" class="text-info">
+                                        {{ form.end_date.label }}
+                                    </label><br>
+                                    {% if form.end_date.errors %}
+                                        {{ form.end_date | add_class:'form-control my-input is-invalid' |attr:'name:end_date' }}
+                                        <div class="invalid-feedback">
+                                            {% blocktrans %}The end date is not valid. It must be future.{% endblocktrans %}
+                                        </div>
+                                        <small class="form-text text-muted">{{ form.end_date.help_text }}</small>
+                                    {% else %}
+                                        {{ form.end_date |add_class:'form-control my-input' |attr:'name:end_date' }}
+                                        <small class="form-text text-muted">{{ form.end_date.help_text }}</small>
+                                    {% endif %}
+                                </div>
                             </div>
-                        {% else %}
-                            {{ form.title | add_class:'form-control my-input' |attr:'autofocus:true' }}
-                            <small>{{ form.title.help_text }}</small>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.description.id_for_label }}"
-                               class="text-info">* {{ form.description.label }}</label>
-                        {% if form.description.errors %}
-                            {{ form.description | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
-                           <small>{{ form.description.help_text }}</small>
-                            <div class="invalid-feedback">
-                                {% for err in form.description.errors %}
-                                    {{ err }}
-                                {% endfor %}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.categories.id_for_label }}" class="text-info">
+                                        {{ form.categories.label }}
+                                        <span class="text-muted">{% trans "(Optional)" %}</span>
+                                    </label><br>
+                                    {{ form.categories |add_class:'form-control my-input' |attr:'name:category' }}
+                                    <small class="form-text text-muted">{{ form.categories.help_text }}</small>
+                                </div>
                             </div>
-                        {% else %}
-                            {{ form.description | add_class:'form-control my-input' |attr:'autofocus:true' }}
-                            <small>{{ form.description.help_text }}</small>
-                        {% endif %}
-                    </div>
-                     <div class="form-group">
-                        <label for="{{ form.end_date.id_for_label }}" class="text-info">* {{ form.end_date.label }}</label><br>
-                        {% if form.end_date.errors %}
-                            {{ form.end_date | add_class:'form-control my-input is-invalid' |attr:'name:end_date' }}
-                            <small>{{ form.description.help_text }}</small>
-                            <div class="invalid-feedback">
-                                {% blocktrans %}The end date is not valid.{% endblocktrans %}
-                            </div>
-                        {% else %}
-                            {{ form.end_date |add_class:'form-control my-input' |attr:'name:end_date' }}
-                            <small>{{ form.description.help_text }}</small>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.category.id_for_label }}" class="text-info">{{ form.category.label }}</label><br>
-                        {% if form.category.errors %}
-                            {{ form.category | add_class:'form-control my-input is-invalid' |attr:'id:category'|attr:'name:category' }}
-                            <small>{{ form.category.help_text }}</small>
-                            <div class="invalid-feedback">
-                                {% blocktrans %}The category is not valid.{% endblocktrans %}
-                            </div>
-                        {% else %}
-                            {{ form.category |add_class:'form-control my-input' |attr:'id:categoty'|attr:'name:category' }}
-                            <small>{{ form.category.help_text }}</small>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.picture.id_for_label }}"
-                               class="text-info">* {{ form.picture.label }}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.picture.id_for_label }}"
+                                   class="text-info">{{ form.picture.label }}</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
                                 <span class="input-group-text" id="inputGroupFileAddon01">
                                     {% blocktrans %}Upload picture{% endblocktrans %}</span>
+                                </div>
+                                <div class="custom-file">
+                                    {{ form.picture |attr:'type:file' | add_class:'custom-file-input' |attr:'aria-describedby:inputPictureHelpTextId' }}
+                                    <label class="custom-file-label" for="{{ form.picture.id_for_label }}">
+                                        {% blocktrans %}Choose file{% endblocktrans %}</label>
+                                </div>
                             </div>
-                            <div class="custom-file">
-                                {{ form.picture |attr:'type:file' | add_class:'custom-file-input' |attr:'aria-describedby:inputPictureHelpTextId' }}
-                                <label class="custom-file-label" for="{{ form.picture.id_for_label }}">
-                                    {% blocktrans %}Choose file{% endblocktrans %}</label>
-                            </div>
+                            <small id="inputPictureHelpTextId" class="form-text text-muted">
+                                {{ form.picture.help_text }}
+                            </small>
+                            {% for err in form.picture.errors %}
+                                <div class="invalid-feedback">{{ err }}</div>
+                            {% endfor %}
                         </div>
-                        <small id="inputPictureHelpTextId" class="form-text text-muted">
-                            {{ form.picture.help_text }}
-                        </small>
-                        {% for err in form.picture.errors %}
-                            <div class="invalid-feedback">{{ err }}</div>
-                        {% endfor %}
-                    </div>
-                    {% if form.errors %}
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            {% if form.errors %}
-                                {% for field in form %}
-                                    {% for error in field.errors %}
-                                        {{ error }}
-                                    {% endfor %}
-                                {% endfor %}
-                                {% for error in form.non_field_errors %}
-                                    {{ error }}
+                        <div class="form-group">
+                            <label for="{{ form.is_binary.id_for_label }}"
+                                   class="text-info">{{ form.is_binary.label }}</label><br>
+                            {% for choice in form.is_binary %}
+                                <div class="custom-control custom-radio">
+                                    {{ choice.tag }}
+                                    {{ form.is_binary.id }}
+                                    <label for="value_{{ forloop.counter0 }}"
+                                           class="custom-control-label">{{ choice.choice_label }}</label>
+                                </div>
+                            {% endfor %}
+                            <small class="form-text text-muted">
+                                {{ form.is_binary.help_text }}
+                            </small>
+                        </div>
+
+                        <div class="editfield" style="display:none;">
+                            {% for option_form in option_formset %}
+                                <div class="option-formset">
+                                    <label for="{{ option_form.name.id_for_label }}"
+                                           class="text-info">{{ option_form.name.label }}</label>
+                                    {% if option_form.name.errors %}
+                                        {{ option_form.name | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
+                                        <small class="form-text text-muted">{{ option_form.name.help_text }}</small>
+                                        <div class="invalid-feedback">
+                                            {% for err in option_form.name.errors %}
+                                                {{ err }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ option_form.name | add_class:'form-control my-input' }}
+                                        <small class="form-text text-muted">{{ option_form.name.help_text }}</small>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+
+                            {% if option_formset.non_form_errors %}
+                                {% for error in option_formset.non_form_errors %}
+                                    {{ error|escape }}
                                 {% endfor %}
                             {% endif %}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                        </div>
+
+                        {% if form.errors %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {% if form.errors %}
+                                    {% for field in form %}
+                                        {% for error in field.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    {% endfor %}
+                                    {% for error in form.non_field_errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                {% endif %}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endif %}
+                        {% if options_form.errors %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {% if options_form.errors %}
+                                    {% for field in options_form %}
+                                        {% for error in field.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    {% endfor %}
+                                    {% for error in options_form.non_field_errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                {% endif %}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endif %}
+
+                        <div class="text-center">
+                            <button type="submit" class=" btn btn-primary">
+                                {% blocktrans %}Create market{% endblocktrans %}
                             </button>
                         </div>
-                    {% endif %}
-                    <div class="text-center">
-                        <button type="submit" class=" btn btn-primary">{% blocktrans %}Create market{% endblocktrans %}
-                        </button>
                     </div>
+                    {{ option_formset.management_form }}
                 </form>
             </div>
         </div>
     </div>
 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css"/>
-    <script>
-        // This script makes the name of the file appear on upload input
-        $(".custom-file-input").on("change", function () {
-             var fileName = $(this).val().split("\\").pop();
-            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-        });
+{% endblock %}
 
-         $(document).ready(function () {
+{% block javascript %}
+     <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script>
+        $(document).ready(function () {
             $({{ form.end_date.id_for_label }}).datepicker({
                 {% get_current_language as LANGUAGE_CODE %}
                 format:
@@ -145,6 +218,39 @@
                     {% endif %}
             })
         });
+
+        $(document).ready(function () {
+            if ($('input[name=is_binary]:checked', '#market_form').val() === "0") {
+                $('.editfield').show();
+                showFormsetOptions();
+            } else
+                $('.editfield').hide();
+        });
+
+        // This script makes the name of the file appear on upload input
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+
+        $('#market_form input[type="radio"]').on('change', function () {
+            if ($('input[name=is_binary]:checked', '#market_form').val() === "1")
+                $('.editfield').hide();
+            else {
+                $('.editfield').show();
+                if (!$('.editfield .delete-row').length) {
+                    showFormsetOptions();
+                }
+            }
+        });
+
+        function showFormsetOptions() {
+            $('.option-formset').formset({
+                addText: 'add option',
+                deleteText: 'remove option',
+            });
+        }
+
+
     </script>
-    
 {% endblock %}

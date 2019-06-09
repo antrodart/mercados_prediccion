@@ -15,10 +15,12 @@ class Market(models.Model):
 	title = models.CharField(max_length=150, blank=False)
 	description = models.TextField(blank=False)
 	end_date = models.DateField(null=False)
+	creation_date = models.DateField(auto_now_add=True)
 	picture = models.TextField()
 	is_judged = models.BooleanField(default=False, null=False)
+	is_binary = models.BooleanField(default=True, null=False)
 	creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
-	category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+	categories = models.ManyToManyField(Category)
 	group = models.ForeignKey('Group', on_delete=models.CASCADE, null=True)
 
 	@property
@@ -30,16 +32,25 @@ class Market(models.Model):
 
 
 class Option(models.Model):
-	title = models.CharField(max_length=140, blank=False)
-	picture = models.TextField(blank=True)
-	is_correct = models.BooleanField(default=None, null=True)
+	name = models.CharField(max_length=40, blank=False)
+	is_correct = models.BooleanField(default=False, null=True)
+	binary_yes = models.BooleanField(default=None, null=True)
 	market = models.ForeignKey(Market, on_delete=models.CASCADE, null=False)
+
+	@property
+	def get_todays_price_yes(self):
+		return self.price_set.get(is_yes=True, is_last=True)
+
+	@property
+	def get_todays_price_no(self):
+		return self.price_set.get(is_yes=False, is_last=True)
 
 
 class Price(models.Model):
 	buy_price = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(1)], default=50)
-	sell_price = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(1)], default=50)
-	date = models.DateField(null=False)
+	date = models.DateField(null=False, auto_now_add=True)
+	is_yes = models.BooleanField(null=False)
+	is_last = models.BooleanField(null=False, default=True)
 	option = models.ForeignKey(Option, on_delete=models.CASCADE, null=False)
 
 
@@ -85,8 +96,11 @@ class JoinedGroup(models.Model):
 
 
 class Asset(models.Model):
+	quantity = models.IntegerField(null=False, default=1)
+	is_yes = models.BooleanField(null=False, default=True)
 	has_expired = models.BooleanField(null=False, default=False)
 	is_judged = models.BooleanField(null=False, default=False)
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
 	option = models.ForeignKey(Option, on_delete=models.CASCADE, null=False)
+	market = models.ForeignKey(Market, on_delete=models.CASCADE, null=False)
 

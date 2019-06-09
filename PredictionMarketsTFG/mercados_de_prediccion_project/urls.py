@@ -32,4 +32,7 @@ urlpatterns = [
 ]
 
 #Do not delete this import, it creates and registers the automatic tasks in tasks.py
-import mercados_de_prediccion_project.tasks
+import mercados_de_prediccion_project.tasks as tasks
+
+tasks.scheduler.start()
+
