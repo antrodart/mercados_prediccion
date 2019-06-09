@@ -4,16 +4,12 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _, get_language
 from django.forms.formsets import formset_factory
 from django.shortcuts import render, redirect, get_object_or_404
-from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
-from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from users.models import User
-import math
 from django.views.generic import TemplateView
-from chartjs.views.lines import BaseLineChartView
 import datetime
 
 class HomePageView(TemplateView):
