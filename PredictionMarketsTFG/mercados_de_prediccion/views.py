@@ -459,13 +459,17 @@ def ajax_charts(request):
 	#  Then, we can get the labels for the x axis (labels).
 	labels = [x.strftime(date_format) for x in days]
 
-	# [ ['option 1', ['3', '4', '30']], ['option 2', ['3', '4', '30']], 'option 3', 'option 4']
 	options = []
+	if market.is_binary:
+		q = Q()
+	else:
+		q = Q(is_yes=True)
+
 	for option in market.option_set.all():
 		#  After that, we get the data for the y axis.
 		price_list = []
-		#price_list.append(price.buy_price for price in Price.objects.filter(option=option).order_by('date').all())
-		price_per_day = Price.objects.filter(option=option).order_by('date')
+		q |= Q(option=option)
+		price_per_day = Price.objects.filter(q).order_by('date')
 		for price in price_per_day:
 			price_list.append(price.buy_price)
 		options_json = {
@@ -480,10 +484,8 @@ def ajax_charts(request):
 		'options': options
 	}
 
-	print(json_dummy)
 	data = json.dumps(json_dummy)
-	res = JsonResponse(data, safe=False)
-	return res
+	return JsonResponse(data, safe=False)
 
 
 @login_required()

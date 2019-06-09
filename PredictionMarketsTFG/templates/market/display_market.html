@@ -219,7 +219,7 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <div id="myDivPlotly">
+                    <div id="divPlotlyLinesChart">
 
                     </div>
                 </div>
@@ -240,33 +240,34 @@
                     'marketId': {{ market.pk|stringformat:"s" }}
                 },
                 dataType: 'json',
-                success: function (datos) {
-                    var returnedData = JSON.parse(datos);
+                success: function (data) {
+                    var returnedData = JSON.parse(data);
                     var chart_data = [];
-                    console.log(returnedData);
-                    for (var i = 0; i < returnedData.options.length; i++){
+                    for (var i = 0; i < returnedData.options.length; i++) {
                         var x = returnedData.labels;
                         var y = returnedData.options[i].values;
-                        var mode = 'lines';
+                        var mode = 'lines+markers';
                         var name = returnedData.options[i].name;
                         var type = 'scatter';
                         var line;
-                        if (returnedData.options[i].binary_yes === true) {
-                            line = {
-                                'color': "#0c730d"
-                            };
-                        } else if (returnedData.options[i].binary_yes === false) {
-                            line = {
-                                'color': "#a00c04"
-                            };
-                        }
+                        {% if market.is_binary %}
+                            if (returnedData.options[i].binary_yes === true) {
+                                line = {
+                                    'color': "#0c730d"
+                                };
+                            } else if (returnedData.options[i].binary_yes === false) {
+                                line = {
+                                    'color': "#a00c04"
+                                };
+                            }
+                        {% endif %}
                         var trace = {
                             'x': x,
                             'y': y,
                             'mode': mode,
                             'name': name,
                             'type': type,
-                            'line': line
+                            'line': line,
                         };
                         chart_data.push(trace);
                     }
@@ -278,12 +279,12 @@
                             'type': 'linear'
                         }
                     };
-                    Plotly.plot('myDivPlotly', {
+                    Plotly.plot('divPlotlyLinesChart', {
                         data: chart_data,
                         layout: layout
                     });
                 },
-                error: function (datos) {
+                error: function (data) {
                     console.log("error");
                 }
             });
@@ -291,7 +292,7 @@
         });
 
     </script>
-    <script>
+    <script type="text/javascript">
         $(document).ready(function () {
             $.ajax({
                 url: "/ajax/related_markets/",

@@ -19,7 +19,7 @@ def delete_users_marked():
 		user.delete()
 
 
-@scheduler.scheduled_job("cron", hour=13, minute=29, id="register_prices_per_day")
+@scheduler.scheduled_job("cron", hour=11, minute=59, id="register_prices_per_day")
 def register_prices_per_day():
 	print("Registering prices")
 	today = datetime.datetime.now()
@@ -54,6 +54,3 @@ def overwrite_prices(current_price_yes, current_price_no):
 		#  Creation of 2 new prices, one for each option, that are the last prices.
 		Price.objects.create(option=current_price_yes.option, is_yes=True, is_last=True, buy_price=current_price_yes.buy_price)
 		Price.objects.create(option=current_price_no.option, is_yes=False, is_last=True, buy_price=current_price_no.buy_price)
-
-
-scheduler.start()
