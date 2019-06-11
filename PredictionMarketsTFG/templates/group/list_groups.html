@@ -72,11 +72,10 @@
         <div class="container">
             <div class="row">
                 {% for group in groups %}
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card mb-4 box-shadow">
                             <a href="/group/?groupId={{ group.id }}">
                                 <img class="card-img-top" alt="{{ group.name }}"
-                                     style="max-height: 225px;object-fit: contain; display: block;"
                                      src="data:image/png;base64,{{ group.picture }}" data-holder-rendered="true">
                             </a>
                             <div class="card-body">
@@ -85,8 +84,11 @@
                                         <img src="{% static 'img/icons/locked.png' %}" alt="{% trans "Private group" %}"
                                              style="max-height: 25px;">
                                     {% endif %}
-                                    <a href="/group/?groupId={{ group.id }}" style="color:unset;"><strong>{{ group.name }}</strong></a>
+                                    <a href="/group/?groupId={{ group.id }}"
+                                       style="color:unset;"><strong>{{ group.name }}</strong></a>
                                 </p>
+                            </div>
+                            <div class="card-footer">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <small class="text-muted">{{ group.market_set.count }}
                                         {% if group.market_set.count == 1 %}
@@ -103,7 +105,8 @@
                                         {% endif %}
                                     </small>
                                     {% if view_name == "list_created" %}
-                                        <a href='/group/edit/?groupId={{ group.id }}' class="btn btn-outline-secondary"
+                                        <a href='/group/edit/?groupId={{ group.id }}'
+                                           class="btn btn-outline-secondary"
                                            role="button">{% trans "Edit" %}</a>
                                     {% endif %}
                                 </div>

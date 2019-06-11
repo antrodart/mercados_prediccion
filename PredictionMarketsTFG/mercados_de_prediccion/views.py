@@ -11,6 +11,7 @@ from .forms import *
 from users.models import User
 from django.views.generic import TemplateView
 import datetime
+import logging
 
 class HomePageView(TemplateView):
 	template_name = 'home.html'
@@ -25,7 +26,11 @@ class ContactView(TemplateView):
 
 
 def list_categories_view(request):
-	all_categories = Category.objects.all()
+	if get_language() == "en":
+		order = "title"
+	else:
+		order = "title_es"
+	all_categories = Category.objects.all().order_by(order)
 	paginator = Paginator(all_categories, per_page=10)
 	page = request.GET.get('page')
 
@@ -37,6 +42,7 @@ def list_categories_view(request):
 		categories = paginator.page(paginator.num_pages)
 
 	args = {'categories': categories}
+	logging.info('Listing categories')
 
 	return render(request, 'category/list_categories.html', args)
 
@@ -188,11 +194,17 @@ def display_group_view(request):
 
 @login_required()
 def create_market_view(request):
+	user = User.objects.get(pk=request.user.pk)
 	group_id = request.GET.get('groupId')
-	group = get_object_or_404(Group, pk=group_id)
-	user = request.user
-	if group and (not group.moderator == user):
+	if group_id:
+		group = get_object_or_404(Group, pk=group_id)
+	else:
+		group = None
+
+	if group and not group.moderator == user:
 		raise PermissionDenied(_("You can't create a market in this group."))
+	elif not group and not user.is_staff and not user.is_verified:
+		raise PermissionDenied(_("You can't create a public market. Please contact us if you want to verify your account and create public markets."))
 
 	# Create the formset, specifying the form and formset we want to use.
 	OptionFormSet = formset_factory(CreateOptionForm, formset=BaseOptionFormSet, min_num=2,max_num=10)
@@ -513,3 +525,31 @@ def buy_asset_view(request):
 			return redirect('/market/?marketId=' + str(market_id))
 	else:
 		return redirect('/market/?marketId=' + str(market_id))
+
+
+def list_markets_view(request):
+	user = request.user
+	user_verified = False
+	query_public_groups = Q(group=None)
+	query_private_groups = Q()
+	if user.is_authenticated:
+		groups_ids = JoinedGroup.objects.filter(user=user, is_accepted=True).values_list('group_id', flat=True)
+		query_private_groups = Q(group__in=groups_ids)
+		user_verified = user.is_verified
+
+	query_public_groups |= query_private_groups
+	all_markets = Market.objects.filter(Q(is_judged=False) & query_public_groups).order_by('end_date')
+
+	paginator = Paginator(all_markets, per_page=10)
+	page = request.GET.get('page')
+
+	try:
+		markets = paginator.get_page(page)
+	except PageNotAnInteger:
+		markets = paginator.get_page(1)
+	except EmptyPage:
+		markets = paginator.page(paginator.num_pages)
+
+	args = {'markets': markets, 'user_verified': user_verified}
+
+	return render(request, 'market/list_markets.html', args)

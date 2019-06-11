@@ -16,68 +16,90 @@
         </div>
     </div>
 
-    <nav aria-label="Pagination">
-        <ul class="pagination">
-            {% if categories.has_previous %}
-                <li class="page-item"><a class="page-link"
-                                         href="?page={{ categories.previous_page_number }}">&laquo;</a></li>
-            {% else %}
-                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
-            {% endif %}
+    <div class="row">
+        <div class="col">
+            <nav aria-label="Pagination">
+                <ul class="pagination">
+                    {% if categories.has_previous %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ categories.previous_page_number }}">&laquo;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                    {% endif %}
 
-            {% for page_num in categories.paginator.page_range %}
-                {% if categories.number == page_num %}
-                    <li class="page-item active"><span class="page-link">{{ page_num }} <span
-                            class="sr-only">(current)</span></span></li>
-                {% else %}
-                    <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a></li>
-                {% endif %}
-            {% endfor %}
-            {% if categories.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ categories.next_page_number }}">&raquo;</a>
-                </li>
-            {% else %}
-                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
-            {% endif %}
-        </ul>
-    </nav>
+                    {% for page_num in categories.paginator.page_range %}
+                        {% if categories.number == page_num %}
+                            <li class="page-item active"><span class="page-link">{{ page_num }} <span
+                                    class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if categories.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ categories.next_page_number }}">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% if user.is_staff %}
+            <div class="col">
+                <div class="float-right">
+                    <a href="{% url 'create_category' %}">
+                        <button type="button" class="btn btn-primary">
+                            {% blocktrans %}Create category{% endblocktrans %}
+                        </button>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
 
     <div class="album py-5 bg-light">
         <div class="container">
             <div class="row">
                 {% for category in categories %}
-                <div class="col-md-4">
-                    <div class="card mb-4 box-shadow">
-                        <a href="/markets/?categoryId={{ category.id }}">
-                            <img class="card-img-top" alt="{{ category.title }}" style="max-height: 225px;object-fit: contain; display: block;" src="data:image/png;base64,{{ category.picture }}" data-holder-rendered="true">
-                        </a>
-                        <div class="card-body">
-                            <p class="card-text">
-                                {% if LANGUAGE_CODE == "en" %}
-                                    <strong>{{ category.title }}</strong>
-                                {% else %}
-                                    <strong>{{ category.title_es }}</strong>
-                                {% endif %}
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">{{ category.market_set.count }}
-                                    {% if category.market_set.count == 1 %}
-                                        {% trans "market" %}
+                    <div class="col-md-3">
+                        <div class="card mb-4 box-shadow">
+                            <a href="/markets/?categoryId={{ category.id }}">
+                                <img class="card-img-top" alt="{{ category.title }}"
+                                     src="data:image/png;base64,{{ category.picture }}" data-holder-rendered="true">
+                            </a>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    {% if LANGUAGE_CODE == "en" %}
+                                        <strong>{{ category.title }}</strong>
                                     {% else %}
-                                        {% trans "markets" %}
+                                        <strong>{{ category.title_es }}</strong>
                                     {% endif %}
-                                </small>
-                                {% if user.is_authenticated and user.is_staff %}
-                                    <a href='/category/edit/?categoryId={{ category.id }}' class="btn btn-outline-secondary"
-                                       role="button">{% trans "Edit" %}</a>
-                                {% endif %}
+                                </p>
+
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">{{ category.market_set.count }}
+                                        {% if category.market_set.count == 1 %}
+                                            {% trans "participant" %}
+                                        {% else %}
+                                            {% trans "markets" %}
+                                        {% endif %}
+                                    </small>
+                                    {% if user.is_authenticated and user.is_staff %}
+                                        <a href='/category/edit/?categoryId={{ category.id }}'
+                                           class="btn btn-outline-secondary"
+                                           role="button">{% trans "Edit" %}</a>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 {% endfor %}
             </div>
         </div>
+
     </div>
 
 {% endblock %}
