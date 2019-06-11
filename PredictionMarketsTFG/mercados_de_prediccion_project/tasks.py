@@ -3,6 +3,7 @@ from django.db import transaction
 from users.models import User
 from mercados_de_prediccion.models import Market, Price
 import datetime
+import logging
 
 
 scheduler = BackgroundScheduler()
@@ -19,9 +20,10 @@ def delete_users_marked():
 		user.delete()
 
 
-@scheduler.scheduled_job("cron", hour=11, minute=59, id="register_prices_per_day")
+@scheduler.scheduled_job("cron", hour=16, minute=30, id="register_prices_per_day")
 def register_prices_per_day():
 	print("Registering prices")
+	logging.info('Registering prices')
 	today = datetime.datetime.now()
 	markets_to_register_prices = Market.objects.filter(end_date__gte=today)  #Markets that haven't finished or finish today
 
@@ -42,6 +44,7 @@ def register_prices_per_day():
 
 				overwrite_prices(current_price_yes, current_price_no)
 
+	logging.info('Prices registered succesfully')
 
 def overwrite_prices(current_price_yes, current_price_no):
 	with transaction.atomic():

@@ -11,7 +11,7 @@ import os
 
 
 class LoginForm(forms.Form):
-	email = forms.EmailField(max_length=255, required=True)
+	email = forms.EmailField(max_length=150, required=True)
 	password = forms.CharField(widget=forms.PasswordInput, required=True)
 
 	def clean(self):
