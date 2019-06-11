@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load static %}
 
 <head>
     <title>{% block title %}{% trans "Categories" %}{% endblock %}</title>
@@ -15,6 +16,7 @@
             </h1>
         </div>
     </div>
+
 
     <div class="row">
         <div class="col">
@@ -76,18 +78,19 @@
                                         <strong>{{ category.title_es }}</strong>
                                     {% endif %}
                                 </p>
-
-                            </div>
-                            <div class="card-footer">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">{{ category.market_set.count }}
+                                    <small class="text-muted">
+                                        <img src="{% static 'img/icons/markets.png' %}"
+                                             title="{% trans "Markets" %}"
+                                             alt="{% trans "Markets" %}" style="max-height: 25px;">
+                                        {{ category.market_set.count }}
                                         {% if category.market_set.count == 1 %}
-                                            {% trans "participant" %}
+                                            {% trans "market" %}
                                         {% else %}
                                             {% trans "markets" %}
                                         {% endif %}
                                     </small>
-                                    {% if user.is_authenticated and user.is_staff %}
+                                    {% if user.is_staff %}
                                         <a href='/category/edit/?categoryId={{ category.id }}'
                                            class="btn btn-outline-secondary"
                                            role="button">{% trans "Edit" %}</a>

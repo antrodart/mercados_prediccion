@@ -526,16 +526,24 @@ def buy_asset_view(request):
 
 def list_markets_view(request):
 	user = request.user
+	category_id = request.GET.get('categoryId')
+	if category_id:
+		category = Category.objects.get(pk=category_id)
+		q_category = Q(categories__in=category_id)
+	else:
+		category = None
+		q_category = Q()
+
 	user_verified = False
-	query_public_groups = Q(group=None)
-	query_private_groups = Q()
+	q_public_groups = Q(group=None)
+	q_private_groups = Q()
 	if user.is_authenticated:
 		groups_ids = JoinedGroup.objects.filter(user=user, is_accepted=True).values_list('group_id', flat=True)
-		query_private_groups = Q(group__in=groups_ids)
+		q_private_groups = Q(group__in=groups_ids)
 		user_verified = user.is_verified
 
-	query_public_groups |= query_private_groups
-	all_markets = Market.objects.filter(Q(is_judged=False) & query_public_groups).order_by('end_date')
+	q_public_groups |= q_private_groups
+	all_markets = Market.objects.filter(Q(is_judged=False) & q_public_groups & q_category).order_by('end_date')
 
 	paginator = Paginator(all_markets, per_page=10)
 	page = request.GET.get('page')
@@ -547,6 +555,6 @@ def list_markets_view(request):
 	except EmptyPage:
 		markets = paginator.page(paginator.num_pages)
 
-	args = {'markets': markets, 'user_verified': user_verified}
+	args = {'markets': markets, 'user_verified': user_verified, 'category': category}
 
 	return render(request, 'market/list_markets.html', args)
