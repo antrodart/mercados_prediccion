@@ -20,7 +20,8 @@
     <link rel="stylesheet" type="text/css" href="{% static "css/header.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/footer.css" %}">
-    {% block css %}{% endblock %}
+    {% block css %}
+    {% endblock %}
 
     <!-- Fontawesome icons-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
@@ -40,7 +41,7 @@
         <div class="collapse navbar-collapse" id="main-navigation">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" id="market_id" href="{% url 'categories' %}">{% trans "Markets" %}</a>
+                    <a class="nav-link" id="markets_id" href="{% url 'markets' %}">{% trans "Markets" %}</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="groups_id" role="button"
@@ -154,10 +155,6 @@
 <script src="{% static 'js/main.js' %}"></script>
 <script src="{% static 'js/i18n.js' %}"></script>
 <script>
-    /*$('.nav-link').click(function () {
-         $(this).closest('.nav-link').removeClass('clicked');
-         $(this).addClass('clicked');
-     });*/
     $(document).ready(function () {
         var url_str = window.location.pathname;
         if (url_str.startsWith("/markets/")) {
@@ -176,6 +173,7 @@
         $('#' + nav_link_id).addClass('clicked')
     }
 </script>
-{% block javascript %}{% endblock %}
+{% block javascript %}
+{% endblock %}
 </body>
 </html>

@@ -1,7 +1,9 @@
 from django.db import models
+from django.db.models import Sum
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import ugettext_lazy as _
+from users.models import User
 import datetime
 
 
@@ -27,6 +29,11 @@ class Market(models.Model):
 	def has_expired(self):
 		return self.end_date < datetime.date.today()
 
+	def get_participants(self):
+		participants = Asset.objects.filter(market_id=self.pk).aggregate(Sum('quantity'))
+		print(participants)
+		return participants
+
 	def __str__(self):
 		return self.title
 
@@ -47,7 +54,7 @@ class Option(models.Model):
 
 
 class Price(models.Model):
-	buy_price = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(1)], default=50)
+	buy_price = models.IntegerField(validators=[MaxValueValidator(99), MinValueValidator(1)], default=50)
 	date = models.DateField(null=False, auto_now_add=True)
 	is_yes = models.BooleanField(null=False)
 	is_last = models.BooleanField(null=False, default=True)
