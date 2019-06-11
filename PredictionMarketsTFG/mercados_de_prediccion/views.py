@@ -469,20 +469,17 @@ def ajax_charts(request):
 
 	options = []
 	if market.is_binary:
-		q = Q()
+		q0 = Q()
 	else:
-		q = Q(is_yes=True)
+		q0 = Q(is_yes=True)
 
 	for option in market.option_set.all():
 		#  After that, we get the data for the y axis.
-		price_list = []
-		q |= Q(option=option)
-		price_per_day = Price.objects.filter(q).order_by('date')
-		for price in price_per_day:
-			price_list.append(price.buy_price)
+		q = q0 & Q(option=option)
+		price_per_day = Price.objects.filter(q).order_by('date').values_list('buy_price', flat=True)
 		options_json = {
 			'name': option.name,
-			'values': price_list,
+			'values': list(price_per_day),
 			'binary_yes': option.binary_yes
 		}
 		options.append(options_json)
