@@ -279,10 +279,12 @@
                             'type': 'linear'
                         }
                     };
-                    Plotly.plot('divPlotlyLinesChart', {
+                    Plotly.newPlot('divPlotlyLinesChart', chart_data, layout, {responsive:true});
+                    /*Plotly.plot('divPlotlyLinesChart', {
                         data: chart_data,
-                        layout: layout
-                    });
+                        layout: layout,
+                        responsive: true
+                    });*/
                 },
                 error: function (data) {
                     console.log("error");
