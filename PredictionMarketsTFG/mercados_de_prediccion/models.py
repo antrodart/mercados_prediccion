@@ -44,13 +44,17 @@ class Option(models.Model):
 	binary_yes = models.BooleanField(default=None, null=True)
 	market = models.ForeignKey(Market, on_delete=models.CASCADE, null=False)
 
-	@property
 	def get_todays_price_yes(self):
 		return self.price_set.get(is_yes=True, is_last=True)
 
-	@property
 	def get_todays_price_no(self):
 		return self.price_set.get(is_yes=False, is_last=True)
+
+	def get_todays_benefits_yes(self):
+		return 100 - self.get_todays_price_yes().buy_price
+
+	def get_todays_benefits_no(self):
+		return 100 - self.get_todays_price_no().buy_price
 
 
 class Price(models.Model):

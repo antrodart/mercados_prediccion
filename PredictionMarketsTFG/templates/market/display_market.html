@@ -117,111 +117,149 @@
             <div class="row">
                 <div class="col">
                     {% for option in market.option_set.all %}
-                        <div class="block">
-                            <div class="row">
-                                {% if market.is_binary %}
-                                    <div class="col-md-2 mx-auto my-auto">
-                                        {% if option.name == "Yes" %}
-                                            <h4>
-                                                <img src="{% static 'img/icons/yes-check.png' %}" alt="Yes"
-                                                     style="max-height: 50px;"/>
-                                                {% trans "Yes" %}
-                                            </h4>
-                                        {% else %}
-                                            <h4>
-                                                <img src="{% static 'img/icons/no-cross.png' %}" alt="No"
-                                                     style="max-height: 50px;"/>
-                                                {% trans "No" %}
-                                            </h4>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-8">
-                                        <form method="post" action="/asset/buy/?marketId={{ market.pk }}"
-                                              class="form-inline">
-                                            <div class="row" style="width:100%;">
-                                                {% csrf_token %}
-                                                <input type="hidden" id="optionId" name="optionId"
-                                                       value="{{ option.pk }}">
-                                                <div class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
-                                                    <h6>{% trans "Price" %}</h6>
-                                                    {% if option.binary_yes %}
-                                                        {{ option.get_todays_price_yes.buy_price }} karma
-                                                    {% else %}
-                                                        {{ option.get_todays_price_no.buy_price }} karma
-                                                    {% endif %}
-                                                </div>
-                                                <div class="col-md-4 my-auto mx-auto text-center padding-top-bottom">
-                                                    <h6>{% trans "Quantity" %}</h6>
-                                                    {{ asset_form.quantity | add_class:'form-control' | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
-                                                </div>
-                                                <div class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
-                                                    <h6>Total: 5813647k</h6>
-                                                    <button type="submit" class=" btn btn-primary">
-                                                        <img src="{% static 'img/icons/buy.png' %}" alt="Buy"
-                                                             style="max-height: 25px;"/>
-                                                        {% trans "Buy" %}
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                {% else %}
-                                    <div class="col-md-2 mx-auto my-auto">
-                                        <h5>{{ option.name }}</h5>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <form method="post" action="/asset/buy/?marketId={{ market.pk }}"
-                                              class="form-inline">
-                                            <div class="row" style="width:100%;">
-                                                {% csrf_token %}
-                                                <input type="hidden" id="optionId" name="optionId"
-                                                       value="{{ option.pk }}">
-                                                <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
-                                                    <h6>{% trans "'Yes' price" %}</h6>
-                                                    {{ option.get_todays_price_yes.buy_price }} karma
-                                                </div>
-                                                <div class="col-md-3 my-auto text-center padding-0 padding-top-bottom">
-                                                    <h6>{% trans "Yes or no" %}</h6>
-                                                    <div class="form-group">
-                                                        <input type="checkbox" checked data-toggle="toggle"
-                                                               data-on="{% trans "Buy yes" %}"
-                                                               data-off="{% trans "Buy no" %}"
-                                                               data-onstyle="success" data-offstyle="danger"
-                                                               name="is_yes"
-                                                               data-size="sm" data-style="innerdivtoggle"
-                                                        >
+                        {% with YES_PRICE=option.get_todays_price_yes.buy_price NO_PRICE=option.get_todays_price_no.buy_price %}
+                            <script type="text/javascript">
+                                function option_benefits(divId, checkboxId, change, yes_p, no_p) {
+                                    var msg1 = "";
+                                    var msg2 = "";
+                                    var price = 100 - {{ YES_PRICE }};
+                                    if (change) {
+                                        if ($('#'+checkboxId).is(":checked")) {
+                                            price = 100 - yes_p;
+                                        } else {
+                                            price = 100 - no_p;
+                                        }
+                                    }
+                                    {% get_current_language as LANGUAGE %}
+                                    {% if LANGUAGE == "en" %}
+                                        msg1 = "You can earn";
+                                        msg2 = "karma per asset.";
+                                    {% else %}
+                                        msg1 = "Puedes ganar";
+                                        msg2 = "karma por acción.";
+                                    {% endif %}
+
+                                    var result = msg1 + " " + price + " " + msg2;
+                                    document.getElementById(divId).innerHTML = result;
+                                }
+                            </script>
+                            <div class="block">
+                                <div class="row">
+                                    {% if market.is_binary %}
+                                        <div class="col-md-2 mx-auto my-auto">
+                                            {% if option.name == "Yes" %}
+                                                <h4>
+                                                    <img src="{% static 'img/icons/yes-check.png' %}" alt="Yes"
+                                                         style="max-height: 50px;"/>
+                                                    {% trans "Yes" %}
+                                                </h4>
+                                            {% else %}
+                                                <h4>
+                                                    <img src="{% static 'img/icons/no-cross.png' %}" alt="No"
+                                                         style="max-height: 50px;"/>
+                                                    {% trans "No" %}
+                                                </h4>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-8">
+                                            <form method="post" action="/asset/buy/?marketId={{ market.pk }}"
+                                                  class="form-inline">
+                                                <div class="row" style="width:100%;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" id="optionId" name="optionId"
+                                                           value="{{ option.pk }}">
+                                                    <div class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                        <h6>{% trans "Price" %}</h6>
+                                                        {% if option.binary_yes %}
+                                                            {{ YES_PRICE }} karma
+                                                        {% else %}
+                                                            {{ NO_PRICE }} karma
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="col-md-4 my-auto mx-auto text-center padding-top-bottom">
+                                                        <h6>{% trans "Quantity" %}</h6>
+                                                        {{ asset_form.quantity | add_class:'form-control' | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
+                                                    </div>
+                                                    <div class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                        <h6>Total: 5813647k</h6>
+                                                        <button type="submit" class=" btn btn-primary">
+                                                            <img src="{% static 'img/icons/buy.png' %}" alt="Buy"
+                                                                 style="max-height: 25px;"/>
+                                                            {% trans "Buy" %}
+                                                        </button>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
-                                                    <h6>{% trans "'No' price" %}</h6>
-                                                    {{ option.get_todays_price_no.buy_price }} karma
+                                            </form>
+                                        </div>
+                                    {% else %}
+                                        <div class="col-md-2 mx-auto my-auto">
+                                            <h5>{{ option.name }}</h5>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <form method="post" action="/asset/buy/?marketId={{ market.pk }}"
+                                                  class="form-inline">
+                                                <div class="row" style="width:100%;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" id="optionId" name="optionId"
+                                                           value="{{ option.pk }}">
+                                                    <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                        <h6>{% trans "'Yes' price" %}</h6>
+                                                        {{ YES_PRICE }} karma
+                                                    </div>
+                                                    <div class="col-md-3 my-auto text-center padding-0 padding-top-bottom">
+                                                        <h6>{% trans "Yes or no" %}</h6>
+                                                        <div class="form-group">
+                                                            <input type="checkbox" checked data-toggle="toggle"
+                                                                   data-on="{% trans "Buy yes" %}"
+                                                                   data-off="{% trans "Buy no" %}"
+                                                                   data-onstyle="success" data-offstyle="danger"
+                                                                   name="is_yes"
+                                                                   data-size="sm" data-style="innerdivtoggle"
+                                                                   onchange="option_benefits('possibleEarnJs{{ forloop.counter }}', 'checkBoxJs{{ forloop.counter }}', true, {{ YES_PRICE }}, {{ NO_PRICE }});"
+                                                                   id="checkBoxJs{{ forloop.counter }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                        <h6>{% trans "'No' price" %}</h6>
+                                                        {{ NO_PRICE }} karma
+                                                    </div>
+                                                    <div class="col-md-3 my-auto mx-auto text-center padding-top-bottom">
+                                                        <h6>{% trans "Quantity" %}</h6>
+                                                        {{ asset_form.quantity | add_class:'form-control' | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
+                                                    </div>
+                                                    <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                        <button type="submit" class=" btn btn-primary">
+                                                            {% trans "Buy" %}
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-3 my-auto mx-auto text-center padding-top-bottom">
-                                                    <h6>{% trans "Quantity" %}</h6>
-                                                    {{ asset_form.quantity | add_class:'form-control' | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
-                                                </div>
-                                                <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
-                                                    <button type="submit" class=" btn btn-primary">
-                                                        {% trans "Buy" %}
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </form>
+                                            </form>
+                                        </div>
+                                    {% endif %}
+                                    <div id="possibleEarnJs{{ forloop.counter }}"
+                                         class="col-md-2 mx-auto my-auto text-center padding-top-bottom">
+                                        {% if market.is_binary %}
+                                            {% if option.binary_yes %}
+                                                {% trans "You can earn" %} {{ option.get_todays_benefits_yes }} {% trans "karma per asset." %}
+                                            {% else %}
+                                                {% trans "You can earn" %} {{ option.get_todays_benefits_no }} {% trans "karma per asset." %}
+                                            {% endif %}
+                                        {% else %}
+                                            <script> option_benefits("possibleEarnJs{{ forloop.counter }}", "checkBoxJs{{ forloop.counter }}", false, {{ YES_PRICE }}, {{ NO_PRICE }});</script>
+                                        {% endif %}
                                     </div>
-                                {% endif %}
-                                <div class="col-md-2 mx-auto my-auto text-center padding-top-bottom">
-                                    {% trans "You can earn up to" %} 131615164k
                                 </div>
                             </div>
-                        </div>
+                        {% endwith %}
                     {% endfor %}
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     <div id="divPlotlyLinesChart">
-
                     </div>
+                    <div id="possibleEarnJs"
+                         class="col-md-2 mx-auto my-auto text-center padding-top-bottom"></div>
                 </div>
             </div>
         </div>
@@ -279,12 +317,7 @@
                             'type': 'linear'
                         }
                     };
-                    Plotly.newPlot('divPlotlyLinesChart', chart_data, layout, {responsive:true});
-                    /*Plotly.plot('divPlotlyLinesChart', {
-                        data: chart_data,
-                        layout: layout,
-                        responsive: true
-                    });*/
+                    Plotly.newPlot('divPlotlyLinesChart', chart_data, layout, {responsive: true});
                 },
                 error: function (data) {
                     console.log("error");
