@@ -8,6 +8,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from .forms import *
+from .utils import check_user_is_member_of_group
 from users.models import User
 from django.views.generic import TemplateView
 import datetime
@@ -183,11 +184,14 @@ def display_group_view(request):
 	except:
 		joined_group = None
 
-	user_is_member = False
+	user_has_requested = False
+	user_is_accepted = False
 	if joined_group:
-		user_is_member = True
+		user_has_requested = True
+		user_is_accepted = joined_group.is_accepted
 
-	args = {'group': group, 'user_is_member': user_is_member}
+
+	args = {'group': group, 'user_has_requested': user_has_requested, 'user_is_accepted': user_is_accepted}
 
 	return render(request, 'group/display_group.html', args)
 
@@ -396,8 +400,11 @@ def display_market_view(request):
 	market = get_object_or_404(Market, pk=market_id)
 	group = market.group
 
-	if group and (not group.is_visible and (not request.user in group.user_accepted_set())):
-		raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
+	if group:
+		check_user_is_member_of_group(user=request.user, group=group)
+
+	#if group and not request.user.pk in group.user_accepted_set():
+	#	raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
 
 	assets_number = Asset.objects.filter(market=market).count()
 
@@ -469,20 +476,17 @@ def ajax_charts(request):
 
 	options = []
 	if market.is_binary:
-		q = Q()
+		q0 = Q()
 	else:
-		q = Q(is_yes=True)
+		q0 = Q(is_yes=True)
 
 	for option in market.option_set.all():
 		#  After that, we get the data for the y axis.
-		price_list = []
-		q |= Q(option=option)
-		price_per_day = Price.objects.filter(q).order_by('date')
-		for price in price_per_day:
-			price_list.append(price.buy_price)
+		q = q0 & Q(option=option)
+		price_per_day = Price.objects.filter(q).order_by('date').values_list('buy_price', flat=True)
 		options_json = {
 			'name': option.name,
-			'values': price_list,
+			'values': list(price_per_day),
 			'binary_yes': option.binary_yes
 		}
 		options.append(options_json)
@@ -503,8 +507,11 @@ def buy_asset_view(request):
 	market = get_object_or_404(Market, pk=market_id)
 	group = market.group
 
-	if group and (not group.is_visible and (not request.user in group.user_accepted_set())):
-		raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
+	if group:
+		check_user_is_member_of_group(user=user, group=group)
+
+	#if group and (not group.is_visible and (not request.user in group.user_accepted_set())):
+	#	raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
 
 	if request.method == "POST":
 		form = CreateAssetForm(request.POST, user=user, market=market)
@@ -529,16 +536,24 @@ def buy_asset_view(request):
 
 def list_markets_view(request):
 	user = request.user
+	category_id = request.GET.get('categoryId')
+	if category_id:
+		category = Category.objects.get(pk=category_id)
+		q_category = Q(categories__in=category_id)
+	else:
+		category = None
+		q_category = Q()
+
 	user_verified = False
-	query_public_groups = Q(group=None)
-	query_private_groups = Q()
+	q_public_groups = Q(group=None)
+	q_private_groups = Q()
 	if user.is_authenticated:
 		groups_ids = JoinedGroup.objects.filter(user=user, is_accepted=True).values_list('group_id', flat=True)
-		query_private_groups = Q(group__in=groups_ids)
+		q_private_groups = Q(group__in=groups_ids)
 		user_verified = user.is_verified
 
-	query_public_groups |= query_private_groups
-	all_markets = Market.objects.filter(Q(is_judged=False) & query_public_groups).order_by('end_date')
+	q_public_groups |= q_private_groups
+	all_markets = Market.objects.filter(Q(is_judged=False) & q_public_groups & q_category).order_by('end_date')
 
 	paginator = Paginator(all_markets, per_page=10)
 	page = request.GET.get('page')
@@ -550,6 +565,8 @@ def list_markets_view(request):
 	except EmptyPage:
 		markets = paginator.page(paginator.num_pages)
 
-	args = {'markets': markets, 'user_verified': user_verified}
+	args = {'markets': markets, 'user_verified': user_verified, 'category': category}
 
 	return render(request, 'market/list_markets.html', args)
+
+

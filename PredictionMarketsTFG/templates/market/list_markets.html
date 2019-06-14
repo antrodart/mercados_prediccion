@@ -14,6 +14,22 @@
                 {% trans "Markets" %}
             </h1>
         </div>
+        {% if category %}
+            <div class="alert alert-info fade show" role="alert">
+                <h5  class="alert-heading">
+                    {% trans "Filtering by category" %}
+                    {% get_current_language as LANGUAGE %}
+                    {% if  LANGUAGE == "en" %}
+                        <strong>{{ category.title }}</strong>.
+                    {% else %}
+                        <strong>{{ category.title_es }}</strong>.
+                    {% endif %}
+                </h5>
+                <a href="{% url 'markets' %}" class="alert-link">
+                    {% trans "Click to cancel the filtering" %}.
+                </a>
+            </div>
+        {% endif %}
     </div>
 
     <div class="row">

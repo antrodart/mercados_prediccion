@@ -87,10 +87,12 @@ class Group(models.Model):
 		return self.joinedgroup_set.filter(is_accepted=True)
 
 	def user_accepted_set(self):
-		res = []
-		for joined_group in self.joinedgroup_accepted_set():
-			res.append(joined_group.user)
-		return res
+		return self.joinedgroup_accepted_set().values_list('user', flat=True)
+
+		#res = []
+		#for joined_group in self.joinedgroup_accepted_set():
+		#	res.append(joined_group.user)
+		#return res
 
 
 class JoinedGroup(models.Model):
