@@ -19,9 +19,9 @@
                         <div class="col">
                             <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
                                 <h1 style="word-break: break-all;">
-                                   {% if not group.is_visible %}
-                                    <img src="{% static 'img/icons/locked.png' %}" alt="{% trans "Private group" %}"
-                                     style="max-height: 40px;">
+                                    {% if not group.is_visible %}
+                                        <img src="{% static 'img/icons/locked.png' %}" alt="{% trans "Private group" %}"
+                                             style="max-height: 40px;">
                                     {% endif %}
                                     {{ group.name }}
                                 </h1>
@@ -94,8 +94,8 @@
                         <div>
                             <ul>
                                 {% for joined_group in group.joinedgroup_accepted_set.all %}
-                                     <li><a href="/user/?userId={{ joined_group.user.pk }}">
-                                   {{ joined_group.user.first_name }} {{ joined_group.user.last_name }}</a></li>
+                                    <li><a href="/user/?userId={{ joined_group.user.pk }}">
+                                        {{ joined_group.user.first_name }} {{ joined_group.user.last_name }}</a></li>
                                 {% endfor %}
                             </ul>
                         </div>
@@ -120,13 +120,13 @@
                                     {% blocktrans %}Create market{% endblocktrans %}
                                 </button>
                             </a>
-                        {% elif not user_is_member %}
+                        {% elif not user_has_requested %}
                             <a href="/group/request-join/?groupId={{ group.pk }}">
                                 <button type="button" class="btn btn-primary">
                                     {% blocktrans %}Join group{% endblocktrans %}
                                 </button>
                             </a>
-                        {% elif not user in group.user_accepted_set %}
+                        {% elif user_has_requested and not user_is_accepted %}
                             <button type="button" class="btn btn-primary disabled" disabled>
                                 {% blocktrans %}Request sent{% endblocktrans %}
                             </button>
@@ -142,11 +142,16 @@
                     {% else %}
                         {% for market in group.descending_ordered_market_set.all %}
                             <div class="block">
-                                <img class="img-fluid img-thumbnail" src="data:image/png;base64,{{ market.picture }}" alt="">
+                                <img class="img-fluid img-thumbnail" src="data:image/png;base64,{{ market.picture }}"
+                                     alt="">
                                 <div>
-                                    <a href="/market/?marketId={{ market.id }}">
+                                    {% if user_is_accepted %}
+                                        <a href="/market/?marketId={{ market.id }}">
+                                            <h2>{{ market.title }}</h2>
+                                        </a>
+                                    {% else %}
                                         <h2>{{ market.title }}</h2>
-                                    </a>
+                                    {% endif %}
                                     <p>
                                         {% if market.has_expired %}
                                             {% blocktrans %}The market is over.{% endblocktrans %}

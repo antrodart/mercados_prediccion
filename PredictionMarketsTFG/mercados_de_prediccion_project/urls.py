@@ -32,7 +32,6 @@ urlpatterns = [
 ]
 
 #Do not delete this import, it creates and registers the automatic tasks in tasks.py
+print("Going to import tasks.py file.")
 import mercados_de_prediccion_project.tasks as tasks
-
-tasks.scheduler.start()
-
+print("Tasks.py file imported.")

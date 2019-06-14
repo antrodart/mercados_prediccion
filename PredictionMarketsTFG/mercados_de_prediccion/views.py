@@ -8,6 +8,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from .forms import *
+from .utils import check_user_is_member_of_group
 from users.models import User
 from django.views.generic import TemplateView
 import datetime
@@ -183,11 +184,14 @@ def display_group_view(request):
 	except:
 		joined_group = None
 
-	user_is_member = False
+	user_has_requested = False
+	user_is_accepted = False
 	if joined_group:
-		user_is_member = True
+		user_has_requested = True
+		user_is_accepted = joined_group.is_accepted
 
-	args = {'group': group, 'user_is_member': user_is_member}
+
+	args = {'group': group, 'user_has_requested': user_has_requested, 'user_is_accepted': user_is_accepted}
 
 	return render(request, 'group/display_group.html', args)
 
@@ -396,8 +400,11 @@ def display_market_view(request):
 	market = get_object_or_404(Market, pk=market_id)
 	group = market.group
 
-	if group and (not group.is_visible and (not request.user in group.user_accepted_set())):
-		raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
+	if group:
+		check_user_is_member_of_group(user=request.user, group=group)
+
+	#if group and not request.user.pk in group.user_accepted_set():
+	#	raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
 
 	assets_number = Asset.objects.filter(market=market).count()
 
@@ -500,8 +507,11 @@ def buy_asset_view(request):
 	market = get_object_or_404(Market, pk=market_id)
 	group = market.group
 
-	if group and (not group.is_visible and (not request.user in group.user_accepted_set())):
-		raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
+	if group:
+		check_user_is_member_of_group(user=user, group=group)
+
+	#if group and (not group.is_visible and (not request.user in group.user_accepted_set())):
+	#	raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
 
 	if request.method == "POST":
 		form = CreateAssetForm(request.POST, user=user, market=market)
@@ -558,3 +568,5 @@ def list_markets_view(request):
 	args = {'markets': markets, 'user_verified': user_verified, 'category': category}
 
 	return render(request, 'market/list_markets.html', args)
+
+
