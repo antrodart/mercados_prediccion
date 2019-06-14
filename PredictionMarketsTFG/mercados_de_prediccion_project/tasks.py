@@ -20,7 +20,7 @@ def delete_users_marked():
 		user.delete()
 
 
-@scheduler.scheduled_job("cron", hour=14, minute=41, id="register_prices_per_day")
+@scheduler.scheduled_job("cron", hour=0, minute=1, id="register_prices_per_day")
 def register_prices_per_day():
 	print("Registering prices. Current time: " + str(datetime.datetime.now()))
 	logging.info('Registering prices')
