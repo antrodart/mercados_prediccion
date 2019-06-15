@@ -4,10 +4,10 @@ from users.models import User
 from mercados_de_prediccion.models import Market, Price
 import datetime
 import logging
-import django
-import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mercados_de_prediccion_project.settings')
-django.setup()
+#import django
+#import os
+#os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mercados_de_prediccion_project.settings')
+#django.setup()
 
 scheduler = BlockingScheduler()
 
