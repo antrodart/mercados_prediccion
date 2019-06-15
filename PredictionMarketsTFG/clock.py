@@ -1,4 +1,4 @@
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
 from django.db import transaction
 from users.models import User
 from mercados_de_prediccion.models import Market, Price
@@ -6,7 +6,7 @@ import datetime
 import logging
 
 
-scheduler = BackgroundScheduler()
+scheduler = BlockingScheduler()
 
 
 @scheduler.scheduled_job("cron", hour=0, minute=5, id="delete_users_marked")

@@ -31,7 +31,6 @@ urlpatterns = [
 	path('accounts/login/', login_view, name="login"),
 ]
 
-#Do not delete this import, it creates and registers the automatic tasks in tasks.py
-print("Going to import tasks.py file.")
-import mercados_de_prediccion_project.tasks as tasks
-print("Tasks.py file imported.")
+#Do not delete this import, it creates and registers the automatic tasks in clock.py
+print("Going to import clock.py file.")
+print("The import was deleted so nothing was imported.")
