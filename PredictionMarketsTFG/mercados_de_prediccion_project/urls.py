@@ -31,6 +31,5 @@ urlpatterns = [
 	path('accounts/login/', login_view, name="login"),
 ]
 
-#Do not delete this import, it creates and registers the automatic tasks in clock.py
-print("Going to import clock.py file.")
-print("The import was deleted so nothing was imported.")
+print("URLs imported.")
+

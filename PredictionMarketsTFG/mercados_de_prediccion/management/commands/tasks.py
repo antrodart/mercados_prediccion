@@ -1,38 +1,25 @@
-from apscheduler.schedulers.background import BackgroundScheduler
+from django.core.management.base import BaseCommand
 from django.db import transaction
 from users.models import User
 from mercados_de_prediccion.models import Market, Price
 import datetime
-import logging
-import django
-import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mercados_de_prediccion_project.settings')
-django.setup()
 
-scheduler = BackgroundScheduler()
+class Command(BaseCommand):
+	help = 'This command adds the cron jobs to the schedule.'
 
-
-@scheduler.scheduled_job("cron", hour=0, minute=5, id="delete_users_marked")
-def delete_users_marked():
-	print("Deleting users")
-	today = datetime.datetime.now()
-	users_marked_deletion = User.objects.filter(deletion_date=today)
-
-	for user in users_marked_deletion:
-		print("Deleting user " + user.__str__())
-		user.delete()
+	def handle(self, *args, **kwargs):
+		self.stdout.write("Trying to register prices per day...")
+		register_prices_per_day()
 
 
-@scheduler.scheduled_job("cron", hour=0, minute=1, id="register_prices_per_day")
 def register_prices_per_day():
 	print("Registering prices. Current time: " + str(datetime.datetime.now()))
-	logging.info('Registering prices')
 	today = datetime.datetime.now()
 	markets_to_register_prices = Market.objects.filter(end_date__gte=today)  #Markets that haven't finished or finish today
 
 	with transaction.atomic():
 		for market in markets_to_register_prices:
-			print("Entring the for loop for market: " + str(market))
+			print("Registering prices for market: " + str(market))
 			if market.is_binary:  #  Binary markets
 				print("Market is binary")
 				yes_option = market.option_set.get(binary_yes=True)
@@ -41,7 +28,6 @@ def register_prices_per_day():
 				current_price_yes = yes_option.price_set.get(is_last=True)
 				current_price_no = no_option.price_set.get(is_last=True)
 
-				print("Yes option is: " + yes_option.name + ", and no option is: " + no_option.name + ". Entring the atomic method...")
 				overwrite_prices(current_price_yes, current_price_no)
 
 			else:  #Non binary markets
@@ -63,15 +49,12 @@ def overwrite_prices(current_price_yes, current_price_no):
 	current_price_yes.save()
 	current_price_no.save()
 
-	print("Current price yes: " + str(current_price_yes) + " and current price no: " + str(current_price_no))
 	print("Going to create the new prices, copying the old ones and setting is_last to True.")
 	#  Creation of 2 new prices, one for each option, that are the last prices.
 	new_yes_price = Price.objects.create(option=current_price_yes.option, is_yes=True, is_last=True, buy_price=current_price_yes.buy_price)
 	new_no_price = Price.objects.create(option=current_price_no.option, is_yes=False, is_last=True, buy_price=current_price_no.buy_price)
 
 	print("Prices created. Yes price: " + str(new_yes_price) + ". No price: " + str(new_no_price))
-	print("Finishing overwrite_prices method...")
 
 
-print("Scheduling tasks...")
-scheduler.start()
+
