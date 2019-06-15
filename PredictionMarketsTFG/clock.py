@@ -6,7 +6,7 @@ import datetime
 import logging
 import django
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mercados_de_prediccion_project.settings")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mercados_de_prediccion_project.settings')
 django.setup()
 
 scheduler = BlockingScheduler()
