@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Sum
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
 from users.models import User
 import datetime
@@ -44,11 +45,21 @@ class Option(models.Model):
 	binary_yes = models.BooleanField(default=None, null=True)
 	market = models.ForeignKey(Market, on_delete=models.CASCADE, null=False)
 
+	def get_todays_price(self):
+		if not self.market.is_binary:
+			raise ObjectDoesNotExist(_("This method can only be used for binary market's options."))
+		return self.price_set.get(is_last=True)
+
 	def get_todays_price_yes(self):
 		return self.price_set.get(is_yes=True, is_last=True)
 
 	def get_todays_price_no(self):
 		return self.price_set.get(is_yes=False, is_last=True)
+
+	def get_todays_beenfits(self):
+		if not self.market.is_binary:
+			raise ObjectDoesNotExist(_("This method can only be used for binary market's options."))
+		return 100 - self.get_todays_price().buy_price
 
 	def get_todays_benefits_yes(self):
 		return 100 - self.get_todays_price_yes().buy_price

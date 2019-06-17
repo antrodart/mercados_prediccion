@@ -117,35 +117,10 @@
             <div class="row">
                 <div class="col">
                     {% for option in market.option_set.all %}
-                        {% with YES_PRICE=option.get_todays_price_yes.buy_price NO_PRICE=option.get_todays_price_no.buy_price %}
-                            <script type="text/javascript">
-                                function option_benefits(divId, checkboxId, change, yes_p, no_p) {
-                                    var msg1 = "";
-                                    var msg2 = "";
-                                    var price = 100 - {{ YES_PRICE }};
-                                    if (change) {
-                                        if ($('#'+checkboxId).is(":checked")) {
-                                            price = 100 - yes_p;
-                                        } else {
-                                            price = 100 - no_p;
-                                        }
-                                    }
-                                    {% get_current_language as LANGUAGE %}
-                                    {% if LANGUAGE == "en" %}
-                                        msg1 = "You can earn";
-                                        msg2 = "karma per asset.";
-                                    {% else %}
-                                        msg1 = "Puedes ganar";
-                                        msg2 = "karma por acción.";
-                                    {% endif %}
-
-                                    var result = msg1 + " " + price + " " + msg2;
-                                    document.getElementById(divId).innerHTML = result;
-                                }
-                            </script>
-                            <div class="block">
-                                <div class="row">
-                                    {% if market.is_binary %}
+                        <div class="block">
+                            <div class="row">
+                                {% if market.is_binary %}
+                                    {% with PRICE=option.get_todays_price.buy_price %}
                                         <div class="col-md-2 mx-auto my-auto">
                                             {% if option.name == "Yes" %}
                                                 <h4>
@@ -163,51 +138,85 @@
                                         </div>
                                         <div class="col-md-8">
                                             <form method="post" action="/asset/buy/?marketId={{ market.pk }}"
-                                                  class="form-inline">
+                                                  id="formId{{ forloop.counter }}" class="form-inline">
                                                 <div class="row" style="width:100%;">
                                                     {% csrf_token %}
                                                     <input type="hidden" id="optionId" name="optionId"
                                                            value="{{ option.pk }}">
-                                                    <div class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                    <div
+                                                            class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
                                                         <h6>{% trans "Price" %}</h6>
-                                                        {% if option.binary_yes %}
-                                                            {{ YES_PRICE }} karma
-                                                        {% else %}
-                                                            {{ NO_PRICE }} karma
-                                                        {% endif %}
+                                                        {{ PRICE }} karma
                                                     </div>
                                                     <div class="col-md-4 my-auto mx-auto text-center padding-top-bottom">
                                                         <h6>{% trans "Quantity" %}</h6>
-                                                        {{ asset_form.quantity | add_class:'form-control' | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
+                                                        {{ asset_form.quantity | add_class:'form-control' | attr:"id:quantity" | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
                                                     </div>
-                                                    <div class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
-                                                        <h6>Total: 5813647k</h6>
-                                                        <button type="submit" class=" btn btn-primary">
-                                                            <img src="{% static 'img/icons/buy.png' %}" alt="Buy"
-                                                                 style="max-height: 25px;"/>
+                                                    <div
+                                                            class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                        <h6>
                                                             {% trans "Buy" %}
+                                                        </h6>
+                                                        <!-- Button trigger modal for binary markets-->
+                                                        <button type="button" class="btn btn-primary"
+                                                                data-toggle="modal"
+                                                                data-target="#binaryMarketsModal"
+                                                                data-binarymarket="true"
+                                                                data-optionname="{{ option.name }}"
+                                                                data-form="formId{{ forloop.counter }}"
+                                                                data-assetprice="{{ PRICE }}">
+                                                            {% trans "Buy assets" %}
                                                         </button>
                                                     </div>
                                                 </div>
                                             </form>
                                         </div>
-                                    {% else %}
+                                    {% endwith %}
+                                {% else %}
+                                    {% with YES_PRICE=option.get_todays_price_yes.buy_price NO_PRICE=option.get_todays_price_no.buy_price %}
+                                        <script type="text/javascript">
+                                            function option_benefits(divId, checkboxId, change, yes_p, no_p) {
+                                                let msg1 = "";
+                                                let msg2 = "";
+                                                let price = 100 - {{ YES_PRICE }};
+                                                if (change) {
+                                                    if ($('#' + checkboxId).is(":checked")) {
+                                                        price = 100 - yes_p;
+                                                    } else {
+                                                        price = 100 - no_p;
+                                                    }
+                                                }
+                                                {% get_current_language as LANGUAGE %}
+                                                {% if LANGUAGE == "en" %}
+                                                    msg1 = "You can earn";
+                                                    msg2 = "karma per asset.";
+                                                {% else %}
+                                                    msg1 = "Puedes ganar";
+                                                    msg2 = "karma por acción.";
+                                                {% endif %}
+
+                                                const res = msg1 + " " + price + " " + msg2;
+                                                document.getElementById(divId).innerHTML = res;
+                                            }
+                                        </script>
                                         <div class="col-md-2 mx-auto my-auto">
                                             <h5>{{ option.name }}</h5>
                                         </div>
                                         <div class="col-md-8">
                                             <form method="post" action="/asset/buy/?marketId={{ market.pk }}"
-                                                  class="form-inline">
+                                                  id="formId{{ forloop.counter }}" class="form-inline">
                                                 <div class="row" style="width:100%;">
                                                     {% csrf_token %}
                                                     <input type="hidden" id="optionId" name="optionId"
                                                            value="{{ option.pk }}">
-                                                    <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                    <div
+                                                            class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
                                                         <h6>{% trans "'Yes' price" %}</h6>
                                                         {{ YES_PRICE }} karma
                                                     </div>
-                                                    <div class="col-md-3 my-auto text-center padding-0 padding-top-bottom">
-                                                        <h6>{% trans "Yes or no" %}</h6>
+                                                    <div
+                                                            class="col-md-3 my-auto text-center padding-0 padding-top-bottom">
+                                                        <h6>{% trans "Yes or no?" %}</h6>
                                                         <div class="form-group">
                                                             <input type="checkbox" checked data-toggle="toggle"
                                                                    data-on="{% trans "Buy yes" %}"
@@ -219,38 +228,50 @@
                                                                    id="checkBoxJs{{ forloop.counter }}">
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                    <div
+                                                            class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
                                                         <h6>{% trans "'No' price" %}</h6>
                                                         {{ NO_PRICE }} karma
                                                     </div>
-                                                    <div class="col-md-3 my-auto mx-auto text-center padding-top-bottom">
+                                                    <div
+                                                            class="col-md-3 my-auto mx-auto text-center padding-top-bottom">
                                                         <h6>{% trans "Quantity" %}</h6>
-                                                        {{ asset_form.quantity | add_class:'form-control' | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
+                                                        {{ asset_form.quantity | add_class:'form-control' | attr:"id:quantity" | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
                                                     </div>
-                                                    <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
-                                                        <button type="submit" class=" btn btn-primary">
-                                                            {% trans "Buy" %}
+                                                    <div
+                                                            class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                        <!-- Button trigger modal for non binary market-->
+                                                        <button type="button" class="btn btn-primary"
+                                                                data-toggle="modal"
+                                                                data-target="#binaryMarketsModal"
+                                                                data-binarymarket="false"
+                                                                data-optionname="{{ option.name }}"
+                                                                data-form="formId{{ forloop.counter }}"
+                                                                data-assetpriceyes="{{ YES_PRICE }}"
+                                                                data-assetpriceno="{{ NO_PRICE }}"
+                                                                data-checkboxid="checkBoxJs{{ forloop.counter }}">
+                                                            {% trans "Buy assets" %}
                                                         </button>
                                                     </div>
                                                 </div>
                                             </form>
                                         </div>
+                                    {% endwith %}
+                                {% endif %}
+                                <div id="possibleEarnJs{{ forloop.counter }}"
+                                     class="col-md-2 mx-auto my-auto text-center padding-top-bottom">
+                                    {% if market.is_binary %}
+                                        {% trans "You can earn" %} {{ option.get_todays_benefits }}
+                                        {% trans "karma per asset." %}
+                                    {% else %}
+                                        <script> option_benefits("possibleEarnJs{{ forloop.counter }}",
+                                            "checkBoxJs{{ forloop.counter }}",
+                                            false, {{ option.get_todays_price_yes.buy_price }}, {{ option.get_todays_price_no.buy_price }});
+                                        </script>
                                     {% endif %}
-                                    <div id="possibleEarnJs{{ forloop.counter }}"
-                                         class="col-md-2 mx-auto my-auto text-center padding-top-bottom">
-                                        {% if market.is_binary %}
-                                            {% if option.binary_yes %}
-                                                {% trans "You can earn" %} {{ option.get_todays_benefits_yes }} {% trans "karma per asset." %}
-                                            {% else %}
-                                                {% trans "You can earn" %} {{ option.get_todays_benefits_no }} {% trans "karma per asset." %}
-                                            {% endif %}
-                                        {% else %}
-                                            <script> option_benefits("possibleEarnJs{{ forloop.counter }}", "checkBoxJs{{ forloop.counter }}", false, {{ YES_PRICE }}, {{ NO_PRICE }});</script>
-                                        {% endif %}
-                                    </div>
                                 </div>
                             </div>
-                        {% endwith %}
+                        </div>
                     {% endfor %}
                 </div>
             </div>
@@ -264,12 +285,77 @@
             </div>
         </div>
     </div>
-
+    <!-- Modal -->
+    <div class="modal fade" id="binaryMarketsModal" tabindex="-1"
+         role="dialog" aria-labelledby="binaryMarketsModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"
+                        id="modal-title">
+                        Option</h4>
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>{% trans "Quantity" %}: <strong><span id="body-quantity"></span></strong> {% trans "assets" %}.
+                    </p>
+                    <p>{% trans "Price per asset" %}: <span id="body-asset-price"></span> karma.</p>
+                    <p>{% trans "Total price" %}: <strong><span id="body-total-price"></span> karma.</strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">{% trans "Close" %}
+                    </button>
+                    <button type="submit" class="btn btn-primary"
+                            id="buysubmit">
+                        <img src="{% static 'img/icons/buy.png' %}"
+                             alt="Buy" style="max-height: 25px;"/>
+                        {% trans "Buy" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascript %}
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        $('#binaryMarketsModal').on('show.bs.modal', function (event) {
+            const button = $(event.relatedTarget);// Button that triggered the modal
+            let option_name = button.data('optionname'); // Extract info from data-* attributes
+            let form_id = button.data('form');
+            let quantity = $('#' + form_id).find('#quantity').val();
+            console.log(quantity);
+            let binary = button.data('binarymarket');
+            let asset_price;
+            if (binary){
+                asset_price = button.data('assetprice');
+            } else {
+                let checkbox_id = button.data('checkboxid');
+                const yes_case = $('#' + checkbox_id).is(":checked");
+                if (yes_case){
+                    asset_price = button.data('assetpriceyes');
+                } else {
+                    asset_price = button.data('assetpriceno');
+                }
+            }
+
+            let total_price = quantity * asset_price;
+
+            const modal = $(this);
+            modal.find('#modal-title').text(option_name);
+            modal.find('#buysubmit').attr('form', form_id);
+            modal.find('#body-quantity').text(quantity);
+            modal.find('#body-asset-price').text(asset_price);
+            modal.find('#body-total-price').text(total_price);
+        });
+    </script>
     <script type="text/javascript">
         $(document).ready(function () {
             $.ajax({
