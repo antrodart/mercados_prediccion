@@ -3,7 +3,7 @@
 {% load static %}
 
 <head>
-    <title>{% block title %}{% trans "Groups" %}{% endblock %}</title>
+    <title>{% block title %}{% trans "Communities" %}{% endblock %}</title>
 </head>
 
 {% block content %}
@@ -12,7 +12,7 @@
         <div class="col-md-6 mx-auto text-center">
             <div class="header-title">
                 <h1 class="wv-heading--title">
-                    {% blocktrans %}My created groups{% endblocktrans %}
+                    {% blocktrans %}My communities created{% endblocktrans %}
                 </h1>
             </div>
         </div>
@@ -20,7 +20,7 @@
         <div class="col-md-6 mx-auto text-center">
             <div class="header-title">
                 <h1 class="wv-heading--title">
-                    {% blocktrans %}All groups{% endblocktrans %}
+                    {% blocktrans %}All communities{% endblocktrans %}
                 </h1>
             </div>
         </div>
@@ -30,15 +30,15 @@
         <div class="col">
             <nav aria-label="Pagination">
                 <ul class="pagination">
-                    {% if groups.has_previous %}
+                    {% if communities.has_previous %}
                         <li class="page-item"><a class="page-link"
-                                                 href="?page={{ groups.previous_page_number }}">&laquo;</a></li>
+                                                 href="?page={{ communities.previous_page_number }}">&laquo;</a></li>
                     {% else %}
                         <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
                     {% endif %}
 
-                    {% for page_num in groups.paginator.page_range %}
-                        {% if groups.number == page_num %}
+                    {% for page_num in communities.paginator.page_range %}
+                        {% if communities.number == page_num %}
                             <li class="page-item active"><span class="page-link">{{ page_num }} <span
                                     class="sr-only">(current)</span></span></li>
                         {% else %}
@@ -46,9 +46,9 @@
                             </li>
                         {% endif %}
                     {% endfor %}
-                    {% if groups.has_next %}
+                    {% if communities.has_next %}
                         <li class="page-item"><a class="page-link"
-                                                 href="?page={{ groups.next_page_number }}">&raquo;</a>
+                                                 href="?page={{ communities.next_page_number }}">&raquo;</a>
                         </li>
                     {% else %}
                         <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
@@ -58,9 +58,9 @@
         </div>
         <div class="col">
             <div class="float-right">
-                <a href="{% url 'create_group' %}">
+                <a href="{% url 'create_community' %}">
                     <button type="button" class="btn btn-primary">
-                        {% blocktrans %}Create group{% endblocktrans %}
+                        {% blocktrans %}Create community{% endblocktrans %}
                     </button>
                 </a>
             </div>
@@ -71,41 +71,41 @@
     <div class="album py-5 bg-light">
         <div class="container">
             <div class="row">
-                {% for group in groups %}
+                {% for community in communities %}
                     <div class="col-md-3">
                         <div class="card mb-4 box-shadow">
-                            <a href="/group/?groupId={{ group.id }}">
-                                <img class="card-img-top" alt="{{ group.name }}"
-                                     src="data:image/png;base64,{{ group.picture }}" data-holder-rendered="true">
+                            <a href="/community/?communityId={{ community.id }}">
+                                <img class="card-img-top" alt="{{ community.name }}"
+                                     src="data:image/png;base64,{{ community.picture }}" data-holder-rendered="true">
                             </a>
                             <div class="card-body">
                                 <p class="card-text">
-                                    {% if not group.is_visible %}
-                                        <img src="{% static 'img/icons/locked.png' %}" alt="{% trans "Private group" %}"
+                                    {% if not community.is_visible %}
+                                        <img src="{% static 'img/icons/locked.png' %}" alt="{% trans "Private community" %}"
                                              style="max-height: 25px;">
                                     {% endif %}
-                                    <a href="/group/?groupId={{ group.id }}"
-                                       style="color:unset;"><strong>{{ group.name }}</strong></a>
+                                    <a href="/community/?communityId={{ community.id }}"
+                                       style="color:unset;"><strong>{{ community.name }}</strong></a>
                                 </p>
                             </div>
                             <div class="card-footer">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">{{ group.market_set.count }}
-                                        {% if group.market_set.count == 1 %}
+                                    <small class="text-muted">{{ community.market_set.count }}
+                                        {% if community.market_set.count == 1 %}
                                             {% trans "market" %}
                                         {% else %}
                                             {% trans "markets" %}
                                         {% endif %}
                                     </small>
-                                    <small class="text-muted">{{ group.joinedgroup_set.count }}
-                                        {% if group.joinedgroup_set.count == 1 %}
+                                    <small class="text-muted">{{ community.joinedcommunity_set.count }}
+                                        {% if community.joinedcommunity_set.count == 1 %}
                                             {% trans "participant" %}
                                         {% else %}
                                             {% trans "participants" %}
                                         {% endif %}
                                     </small>
                                     {% if view_name == "list_created" %}
-                                        <a href='/group/edit/?groupId={{ group.id }}'
+                                        <a href='/community/edit/?communityId={{ community.id }}'
                                            class="btn btn-outline-secondary"
                                            role="button">{% trans "Edit" %}</a>
                                     {% endif %}

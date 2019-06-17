@@ -58,6 +58,6 @@ class User(AbstractUser):
 
 	objects = UserManager()
 
-	def get_joined_group_accepted_set(self):
-		return self.joinedgroup_set.filter(is_accepted=True)
+	def get_joined_community_accepted_set(self):
+		return self.joinedcommunity_set.filter(is_accepted=True)
 

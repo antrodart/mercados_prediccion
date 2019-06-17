@@ -16,15 +16,15 @@ urlpatterns = [
 	path('category/create/', views.create_category_view, name='create_category'),
 	path('category/edit/', views.edit_category_view, name='edit_category'),
 
-	#  Groups
-	path('groups/all/', views.list_all_groups_view, name='list_all_groups'),
-	path('groups/created/', views.list_created_groups_view, name='list_created_groups'),
-	path('group/create/', views.create_group_view, name='create_group'),
-	path('group/edit/', views.edit_group_view, name='edit_group'),
-	path('group/', views.display_group_view, name='display_group'),
-	path('group/request-join/', views.request_to_join_group, name='request_to_join_group'),
-	path('group/accept/', views.accept_user_to_group_view, name='accept_user_to_group'),
-	path('group/members/', views.list_members_group_view, name='list_members_group'),
+	#  Communities
+	path('communities/all/', views.list_all_communities_view, name='list_all_communities'),
+	path('communities/created/', views.list_created_communities_view, name='list_created_communities'),
+	path('community/create/', views.create_community_view, name='create_community'),
+	path('community/edit/', views.edit_community_view, name='edit_community'),
+	path('community/', views.display_community_view, name='display_community'),
+	path('community/request-join/', views.request_to_join_community, name='request_to_join_community'),
+	path('community/accept/', views.accept_user_to_community_view, name='accept_user_to_community'),
+	path('community/members/', views.list_members_community_view, name='list_members_community'),
 
 	#  Markets
 	path('market/create/', views.create_market_view, name='create_market'),

@@ -3,14 +3,14 @@
 {% load static %}
 
 <head>
-    <title>{% block title %}{{ group.name }}{% endblock %}</title>
+    <title>{% block title %}{{ community.name }}{% endblock %}</title>
 </head>
 
 {% block content %}
     <div class="row top-buffer"> {% comment %}Top buffer adds 20px for top margin{% endcomment %}
         <div class="col-md-3">
-            <img class="img-fluid img-thumbnail" alt="{{ group.name }}" style="max-height: 255px"
-                 src="data:image/png;base64,{{ group.picture }}" data-holder-rendered="true">
+            <img class="img-fluid img-thumbnail" alt="{{ community.name }}" style="max-height: 255px"
+                 src="data:image/png;base64,{{ community.picture }}" data-holder-rendered="true">
         </div>
         <div class="col-md-9 my-auto"> {% comment %}Puts column and text in the center{% endcomment %}
             <div class="row">
@@ -19,22 +19,22 @@
                         <div class="col">
                             <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
                                 <h1 style="word-break: break-all;">
-                                    {% if not group.is_visible %}
-                                        <img src="{% static 'img/icons/locked.png' %}" alt="{% trans "Private group" %}"
+                                    {% if not community.is_visible %}
+                                        <img src="{% static 'img/icons/locked.png' %}" alt="{% trans "Private community" %}"
                                              style="max-height: 40px;">
                                     {% endif %}
-                                    {{ group.name }}
+                                    {{ community.name }}
                                 </h1>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col text-muted">
-                            {% blocktrans %}Created by{% endblocktrans %} {{ group.moderator }}
-                            - {{ group.creation_date |date }}
+                            {% blocktrans %}Created by{% endblocktrans %} {{ community.moderator }}
+                            - {{ community.creation_date |date }}
                             <p>
-                                {{ group.joinedgroup_accepted_set.count }}
-                                {% if group.joinedgroup_accepted_set.count == 1 %}
+                                {{ community.joinedcommunity_accepted_set.count }}
+                                {% if community.joinedcommunity_accepted_set.count == 1 %}
                                     {% trans "member" %}.
                                 {% else %}
                                     {% trans "members" %}.
@@ -43,24 +43,24 @@
                         </div>
                     </div>
                 </div>
-                {% if group.moderator == user %}
+                {% if community.moderator == user %}
                     <div class="col-md-3">
                         <div style="margin-bottom: 1rem">
                             <h2>
                                 <img src="{% static 'img/icons/options-3.png' %}" alt="Options"
                                      style="max-height: 25px;">
-                                {% trans "Group options:" %}
+                                {% trans "Community options:" %}
                             </h2>
                         </div>
                         <div class="col">
-                            <a href='/group/members/?groupId={{ group.id }}'
+                            <a href='/community/members/?communityId={{ community.id }}'
                                class="btn btn-outline-info btn-block text-left">
                                 <img src="{% static 'img/icons/users.png' %}" alt="Members"
                                      style="max-height: 25px;"/> {% trans "Members" %}</a>
-                            <a href='/group/edit/?groupId={{ group.id }}'
+                            <a href='/community/edit/?communityId={{ community.id }}'
                                class="btn btn-outline-danger btn-block text-left">
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
-                                     style="max-height: 25px;"/> {% trans "Edit group" %}</a>
+                                     style="max-height: 25px;"/> {% trans "Edit community" %}</a>
                         </div>
                     </div>
                 {% endif %}
@@ -74,13 +74,13 @@
                 <div class="col">
                     <div style="margin-bottom: 1rem">
                         <h2>
-                            <img src="{% static 'img/icons/group-rules.png' %}" alt="Description"
+                            <img src="{% static 'img/icons/community-rules.png' %}" alt="Description"
                                  style="max-height: 25px;">
                             {% trans "Description:" %}
                         </h2>
                     </div>
                     <div>
-                        <p>{{ group.description }}</p>
+                        <p>{{ community.description }}</p>
                     </div>
                 </div>
             </div>
@@ -93,9 +93,9 @@
                         </h2>
                         <div>
                             <ul>
-                                {% for joined_group in group.joinedgroup_accepted_set.all %}
-                                    <li><a href="/user/?userId={{ joined_group.user.pk }}">
-                                        {{ joined_group.user.first_name }} {{ joined_group.user.last_name }}</a></li>
+                                {% for joined_community in community.joinedcommunity_accepted_set.all %}
+                                    <li><a href="/user/?userId={{ joined_community.user.pk }}">
+                                        {{ joined_community.user.first_name }} {{ joined_community.user.last_name }}</a></li>
                                 {% endfor %}
                             </ul>
                         </div>
@@ -114,16 +114,16 @@
                 </div>
                 <div class="col">
                     <div class="float-right">
-                        {% if group.moderator == user %}
-                            <a href="/market/create/?groupId={{ group.pk }}">
+                        {% if community.moderator == user %}
+                            <a href="/market/create/?communityId={{ community.pk }}">
                                 <button type="button" class="btn btn-primary">
                                     {% blocktrans %}Create market{% endblocktrans %}
                                 </button>
                             </a>
                         {% elif not user_has_requested %}
-                            <a href="/group/request-join/?groupId={{ group.pk }}">
+                            <a href="/community/request-join/?communityId={{ community.pk }}">
                                 <button type="button" class="btn btn-primary">
-                                    {% blocktrans %}Join group{% endblocktrans %}
+                                    {% blocktrans %}Join community{% endblocktrans %}
                                 </button>
                             </a>
                         {% elif user_has_requested and not user_is_accepted %}
@@ -137,10 +137,10 @@
 
             <div class="row">
                 <div class="col">
-                    {% if group.market_set.count == 0 %}
-                        <p>{% blocktrans %}This group has no markets yet.{% endblocktrans %}</p>
+                    {% if community.market_set.count == 0 %}
+                        <p>{% blocktrans %}This community has no markets yet.{% endblocktrans %}</p>
                     {% else %}
-                        {% for market in group.descending_ordered_market_set.all %}
+                        {% for market in community.descending_ordered_market_set.all %}
                             <div class="block">
                                 <img class="img-fluid img-thumbnail" src="data:image/png;base64,{{ market.picture }}"
                                      alt="">

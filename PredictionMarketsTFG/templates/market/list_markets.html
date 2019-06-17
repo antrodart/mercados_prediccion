@@ -90,7 +90,7 @@
                                     <strong>{{ market.title }}</strong>
                                 </p>
                                 <small class="text-muted">
-                                    {% if market.group == None %}
+                                    {% if market.community == None %}
                                         <img src="{% static 'img/icons/unlock.png' %}"
                                              title="{% trans "Public market" %}"
                                              alt="{% trans "Public market" %}" style="max-height: 25px;">
@@ -99,7 +99,7 @@
                                         <img src="{% static 'img/icons/community.png' %}"
                                              title="{% trans "Community" %}"
                                              alt="{% trans "Community" %}" style="max-height: 25px;">
-                                        {{ market.group.name }}
+                                        {{ market.community.name }}
                                     {% endif %}
                                 </small>
                             </div>

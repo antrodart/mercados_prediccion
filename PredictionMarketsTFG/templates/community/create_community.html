@@ -5,9 +5,9 @@
 <head>
     <title>{% block title %}
         {% if editing %}
-            {% trans "Edit group" %}
+            {% trans "Edit community" %}
         {% else %}
-            {% trans "Create group" %}
+            {% trans "Create community" %}
         {% endif %}
     {% endblock %}</title>
 </head>
@@ -22,9 +22,9 @@
         <div class="header-title">
             <h1 class="wv-heading--title">
                 {% if editing %}
-                    {% blocktrans %}Edit private group{% endblocktrans %}
+                    {% blocktrans %}Edit private community{% endblocktrans %}
                 {% else %}
-                    {% blocktrans %}Create private group{% endblocktrans %}
+                    {% blocktrans %}Create private community{% endblocktrans %}
                 {% endif %}
             </h1>
         </div>
@@ -121,7 +121,7 @@
                         <button type="submit" class="btn btn-primary">{% trans "Save" %}
                         </button>
                     {% else %}
-                         <button type="submit" class="btn btn-primary">{% blocktrans %}Create group{% endblocktrans %}
+                         <button type="submit" class="btn btn-primary">{% blocktrans %}Create community{% endblocktrans %}
                         </button>
                     {% endif %}
                     </div>
@@ -143,9 +143,9 @@
         function deleteConfirm() {
             {% get_current_language as CURRENT_LANGUAGE %}
             {% if CURRENT_LANGUAGE == "en" %}
-                var result = confirm("Are you sure you want to delete this group?");
+                var result = confirm("Are you sure you want to delete this community?");
             {% else %}
-                var result = confirm("¿Estás seguro de que quieres borrar este grupo?");
+                var result = confirm("¿Estás seguro de que quieres borrar esta comunidad?");
             {% endif %}
             return result;
         }

@@ -8,7 +8,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from .forms import *
-from .utils import check_user_is_member_of_group
+from .utils import check_user_is_member_of_community
 from users.models import User
 from django.views.generic import TemplateView
 import datetime
@@ -85,136 +85,136 @@ def edit_category_view(request):
 
 
 @login_required()
-def list_created_groups_view(request):
-	created_groups = Group.objects.filter(moderator=request.user.id).order_by('creation_date')
-	paginator = Paginator(created_groups, per_page=10)
+def list_created_communities_view(request):
+	created_communities = Community.objects.filter(moderator=request.user.id).order_by('creation_date')
+	paginator = Paginator(created_communities, per_page=10)
 	page = request.GET.get('page')
 
 	try:
-		groups = paginator.get_page(page)
+		communities = paginator.get_page(page)
 	except PageNotAnInteger:
-		groups = paginator.get_page(1)
+		communities = paginator.get_page(1)
 	except EmptyPage:
-		groups = paginator.page(paginator.num_pages)
+		communities = paginator.page(paginator.num_pages)
 
-	args = {'groups': groups, 'view_name': 'list_created'}
+	args = {'communities': communities, 'view_name': 'list_created'}
 
-	return render(request, 'group/list_groups.html', args)
+	return render(request, 'community/list_communities.html', args)
 
 
-def list_all_groups_view(request):
-	all_groups = Group.objects.filter(is_visible=True).order_by('creation_date')
-	paginator = Paginator(all_groups, per_page=10)
+def list_all_communities_view(request):
+	all_communities = Community.objects.filter(is_visible=True).order_by('creation_date')
+	paginator = Paginator(all_communities, per_page=10)
 	page = request.GET.get('page')
 
 	try:
-		groups = paginator.get_page(page)
+		communities = paginator.get_page(page)
 	except PageNotAnInteger:
-		groups = paginator.get_page(1)
+		communities = paginator.get_page(1)
 	except EmptyPage:
-		groups = paginator.page(paginator.num_pages)
+		communities = paginator.page(paginator.num_pages)
 
-	args = {'groups': groups, 'view_name': 'list_all'}
+	args = {'communities': communities, 'view_name': 'list_all'}
 
-	return render(request, 'group/list_groups.html', args)
+	return render(request, 'community/list_communities.html', args)
 
 
 @login_required()
-def create_group_view(request):
+def create_community_view(request):
 	if request.method == "POST":
-		form = CreateGroupForm(request.POST, request.FILES, user=request.user)
+		form = CreateCommunityForm(request.POST, request.FILES, user=request.user)
 		if form.is_valid():
-			group = form.save(commit=False)
+			community = form.save(commit=False)
 			is_visible = request.POST.get('is_visible')
 			if is_visible:
-				group.is_visible = True
+				community.is_visible = True
 			else:
-				group.is_visible = False
+				community.is_visible = False
 
-			group.save()
+			community.save()
 
-			joined_group = JoinedGroup(is_accepted=True, user=request.user, group_id=group.pk)
-			joined_group.save()
+			joined_community = JoinedCommunity(is_accepted=True, user=request.user, community_id=community.pk)
+			joined_community.save()
 
-			return redirect('/group/?groupId=' + str(group.pk))
+			return redirect('/community/?communityId=' + str(community.pk))
 	else:
-		form = CreateGroupForm(user=request.user)
+		form = CreateCommunityForm(user=request.user)
 
 	args = {'form': form}
-	return render(request, 'group/create_group.html', args)
+	return render(request, 'community/create_community.html', args)
 
 
 @login_required()
-def edit_group_view(request):
-	group_id = request.GET.get('groupId')
-	group = get_object_or_404(Group, pk=group_id)
-	if not group.moderator == request.user:
-		raise PermissionDenied(_("You cannot edit this group."))
+def edit_community_view(request):
+	community_id = request.GET.get('communityId')
+	community = get_object_or_404(Community, pk=community_id)
+	if not community.moderator == request.user:
+		raise PermissionDenied(_("You cannot edit this community."))
 	if request.method == "POST":
 		if request.POST.get('delete') is not None:
-			group.delete()
-			return redirect('/groups/created')
+			community.delete()
+			return redirect('/communities/created')
 
-		form = CreateGroupForm(request.POST, request.FILES, instance=group, user=request.user)
+		form = CreateCommunityForm(request.POST, request.FILES, instance=community, user=request.user)
 		if form.is_valid():
-			group = form.save(commit=False)
+			community = form.save(commit=False)
 			is_visible = request.POST.get('is_visible')
 			if is_visible:
-				group.is_visible = True
+				community.is_visible = True
 			else:
-				group.is_visible = False
+				community.is_visible = False
 
-			group.save()
+			community.save()
 
-			return redirect('/group/?groupId=' + str(group_id))
+			return redirect('/community/?communityId=' + str(community_id))
 	else:
-		form = CreateGroupForm(instance=group, user=request.user)
+		form = CreateCommunityForm(instance=community, user=request.user)
 
 	args = {'form': form, 'editing': True}
-	return render(request, 'group/create_group.html', args)
+	return render(request, 'community/create_community.html', args)
 
 
 @login_required()
-def display_group_view(request):
-	group_id = request.GET.get('groupId')
+def display_community_view(request):
+	community_id = request.GET.get('communityId')
 	user = request.user
-	group = get_object_or_404(Group, pk=group_id)
+	community = get_object_or_404(Community, pk=community_id)
 	try:
-		joined_group = JoinedGroup.objects.get(user=user, group=group)
+		joined_community = JoinedCommunity.objects.get(user=user, community=community)
 	except:
-		joined_group = None
+		joined_community = None
 
 	user_has_requested = False
 	user_is_accepted = False
-	if joined_group:
+	if joined_community:
 		user_has_requested = True
-		user_is_accepted = joined_group.is_accepted
+		user_is_accepted = joined_community.is_accepted
 
 
-	args = {'group': group, 'user_has_requested': user_has_requested, 'user_is_accepted': user_is_accepted}
+	args = {'community': community, 'user_has_requested': user_has_requested, 'user_is_accepted': user_is_accepted}
 
-	return render(request, 'group/display_group.html', args)
+	return render(request, 'community/display_community.html', args)
 
 
 @login_required()
 def create_market_view(request):
 	user = User.objects.get(pk=request.user.pk)
-	group_id = request.GET.get('groupId')
-	if group_id:
-		group = get_object_or_404(Group, pk=group_id)
+	community_id = request.GET.get('communityId')
+	if community_id:
+		community = get_object_or_404(Community, pk=community_id)
 	else:
-		group = None
+		community = None
 
-	if group and not group.moderator == user:
-		raise PermissionDenied(_("You can't create a market in this group."))
-	elif not group and not user.is_staff and not user.is_verified:
+	if community and not community.moderator == user:
+		raise PermissionDenied(_("You can't create a market in this community."))
+	elif not community and not user.is_staff and not user.is_verified:
 		raise PermissionDenied(_("You can't create a public market. Please contact us if you want to verify your account and create public markets."))
 
 	# Create the formset, specifying the form and formset we want to use.
 	OptionFormSet = formset_factory(CreateOptionForm, formset=BaseOptionFormSet, min_num=2,max_num=10)
 
 	if request.method == "POST":
-		market_form = CreateMarketForm(request.POST, request.FILES, user=request.user, group=group)
+		market_form = CreateMarketForm(request.POST, request.FILES, user=request.user, community=community)
 		option_formset = OptionFormSet(request.POST)
 
 		if market_form.is_valid():
@@ -259,7 +259,7 @@ def create_market_view(request):
 						return redirect('/market/?marketId=' + str(market.pk))
 
 	else:
-		market_form = CreateMarketForm(user=request.user, group=group)
+		market_form = CreateMarketForm(user=request.user, community=community)
 		option_formset = OptionFormSet()
 
 	args = {'form': market_form, 'option_formset': option_formset}
@@ -276,10 +276,10 @@ def edit_market_view(request):
 
 	if request.method == "POST":
 		if request.POST.get('delete') is not None:
-			group = market.group
+			community = market.community
 			market.delete()
-			if group:
-				return redirect('/group/?groupId=' + str(group.pk))
+			if community:
+				return redirect('/community/?communityId=' + str(community.pk))
 			else:
 				return redirect('/')
 
@@ -297,82 +297,82 @@ def edit_market_view(request):
 
 
 @login_required()
-def request_to_join_group(request):
+def request_to_join_community(request):
 	user = request.user
-	group_id = request.GET.get('groupId')
-	group = Group.objects.get(pk=group_id)
+	community_id = request.GET.get('communityId')
+	community = Community.objects.get(pk=community_id)
 	try:
-		joined_group = JoinedGroup.objects.get(user=user, group=group)
+		joined_community = JoinedCommunity.objects.get(user=user, community=community)
 	except:
-		joined_group = None
+		joined_community = None
 
-	if joined_group:
-		raise PermissionDenied(_("You are already member of this group"))
+	if joined_community:
+		raise PermissionDenied(_("You are already member of this community."))
 
 	if request.method == "POST":
-		form = MakeRequestToJoinForm(request.POST, user=user, group=group)
+		form = MakeRequestToJoinForm(request.POST, user=user, community=community)
 		if form.is_valid():
 			form.save()
 
-			return redirect('list_all_groups')
+			return redirect('list_all_communities')
 	else:
-		form = MakeRequestToJoinForm(user=user, group=group)
+		form = MakeRequestToJoinForm(user=user, community=community)
 
-	args = {'form': form, 'group': group}
-	return render(request, 'group/create_request_join.html', args)
+	args = {'form': form, 'community': community}
+	return render(request, 'community/create_request_join.html', args)
 
 
 @login_required()
-def accept_user_to_group_view(request):
-	joined_group_id = request.GET.get('joinedGroupId')
-	joined_group = get_object_or_404(JoinedGroup, pk=joined_group_id)
-	if not joined_group.group.moderator == request.user:
+def accept_user_to_community_view(request):
+	joined_community_id = request.GET.get('joinedCommunityId')
+	joined_community = get_object_or_404(JoinedCommunity, pk=joined_community_id)
+	if not joined_community.community.moderator == request.user:
 		raise PermissionDenied(_("Only moderatos can access this page."))
 
 	try:
-		joined_group.is_accepted = True
-		joined_group.joined_date = datetime.datetime.now()
-		joined_group.save()
-		return redirect('/group/members/?groupId=' + str(joined_group.group.pk))
+		joined_community.is_accepted = True
+		joined_community.joined_date = datetime.datetime.now()
+		joined_community.save()
+		return redirect('/community/members/?communityId=' + str(joined_community.community.pk))
 	except:
 		raise PermissionDenied(_("Only moderatos can access this page."))
 
 
 @login_required()
-def reject_user_to_group_view(request):
-	joined_group_id = request.GET.get('joinedGroupId')
-	joined_group = get_object_or_404(JoinedGroup, pk=joined_group_id)
-	if not joined_group.group.moderator == request.user:
+def reject_user_to_community_view(request):
+	joined_community_id = request.GET.get('joinedCommunityId')
+	joined_community = get_object_or_404(JoinedCommunity, pk=joined_community_id)
+	if not joined_community.community.moderator == request.user:
 		raise PermissionDenied(_("Only moderatos can access this page."))
 
 	try:
-		group_id = str(joined_group.group.pk)
-		joined_group.delete()
-		return redirect('/group/members/?groupId=' + group_id)
+		community_id = str(joined_community.community.pk)
+		joined_community.delete()
+		return redirect('/community/members/?communityId=' + community_id)
 	except:
 		raise PermissionDenied(_("Only moderatos can access this page."))
 
 
 @login_required()
-def list_members_group_view(request):
-	group_id = request.GET.get('groupId')
-	group = get_object_or_404(Group, pk=group_id)
-	if not group.moderator == request.user:
+def list_members_community_view(request):
+	community_id = request.GET.get('communityId')
+	community = get_object_or_404(Community, pk=community_id)
+	if not community.moderator == request.user:
 		raise PermissionDenied(_("Only moderators can access this page."))
-	joined_groups = group.joinedgroup_set.all()
+	joined_communities = community.joinedcommunity_set.all()
 	page = request.GET.get('page')
-	paginator = Paginator(joined_groups, per_page=10)
+	paginator = Paginator(joined_communities, per_page=10)
 
 	try:
-		joined_groups = paginator.get_page(page)
+		joined_communities = paginator.get_page(page)
 	except PageNotAnInteger:
-		joined_groups = paginator.get_page(1)
+		joined_communities = paginator.get_page(1)
 	except EmptyPage:
-		joined_groups = paginator.page(paginator.num_pages)
+		joined_communities = paginator.page(paginator.num_pages)
 
-	args = {'joined_groups': joined_groups, 'view_name': 'member_list', 'group_id': group_id}
+	args = {'joined_communities': joined_communities, 'view_name': 'member_list', 'community_id': community_id}
 
-	return render(request, 'group/list_members.html', args)
+	return render(request, 'community/list_members.html', args)
 
 
 def display_profile_view(request):
@@ -398,13 +398,13 @@ def cancel_deletion_user_view(request):
 def display_market_view(request):
 	market_id = request.GET.get('marketId')
 	market = get_object_or_404(Market, pk=market_id)
-	group = market.group
+	community = market.community
 
-	if group:
-		check_user_is_member_of_group(user=request.user, group=group)
+	if community:
+		check_user_is_member_of_community(user=request.user, community=community)
 
-	#if group and not request.user.pk in group.user_accepted_set():
-	#	raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
+	#if community and not request.user.pk in community.user_accepted_set():
+	#	raise PermissionDenied(_("The market is part of a private community in which you do not have access."))
 
 	assets_number = Asset.objects.filter(market=market).count()
 
@@ -421,18 +421,18 @@ def ajax_related_markets(request):
 	categories = market.categories.all()
 	q = Q()
 
-	if market.group:
+	if market.community:
 		if categories:
 			for category in categories.all():
-				q |= (Q(is_judged=False) & Q(categories=category) & (Q(group=None) | Q(group=market.group)))
+				q |= (Q(is_judged=False) & Q(categories=category) & (Q(community=None) | Q(community=market.community)))
 		else:
-			q |= (Q(is_judged=False) & (Q(group=None) | Q(group=market.group)))
+			q |= (Q(is_judged=False) & (Q(community=None) | Q(community=market.community)))
 	else:
 		if categories:
 			for category in categories.all():
-				q |= (Q(is_judged=False) & Q(categories=category) & Q(group=None))
+				q |= (Q(is_judged=False) & Q(categories=category) & Q(community=None))
 		else:
-			q |= (Q(is_judged=False) & Q(group=None))
+			q |= (Q(is_judged=False) & Q(community=None))
 	q &= (~Q(id=market_id))
 	related_markets = Market.objects.filter(q).distinct()
 
@@ -505,13 +505,13 @@ def buy_asset_view(request):
 	user = request.user
 	market_id = request.GET.get('marketId')
 	market = get_object_or_404(Market, pk=market_id)
-	group = market.group
+	community = market.community
 
-	if group:
-		check_user_is_member_of_group(user=user, group=group)
+	if community:
+		check_user_is_member_of_community(user=user, community=community)
 
-	#if group and (not group.is_visible and (not request.user in group.user_accepted_set())):
-	#	raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
+	#if community and (not community.is_visible and (not request.user in community.user_accepted_set())):
+	#	raise PermissionDenied(_("The market is part of a private community in which you do not have access."))
 
 	if request.method == "POST":
 		form = CreateAssetForm(request.POST, user=user, market=market)
@@ -545,15 +545,15 @@ def list_markets_view(request):
 		q_category = Q()
 
 	user_verified = False
-	q_public_groups = Q(group=None)
-	q_private_groups = Q()
+	q_public_communities = Q(community=None)
+	q_private_communities = Q()
 	if user.is_authenticated:
-		groups_ids = JoinedGroup.objects.filter(user=user, is_accepted=True).values_list('group_id', flat=True)
-		q_private_groups = Q(group__in=groups_ids)
+		communities_ids = JoinedCommunity.objects.filter(user=user, is_accepted=True).values_list('community_id', flat=True)
+		q_private_communities = Q(community__in=communities_ids)
 		user_verified = user.is_verified
 
-	q_public_groups |= q_private_groups
-	all_markets = Market.objects.filter(Q(is_judged=False) & q_public_groups & q_category).order_by('end_date')
+	q_public_communities |= q_private_communities
+	all_markets = Market.objects.filter(Q(is_judged=False) & q_public_communities & q_category).order_by('end_date')
 
 	paginator = Paginator(all_markets, per_page=10)
 	page = request.GET.get('page')

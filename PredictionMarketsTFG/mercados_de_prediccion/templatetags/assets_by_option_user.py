@@ -1,6 +1,6 @@
 from django import template
 from django.utils.translation import ugettext_lazy as _
-from mercados_de_prediccion.models import Asset, Option
+from mercados_de_prediccion.models import Asset
 
 register = template.Library()
 

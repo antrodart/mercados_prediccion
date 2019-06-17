@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='group',
+            model_name='community',
             name='name',
             field=models.CharField(max_length=70),
         ),

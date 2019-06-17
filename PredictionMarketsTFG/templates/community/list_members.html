@@ -22,15 +22,15 @@
         <div class="col">
             <nav aria-label="Pagination">
                 <ul class="pagination">
-                    {% if joined_groups.has_previous %}
+                    {% if joined_communities.has_previous %}
                         <li class="page-item"><a class="page-link"
-                                                 href="?page={{ joined_groups.previous_page_number }}">&laquo;</a></li>
+                                                 href="?page={{ joined_communities.previous_page_number }}">&laquo;</a></li>
                     {% else %}
                         <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
                     {% endif %}
 
-                    {% for page_num in joined_groups.paginator.page_range %}
-                        {% if joined_groups.number == page_num %}
+                    {% for page_num in joined_communities.paginator.page_range %}
+                        {% if joined_communities.number == page_num %}
                             <li class="page-item active"><span class="page-link">{{ page_num }} <span
                                     class="sr-only">(current)</span></span></li>
                         {% else %}
@@ -38,9 +38,9 @@
                             </li>
                         {% endif %}
                     {% endfor %}
-                    {% if joined_groups.has_next %}
+                    {% if joined_communities.has_next %}
                         <li class="page-item"><a class="page-link"
-                                                 href="?page={{ joined_groups.next_page_number }}">&raquo;</a>
+                                                 href="?page={{ joined_communities.next_page_number }}">&raquo;</a>
                         </li>
                     {% else %}
                         <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
@@ -50,9 +50,9 @@
         </div>
         <div class="col">
             <div class="float-right">
-                <a href="/group/?groupId={{ group_id|stringformat:"s" }}">
+                <a href="/community/?communityId={{ community_id|stringformat:"s" }}">
                     <button type="button" class="btn btn-primary">
-                        {% blocktrans %}Back to group{% endblocktrans %}
+                        {% blocktrans %}Back to community{% endblocktrans %}
                     </button>
                 </a>
             </div>
@@ -69,16 +69,16 @@
         </tr>
         </thead>
         <tbody>
-        {% for joined_group in joined_groups %}
-            <tr {% if not joined_group.is_accepted %} class="table-warning" {% endif %}>
-                <th scope="row">{{ joined_group.private_karma }}</th>
-                <td><a href="/user/?userId={{ joined_group.user.pk }}">
-                    {{ joined_group.user.first_name }} {{ joined_group.user.last_name }}</a></td>
-                <td>{{ joined_group.description }}</td>
-                {% if joined_group.is_accepted %}
-                    <td>{% trans "User joined on" %} {{ joined_group.joined_date }}</td>
+        {% for joined_community in joined_communities %}
+            <tr {% if not joined_community.is_accepted %} class="table-warning" {% endif %}>
+                <th scope="row">{{ joined_community.private_karma }}</th>
+                <td><a href="/user/?userId={{ joined_community.user.pk }}">
+                    {{ joined_community.user.first_name }} {{ joined_community.user.last_name }}</a></td>
+                <td>{{ joined_community.description }}</td>
+                {% if joined_community.is_accepted %}
+                    <td>{% trans "User joined on" %} {{ joined_community.joined_date }}</td>
                 {% else %}
-                    <td><a href='/group/accept/?joinedGroupId={{ joined_group.id }}'
+                    <td><a href='/community/accept/?joinedCommunityId={{ joined_community.id }}'
                                class="btn btn-outline-info">
                                 <img src="{% static 'img/icons/check.png' %}" alt="Accept"
                                      style="max-height: 25px;"/> {% trans "Accept member" %}</a></td>

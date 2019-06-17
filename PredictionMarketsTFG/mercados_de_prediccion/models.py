@@ -24,7 +24,7 @@ class Market(models.Model):
 	is_binary = models.BooleanField(default=True, null=False)
 	creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
 	categories = models.ManyToManyField(Category)
-	group = models.ForeignKey('Group', on_delete=models.CASCADE, null=True)
+	community = models.ForeignKey('mercados_de_prediccion.models.Community', on_delete=models.CASCADE, null=True)
 
 	@property
 	def has_expired(self):
@@ -84,7 +84,7 @@ class Comment(models.Model):
 	author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
 
 
-class Group(models.Model):
+class Community(models.Model):
 	name = models.CharField(max_length=70, blank=False)
 	description = models.TextField(blank=False)
 	picture = models.TextField(_('Picture'), blank=True, null=True)
@@ -95,28 +95,23 @@ class Group(models.Model):
 	def descending_ordered_market_set(self):
 		return self.market_set.order_by('-end_date')
 
-	def descending_ordered_joinedgroup_karma_set(self):
-		return self.joinedgroup_set.order_by('-private_karma')
+	def descending_ordered_joinedcommunity_karma_set(self):
+		return self.joinedcommunity_set.order_by('-private_karma')
 
-	def joinedgroup_accepted_set(self):
-		return self.joinedgroup_set.filter(is_accepted=True)
+	def joinedcommunity_accepted_set(self):
+		return self.joinedcommunity_set.filter(is_accepted=True)
 
 	def user_accepted_set(self):
-		return self.joinedgroup_accepted_set().values_list('user', flat=True)
-
-		#res = []
-		#for joined_group in self.joinedgroup_accepted_set():
-		#	res.append(joined_group.user)
-		#return res
+		return self.joinedcommunity_accepted_set().values_list('user', flat=True)
 
 
-class JoinedGroup(models.Model):
+class JoinedCommunity(models.Model):
 	private_karma = models.IntegerField(null=False, default=0)
 	joined_date = models.DateTimeField(auto_now_add=True)
 	description = models.TextField(blank=True)
 	is_accepted = models.BooleanField(null=False, default=False)
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
-	group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False)
+	community = models.ForeignKey(Community, on_delete=models.CASCADE, null=False)
 
 
 class Asset(models.Model):

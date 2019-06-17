@@ -22,13 +22,13 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='market',
-            name='group',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='mercados_de_prediccion.Group'),
+            name='community',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='mercados_de_prediccion.Community'),
         ),
         migrations.AddField(
             model_name='joinedgroup',
-            name='group',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mercados_de_prediccion.Group'),
+            name='community',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mercados_de_prediccion.Community'),
         ),
         migrations.AddField(
             model_name='joinedgroup',
@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
-            model_name='group',
+            model_name='community',
             name='moderator',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),

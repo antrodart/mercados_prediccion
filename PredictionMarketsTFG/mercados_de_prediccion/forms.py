@@ -33,40 +33,40 @@ class CreateCategoryForm(forms.ModelForm):
 		return category
 
 
-class CreateGroupForm(forms.ModelForm):
-	name = forms.CharField(label=_('Group name'), required=True, max_length=70)
+class CreateCommunityForm(forms.ModelForm):
+	name = forms.CharField(label=_('Community name'), required=True, max_length=70)
 	description = forms.CharField(max_length=300, required=True,
-	                              widget=forms.Textarea(attrs={'placeholder': _('Describe your group: rules, objectives and general information')}),
+	                              widget=forms.Textarea(attrs={'placeholder': _('Describe your community: rules, objectives and general information')}),
 	                              label=_('Description'))
 	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))
-	is_visible = forms.BooleanField(label=_('Visibility'), help_text=_('Visible groups can be seen by anyone.'), required=False)
+	is_visible = forms.BooleanField(label=_('Visibility'), help_text=_('Visible communities can be seen by anyone.'), required=False)
 
 	class Meta():
-		model = Group
+		model = Community
 		fields = ('name', 'description', 'picture',)
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
-		super(CreateGroupForm, self).__init__(*args, **kwargs)
+		super(CreateCommunityForm, self).__init__(*args, **kwargs)
 
 	def save(self, commit=True):
-		group = super(CreateGroupForm,self).save(commit=False)
-		group.name = self.cleaned_data['name']
-		group.description = self.cleaned_data['description']
-		group.moderator = self.user
+		community = super(CreateCommunityForm,self).save(commit=False)
+		community.name = self.cleaned_data['name']
+		community.description = self.cleaned_data['description']
+		community.moderator = self.user
 		picture = self.cleaned_data['picture']
 		if not picture:
-			group.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_group_img.json')))["data"]
+			community.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_community_img.json')))["data"]
 		else:
 			if isinstance(picture, str):
-				group.picture = picture
+				community.picture = picture
 			else:
 				encoded_picture = force_text(base64.b64encode(picture.file.read()))
-				group.picture = encoded_picture
+				community.picture = encoded_picture
 		if commit:
-			group.save()
-		return group
+			community.save()
+		return community
 
 
 class CategoryChoiceField(forms.ModelMultipleChoiceField):
@@ -103,7 +103,7 @@ class CreateMarketForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
-		self.group = kwargs.pop('group')
+		self.community = kwargs.pop('community')
 		super(CreateMarketForm, self).__init__(*args, **kwargs)
 
 	def save(self, commit=True):
@@ -113,10 +113,10 @@ class CreateMarketForm(forms.ModelForm):
 		market.end_date = self.cleaned_data['end_date']
 		market.is_binary = self.cleaned_data['is_binary']
 		market.creator = self.user
-		market.group = self.group
+		market.community = self.community
 		picture = self.cleaned_data['picture']
 		if not picture:
-			market.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_group_img.json')))["data"]
+			market.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_community_img.json')))["data"]
 		else:
 			if isinstance(picture, str):
 				market.picture = picture
@@ -148,7 +148,7 @@ class EditMarketForm(forms.ModelForm):
 		market.categories.set(self.cleaned_data['categories'])
 		picture = self.cleaned_data['picture']
 		if not picture:
-			market.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_group_img.json')))["data"]
+			market.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_community_img.json')))["data"]
 		else:
 			if isinstance(picture, str):
 				market.picture = picture
@@ -170,32 +170,27 @@ class CreateOptionForm(forms.Form):
 
 
 class BaseOptionFormSet(BaseFormSet):
-    def clean(self):
-        """
-        Adds validation to check that no two options have the same name
-        """
-        if any(self.errors):
-            return
+	def clean(self):
+		"""
+		Adds validation to check that no two options have the same name
+		"""
+		if any(self.errors):
+			return
 
-        names = []
-        duplicates = False
+		names = []
+		duplicates = False
 
-        for form in self.forms:
-            if form.cleaned_data:
-                name = form.cleaned_data['name']
+		for form in self.forms:
+			if form.cleaned_data:
+				name = form.cleaned_data['name']
 
-                # Check that no two options have the same name
-                if name in names:
-                    duplicates = True
-                names.append(name)
+				# Check that no two options have the same name
+				if name in names:
+					duplicates = True
+				names.append(name)
 
-                if duplicates:
-                    raise forms.ValidationError(
-                        'Options must have unique names.',
-                        code='duplicate_names'
-                    )
-
-
+				if duplicates:
+					raise forms.ValidationError('Options must have unique names.', code='duplicate_names')
 
 
 class MakeRequestToJoinForm(forms.ModelForm):
@@ -205,24 +200,24 @@ class MakeRequestToJoinForm(forms.ModelForm):
 	                              label=_('Description'))
 
 	class Meta():
-		model = JoinedGroup
+		model = JoinedCommunity
 		fields = ('description',)
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
-		self.group = kwargs.pop('group')
+		self.community = kwargs.pop('community')
 		super(MakeRequestToJoinForm, self).__init__(*args, **kwargs)
 
 	def save(self, commit=True):
-		joined_group = super(MakeRequestToJoinForm, self).save(commit=False)
-		joined_group.description = self.cleaned_data['description']
-		joined_group.is_accepted = False
-		joined_group.user = self.user
-		joined_group.group = self.group
+		joined_community = super(MakeRequestToJoinForm, self).save(commit=False)
+		joined_community.description = self.cleaned_data['description']
+		joined_community.is_accepted = False
+		joined_community.user = self.user
+		joined_community.community = self.community
 
 		if commit:
-			joined_group.save()
-		return joined_group
+			joined_community.save()
+		return joined_community
 
 
 class CreateAssetForm(forms.ModelForm):

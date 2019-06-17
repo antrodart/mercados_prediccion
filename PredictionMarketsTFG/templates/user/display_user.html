@@ -87,17 +87,17 @@
                 <div class="col">
                     <div style="margin-bottom: 1rem">
                         <h2>
-                            <img src="{% static 'img/icons/groups.png' %}" alt="Groups"
+                            <img src="{% static 'img/icons/communities.png' %}" alt="Communities"
                                  style="max-height: 25px;">
-                            {% trans "Groups:" %}
+                            {% trans "Communities:" %}
                         </h2>
                     </div>
                     <div>
                         <ul>
-                            {% for joined_group in user_profile.get_joined_group_accepted_set.all %}
-                                {% if joined_group.group.is_visible or user_profile == user %}
+                            {% for joined_community in user_profile.get_joined_community_accepted_set.all %}
+                                {% if joined_community.community.is_visible or user_profile == user %}
                                     <li>
-                                        <a href="/group/?groupId={{ joined_group.group.id }}">{{ joined_group.group.name }}</a>
+                                        <a href="/community/?communityId={{ joined_community.community.id }}">{{ joined_community.community.name }}</a>
                                     </li>
                                 {% endif %}
                             {% endfor %}
@@ -132,10 +132,10 @@
                                         <a href="{% url 'home' %}">
                                             <h5 class="mt-0 mb-1">{{ market.title }}</h5>
                                         </a>
-                                        {% if market.joinedgroup_set.count == 1 %}
-                                            <p>{{ market.joinedgroup_set.count }} {% trans "participant" %}</p>
+                                        {% if market.joinedcommunity_set.count == 1 %}
+                                            <p>{{ market.joinedcommunity_set.count }} {% trans "participant" %}</p>
                                         {% else %}
-                                            <p>{{ market.joinedgroup_set.count }} {% trans "participants" %}</p>
+                                            <p>{{ market.joinedcommunity_set.count }} {% trans "participants" %}</p>
                                         {% endif %}
                                         {% if market.has_expired %}
                                             {% blocktrans %}The market is over.{% endblocktrans %}

@@ -1,4 +1,4 @@
-from .models import JoinedGroup
+from .models import JoinedCommunity
 from django.core.exceptions import PermissionDenied
 import calendar
 import datetime
@@ -12,9 +12,9 @@ def add_months(sourcedate, months):
 	return datetime.date(year, month, day)
 
 
-def check_user_is_member_of_group(user, group):
+def check_user_is_member_of_community(user, community):
 	try:
-		if not JoinedGroup.objects.get(group_id=group.pk, user=user.pk).is_accepted:
-			raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
+		if not JoinedCommunity.objects.get(community_id=community.pk, user=user.pk).is_accepted:
+			raise PermissionDenied(_("The market is part of a private community in which you do not have access."))
 	except:
-		raise PermissionDenied(_("The market is part of a private group in which you do not have access."))
+		raise PermissionDenied(_("The market is part of a private community in which you do not have access."))
