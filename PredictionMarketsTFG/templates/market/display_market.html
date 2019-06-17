@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% load widget_tweaks %}
+{% load assets_by_option_user %}
 
 <head>
     <title>{% block title %}{{ market.title }}{% endblock %}</title>
@@ -174,31 +175,6 @@
                                     {% endwith %}
                                 {% else %}
                                     {% with YES_PRICE=option.get_todays_price_yes.buy_price NO_PRICE=option.get_todays_price_no.buy_price %}
-                                        <script type="text/javascript">
-                                            function option_benefits(divId, checkboxId, change, yes_p, no_p) {
-                                                let msg1 = "";
-                                                let msg2 = "";
-                                                let price = 100 - {{ YES_PRICE }};
-                                                if (change) {
-                                                    if ($('#' + checkboxId).is(":checked")) {
-                                                        price = 100 - yes_p;
-                                                    } else {
-                                                        price = 100 - no_p;
-                                                    }
-                                                }
-                                                {% get_current_language as LANGUAGE %}
-                                                {% if LANGUAGE == "en" %}
-                                                    msg1 = "You can earn";
-                                                    msg2 = "karma per asset.";
-                                                {% else %}
-                                                    msg1 = "Puedes ganar";
-                                                    msg2 = "karma por acción.";
-                                                {% endif %}
-
-                                                const res = msg1 + " " + price + " " + msg2;
-                                                document.getElementById(divId).innerHTML = res;
-                                            }
-                                        </script>
                                         <div class="col-md-2 mx-auto my-auto">
                                             <h5>{{ option.name }}</h5>
                                         </div>
@@ -224,8 +200,7 @@
                                                                    data-onstyle="success" data-offstyle="danger"
                                                                    name="is_yes"
                                                                    data-size="sm" data-style="innerdivtoggle"
-                                                                   onchange="option_benefits('possibleEarnJs{{ forloop.counter }}', 'checkBoxJs{{ forloop.counter }}', true, {{ YES_PRICE }}, {{ NO_PRICE }});"
-                                                                   id="checkBoxJs{{ forloop.counter }}">
+                                                                   id="checkBoxId{{ forloop.counter }}">
                                                         </div>
                                                     </div>
                                                     <div
@@ -249,7 +224,7 @@
                                                                 data-form="formId{{ forloop.counter }}"
                                                                 data-assetpriceyes="{{ YES_PRICE }}"
                                                                 data-assetpriceno="{{ NO_PRICE }}"
-                                                                data-checkboxid="checkBoxJs{{ forloop.counter }}">
+                                                                data-checkboxid="checkBoxId{{ forloop.counter }}">
                                                             {% trans "Buy assets" %}
                                                         </button>
                                                     </div>
@@ -260,15 +235,7 @@
                                 {% endif %}
                                 <div id="possibleEarnJs{{ forloop.counter }}"
                                      class="col-md-2 mx-auto my-auto text-center padding-top-bottom">
-                                    {% if market.is_binary %}
-                                        {% trans "You can earn" %} {{ option.get_todays_benefits }}
-                                        {% trans "karma per asset." %}
-                                    {% else %}
-                                        <script> option_benefits("possibleEarnJs{{ forloop.counter }}",
-                                            "checkBoxJs{{ forloop.counter }}",
-                                            false, {{ option.get_todays_price_yes.buy_price }}, {{ option.get_todays_price_no.buy_price }});
-                                        </script>
-                                    {% endif %}
+                                    {% get_assets_by_option_user option user %}
                                 </div>
                             </div>
                         </div>
@@ -305,6 +272,7 @@
                     </p>
                     <p>{% trans "Price per asset" %}: <span id="body-asset-price"></span> karma.</p>
                     <p>{% trans "Total price" %}: <strong><span id="body-total-price"></span> karma.</strong></p>
+                    <p><span id="body-option-benefits"></span></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary"
@@ -334,12 +302,12 @@
             console.log(quantity);
             let binary = button.data('binarymarket');
             let asset_price;
-            if (binary){
+            if (binary) {
                 asset_price = button.data('assetprice');
             } else {
                 let checkbox_id = button.data('checkboxid');
                 const yes_case = $('#' + checkbox_id).is(":checked");
-                if (yes_case){
+                if (yes_case) {
                     asset_price = button.data('assetpriceyes');
                 } else {
                     asset_price = button.data('assetpriceno');
@@ -354,7 +322,29 @@
             modal.find('#body-quantity').text(quantity);
             modal.find('#body-asset-price').text(asset_price);
             modal.find('#body-total-price').text(total_price);
+            modal.find('#body-option-benefits').text(option_benefits(asset_price, quantity))
         });
+
+        function option_benefits(asset_price, quantity) {
+            let msg1 = "";
+            let msg2 = "";
+            let msg3 = "";
+            const benefits = 100 - asset_price;
+            const total_benefits = benefits * quantity;
+
+            {% get_current_language as LANGUAGE %}
+            {% if LANGUAGE == "en" %}
+                msg1 = "You can earn " ;
+                msg2 = " karma per asset. In other words, ";
+                msg3 = " karma in total!";
+            {% else %}
+                msg1 = "Puedes ganar ";
+                msg2 = " karma por acción. O lo que es lo mismo, ¡";
+                msg3 = " karma en total!";
+            {% endif %}
+
+            return msg1 + benefits + msg2 + total_benefits + msg3;
+        }
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -448,5 +438,4 @@
             return false;
         });
     </script>
-
 {% endblock %}

@@ -56,7 +56,7 @@ class Option(models.Model):
 	def get_todays_price_no(self):
 		return self.price_set.get(is_yes=False, is_last=True)
 
-	def get_todays_beenfits(self):
+	def get_todays_benefits(self):
 		if not self.market.is_binary:
 			raise ObjectDoesNotExist(_("This method can only be used for binary market's options."))
 		return 100 - self.get_todays_price().buy_price
