@@ -24,7 +24,7 @@ class Market(models.Model):
 	is_binary = models.BooleanField(default=True, null=False)
 	creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
 	categories = models.ManyToManyField(Category)
-	community = models.ForeignKey('mercados_de_prediccion.models.Community', on_delete=models.CASCADE, null=True)
+	community = models.ForeignKey('Community', on_delete=models.CASCADE, null=True)
 
 	@property
 	def has_expired(self):
