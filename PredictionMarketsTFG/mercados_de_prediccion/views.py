@@ -8,7 +8,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from .forms import *
-from .utils import check_user_is_member_of_community
+from .utils import check_user_is_member_of_community, recalculate_price_options
 from users.models import User
 from django.views.generic import TemplateView
 import datetime
@@ -400,11 +400,7 @@ def display_market_view(request):
 	market = get_object_or_404(Market, pk=market_id)
 	community = market.community
 
-	if community:
-		check_user_is_member_of_community(user=request.user, community=community)
-
-	#if community and not request.user.pk in community.user_accepted_set():
-	#	raise PermissionDenied(_("The market is part of a private community in which you do not have access."))
+	check_user_is_member_of_community(user=request.user, community=community)
 
 	assets_number = Asset.objects.filter(market=market).count()
 
@@ -507,11 +503,7 @@ def buy_asset_view(request):
 	market = get_object_or_404(Market, pk=market_id)
 	community = market.community
 
-	if community:
-		check_user_is_member_of_community(user=user, community=community)
-
-	#if community and (not community.is_visible and (not request.user in community.user_accepted_set())):
-	#	raise PermissionDenied(_("The market is part of a private community in which you do not have access."))
+	check_user_is_member_of_community(user=user, community=community)
 
 	if request.method == "POST":
 		form = CreateAssetForm(request.POST, user=user, market=market)
@@ -520,14 +512,15 @@ def buy_asset_view(request):
 			option = get_object_or_404(Option, pk=option_id)
 			is_yes = request.POST.get('is_yes')
 
-			asset = form.save(commit=False)
-			asset.option = option
-			if is_yes:
-				asset.is_yes = True
-			else:
-				asset.is_yes = False
+			with transaction.atomic():
+				asset = form.save(commit=False)
+				asset.option = option
+				if is_yes:
+					asset.is_yes = True
+				else:
+					asset.is_yes = False
 
-			asset.save()
+				recalculate_price_options(option, asset)
 
 			return redirect('/market/?marketId=' + str(market_id))
 	else:

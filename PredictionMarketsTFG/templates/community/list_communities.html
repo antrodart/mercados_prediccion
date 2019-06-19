@@ -56,15 +56,17 @@
                 </ul>
             </nav>
         </div>
-        <div class="col">
-            <div class="float-right">
-                <a href="{% url 'create_community' %}">
-                    <button type="button" class="btn btn-primary">
-                        {% blocktrans %}Create community{% endblocktrans %}
-                    </button>
-                </a>
+        {% if user.is_authenticated %}
+            <div class="col">
+                <div class="float-right">
+                    <a href="{% url 'create_community' %}">
+                        <button type="button" class="btn btn-primary">
+                            {% blocktrans %}Create community{% endblocktrans %}
+                        </button>
+                    </a>
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 
 
@@ -81,7 +83,8 @@
                             <div class="card-body">
                                 <p class="card-text">
                                     {% if not community.is_visible %}
-                                        <img src="{% static 'img/icons/locked.png' %}" alt="{% trans "Private community" %}"
+                                        <img src="{% static 'img/icons/locked.png' %}"
+                                             alt="{% trans "Private community" %}"
                                              style="max-height: 25px;">
                                     {% endif %}
                                     <a href="/community/?communityId={{ community.id }}"

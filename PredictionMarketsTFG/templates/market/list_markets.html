@@ -16,7 +16,7 @@
         </div>
         {% if category %}
             <div class="alert alert-info fade show" role="alert">
-                <h5  class="alert-heading">
+                <h5 class="alert-heading">
                     {% trans "Filtering by category" %}
                     {% get_current_language as LANGUAGE %}
                     {% if  LANGUAGE == "en" %}
@@ -86,9 +86,10 @@
                                      src="data:image/png;base64,{{ market.picture }}" data-holder-rendered="true">
                             </a>
                             <div class="card-body">
-                                <p class="card-text">
-                                    <strong>{{ market.title }}</strong>
-                                </p>
+                                <a href="/market/?marketId={{ market.id }}" style="color:unset;">
+                                    <p class="card-text">
+                                        <strong>{{ market.title }}</strong>
+                                    </p></a>
                                 <small class="text-muted">
                                     {% if market.community == None %}
                                         <img src="{% static 'img/icons/unlock.png' %}"

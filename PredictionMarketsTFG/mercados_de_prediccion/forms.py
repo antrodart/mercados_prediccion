@@ -95,7 +95,8 @@ class CreateMarketForm(forms.ModelForm):
 	CHOICES = [(1, _('Binary')), (0, _('Multiple'))]
 	is_binary = forms.ChoiceField(label=_("Type of market"), choices=CHOICES,
 	                              widget=forms.RadioSelect(attrs={'id': 'value', 'class': 'custom-control-input'}),
-	                              required=True, help_text=_('Binary markets only accept yes/no contract options. Multiple markets accept more than one predefined options.'))
+	                              required=True, initial=1,
+	                              help_text=_('Binary markets only accept yes/no contract options. Multiple markets accept more than one predefined options.'))
 
 	class Meta():
 		model = Market
@@ -222,7 +223,8 @@ class MakeRequestToJoinForm(forms.ModelForm):
 
 class CreateAssetForm(forms.ModelForm):
 	#is_yes = forms.BooleanField(label=_("Buy yes or no"))
-	quantity = forms.IntegerField(label=_("Quantity"), help_text=_('The quantity of assets you want to buy.'), required=True)
+	quantity = forms.IntegerField(label=_("Quantity"), help_text=_('The quantity of assets you want to buy.'),
+	                              required=True, min_value=1, initial=1)
 	class Meta():
 		model = Asset
 		fields = ('quantity',)
