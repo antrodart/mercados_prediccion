@@ -48,7 +48,7 @@ class User(AbstractUser):
 	email = models.EmailField(unique=True, max_length=150)
 	date_of_birth = models.DateField(blank=True, null=True, validators=[validate_date_is_past])
 	biography = models.TextField(blank=True, null=True)
-	public_karma = models.IntegerField(null=False, default=0, validators=[MinValueValidator(0)])
+	public_karma = models.IntegerField(null=False, default=500, validators=[MinValueValidator(0)])
 	picture = models.TextField(default=DEFAULT_USER_IMG)
 	is_verified = models.BooleanField(null=False, default=False)
 	deletion_date = models.DateField(null=True, default=None)

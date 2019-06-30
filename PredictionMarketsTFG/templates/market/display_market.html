@@ -275,6 +275,7 @@
                     <p><span id="body-option-benefits"></span></p>
                 </div>
                 <div class="modal-footer">
+                    <p hidden id="body-no-karma" class="text-danger">{% trans "You don't have enough karma" %}.</p>
                     <button type="button" class="btn btn-secondary"
                             data-dismiss="modal">{% trans "Close" %}
                     </button>
@@ -295,11 +296,10 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="text/javascript">
         $('#binaryMarketsModal').on('show.bs.modal', function (event) {
-            const button = $(event.relatedTarget);// Button that triggered the modal
+            const button = $(event.relatedTarget);// Button that triggered the modal.
             let option_name = button.data('optionname'); // Extract info from data-* attributes
             let form_id = button.data('form');
             let quantity = $('#' + form_id).find('#quantity').val();
-            console.log(quantity);
             let binary = button.data('binarymarket');
             let asset_price;
             if (binary) {
@@ -322,7 +322,15 @@
             modal.find('#body-quantity').text(quantity);
             modal.find('#body-asset-price').text(asset_price);
             modal.find('#body-total-price').text(total_price);
-            modal.find('#body-option-benefits').text(option_benefits(asset_price, quantity))
+            modal.find('#body-option-benefits').text(option_benefits(asset_price, quantity));
+            console.log("User karma: " + {{ user_karma }});
+            if(total_price>{{ user_karma }}){
+                modal.find('#body-no-karma').removeAttr('hidden');
+                modal.find('#buysubmit').attr("disabled","disabled");
+            }else{
+                modal.find('#body-no-karma').attr("hidden","hidden");
+                modal.find('#buysubmit').removeAttr('disabled');
+            }
         });
 
         function option_benefits(asset_price, quantity) {

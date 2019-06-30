@@ -222,7 +222,6 @@ class MakeRequestToJoinForm(forms.ModelForm):
 
 
 class CreateAssetForm(forms.ModelForm):
-	#is_yes = forms.BooleanField(label=_("Buy yes or no"))
 	quantity = forms.IntegerField(label=_("Quantity"), help_text=_('The quantity of assets you want to buy.'),
 	                              required=True, min_value=1, initial=1)
 	class Meta():

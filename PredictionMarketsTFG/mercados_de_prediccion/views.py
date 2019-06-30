@@ -8,7 +8,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from .forms import *
-from .utils import check_user_is_member_of_community, recalculate_price_options
+from .utils import *
 from users.models import User
 from django.views.generic import TemplateView
 import datetime
@@ -401,11 +401,14 @@ def display_market_view(request):
 	community = market.community
 
 	check_user_is_member_of_community(user=request.user, community=community)
-
+	if community:
+		user_karma = JoinedCommunity.objects.get(community=community, user=request.user).private_karma
+	else:
+		user_karma = request.user.public_karma
 	assets_number = Asset.objects.filter(market=market).count()
 
 	asset_form = CreateAssetForm(user=request.user, market=market)
-	args = {'market': market, 'assets_number': assets_number, 'asset_form': asset_form}
+	args = {'market': market, 'assets_number': assets_number, 'asset_form': asset_form, 'user_karma': user_karma}
 
 	return render(request, 'market/display_market.html', args)
 
@@ -520,11 +523,10 @@ def buy_asset_view(request):
 				else:
 					asset.is_yes = False
 
+				user_subtract_karma(user, asset, community)
 				recalculate_price_options(option, asset)
 
 			return redirect('/market/?marketId=' + str(market_id))
-	else:
-		return redirect('/market/?marketId=' + str(market_id))
 
 
 def list_markets_view(request):
