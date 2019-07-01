@@ -218,7 +218,7 @@ def create_market_view(request):
 		option_formset = OptionFormSet(request.POST)
 
 		if market_form.is_valid():
-			if market_form.cleaned_data['is_binary'] == '1':
+			if market_form.cleaned_data['market_type'] == '1':  #  The market is binary
 				market = market_form.save()
 
 				try:
@@ -248,10 +248,16 @@ def create_market_view(request):
 
 					try:
 						with transaction.atomic():
-							for option in new_options:
-								option.save()
-								price_yes = Price.objects.create(option=option, is_yes=True, is_last=True)
-								price_no = Price.objects.create(option=option, is_yes=False, is_last=True)
+							if market.is_exclusive:
+								num_options = len(new_options)
+								for option in new_options:
+									option.save()
+									price_yes = Price.objects.create(option=option, is_yes=True, is_last=True, buy_price=round(100/num_options))
+							else:
+								for option in new_options:
+									option.save()
+									price_yes = Price.objects.create(option=option, is_yes=True, is_last=True)
+									price_no = Price.objects.create(option=option, is_yes=False, is_last=True)
 
 						return redirect('/market/?marketId=' + str(market.pk))
 
@@ -523,8 +529,11 @@ def buy_asset_view(request):
 				else:
 					asset.is_yes = False
 
-				user_subtract_karma(user, asset, community)
-				recalculate_price_options(option, asset)
+				user_subtract_karma(user, asset, community, market)
+				if market.is_binary or not market.is_exclusive:
+					recalculate_price_binary_options(option, asset)
+				else:
+					recalculate_price_exclusive_options(market=market, option=option, asset=asset)
 
 			return redirect('/market/?marketId=' + str(market_id))
 

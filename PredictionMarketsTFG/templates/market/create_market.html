@@ -111,18 +111,18 @@
                             {% endfor %}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.is_binary.id_for_label }}"
-                                   class="text-info">{{ form.is_binary.label }}</label><br>
-                            {% for choice in form.is_binary %}
+                            <label for="{{ form.market_type.id_for_label }}"
+                                   class="text-info">{{ form.market_type.label }}</label><br>
+                            {% for choice in form.market_type %}
                                 <div class="custom-control custom-radio">
                                     {{ choice.tag }}
-                                    {{ form.is_binary.id }}
+                                    {{ form.market_type.id }}
                                     <label for="value_{{ forloop.counter0 }}"
                                            class="custom-control-label">{{ choice.choice_label }}</label>
                                 </div>
                             {% endfor %}
                             <small class="form-text text-muted">
-                                {{ form.is_binary.help_text }}
+                                {{ form.market_type.help_text }}
                             </small>
                         </div>
 
@@ -220,7 +220,7 @@
         });
 
         $(document).ready(function () {
-            if ($('input[name=is_binary]:checked', '#market_form').val() === "0") {
+            if ($('input[name=market_type]:checked', '#market_form').val() === "0") {
                 $('.editfield').show();
                 showFormsetOptions();
             } else
@@ -234,7 +234,7 @@
         });
 
         $('#market_form input[type="radio"]').on('change', function () {
-            if ($('input[name=is_binary]:checked', '#market_form').val() === "1")
+            if ($('input[name=market_type]:checked', '#market_form').val() === "1")
                 $('.editfield').hide();
             else {
                 $('.editfield').show();

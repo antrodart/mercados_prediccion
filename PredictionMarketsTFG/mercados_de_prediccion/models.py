@@ -22,6 +22,7 @@ class Market(models.Model):
 	picture = models.TextField()
 	is_judged = models.BooleanField(default=False, null=False)
 	is_binary = models.BooleanField(default=True, null=False)
+	is_exclusive = models.BooleanField(null=True)
 	creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
 	categories = models.ManyToManyField(Category)
 	community = models.ForeignKey('Community', on_delete=models.CASCADE, null=True)
@@ -46,8 +47,8 @@ class Option(models.Model):
 	market = models.ForeignKey(Market, on_delete=models.CASCADE, null=False)
 
 	def get_todays_price(self):
-		if not self.market.is_binary:
-			raise ObjectDoesNotExist(_("This method can only be used for binary market's options."))
+		if not self.market.is_binary and not self.market.is_exclusive:
+			raise ObjectDoesNotExist(_("This method can only be used for binary or exclusive markets options."))
 		return self.price_set.get(is_last=True)
 
 	def get_todays_price_yes(self):
@@ -57,8 +58,8 @@ class Option(models.Model):
 		return self.price_set.get(is_yes=False, is_last=True)
 
 	def get_todays_benefits(self):
-		if not self.market.is_binary:
-			raise ObjectDoesNotExist(_("This method can only be used for binary market's options."))
+		if not self.market.is_binary and not self.market.is_exclusive:
+			raise ObjectDoesNotExist(_("This method can only be used for binary or exclusive markets options."))
 		return 100 - self.get_todays_price().buy_price
 
 	def get_todays_benefits_yes(self):

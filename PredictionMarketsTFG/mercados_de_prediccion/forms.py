@@ -92,15 +92,15 @@ class CreateMarketForm(forms.ModelForm):
 	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))
 	categories = CategoryChoiceField(label=_("Categories"), queryset=Category.objects.all(), required=False,)
-	CHOICES = [(1, _('Binary')), (0, _('Multiple'))]
-	is_binary = forms.ChoiceField(label=_("Type of market"), choices=CHOICES,
+	CHOICES = [(1, _('Binary')), (0, _('Multiple: exclusive')), (-1, _('Multiple: non-exclusive'))]
+	market_type = forms.ChoiceField(label=_("Type of market"), choices=CHOICES,
 	                              widget=forms.RadioSelect(attrs={'id': 'value', 'class': 'custom-control-input'}),
 	                              required=True, initial=1,
-	                              help_text=_('Binary markets only accept yes/no contract options. Multiple markets accept more than one predefined options.'))
+	                              help_text=_('Binary markets only accept yes/no contract options. Multiple markets accept two or more predefined options; in exclusive multiple markets the asset prices are divided between all the options, and in non-exclusive multiple markets each option has its own "binary market" included, where people can vote if that option will take place or not.'))
 
 	class Meta():
 		model = Market
-		fields = ('title', 'description', 'end_date', 'picture', 'categories', 'is_binary')
+		fields = ('title', 'description', 'end_date', 'picture', 'categories', 'market_type')
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
@@ -112,7 +112,12 @@ class CreateMarketForm(forms.ModelForm):
 		market.title = self.cleaned_data['title']
 		market.description = self.cleaned_data['description']
 		market.end_date = self.cleaned_data['end_date']
-		market.is_binary = self.cleaned_data['is_binary']
+		market_type = self.cleaned_data['market_type']
+		if market_type == '1':
+			market.is_binary = True
+		else:
+			market.is_binary = False
+			market.is_exclusive = True if market_type == '0' else False
 		market.creator = self.user
 		market.community = self.community
 		picture = self.cleaned_data['picture']
