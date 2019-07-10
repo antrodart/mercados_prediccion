@@ -249,3 +249,23 @@ class CreateAssetForm(forms.ModelForm):
 		if commit:
 			asset.save()
 		return asset
+
+
+class JudgeBinaryMarketForm(forms.Form):
+	options = forms.ChoiceField(label=_("Winner option"), required=True, help_text=_('Select the winner option for this market.'))
+
+	def __init__(self, *args, **kwargs):
+		self.CHOICES = kwargs.pop('option_choices', None)
+		super(JudgeBinaryMarketForm, self).__init__(*args, **kwargs)
+		if self.CHOICES:
+			self.fields["options"].choices = self.CHOICES
+
+
+class JudgeMultipleNonExclusiveMarketForm(forms.Form):
+	options = forms.MultipleChoiceField(label=_("Winner options"), required=True, help_text=_('Select the winner options for this market. More than one can be selected holding the Control key.'))
+
+	def __init__(self, *args, **kwargs):
+		self.CHOICES = kwargs.pop('option_choices')
+		super(JudgeMultipleNonExclusiveMarketForm, self).__init__(*args, **kwargs)
+		if self.CHOICES:
+			self.fields["options"].choices = self.CHOICES

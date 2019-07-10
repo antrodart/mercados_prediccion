@@ -407,16 +407,23 @@ def display_market_view(request):
 	community = market.community
 
 	check_user_is_member_of_community(user=request.user, community=community)
-	if community:
-		user_karma = JoinedCommunity.objects.get(community=community, user=request.user).private_karma
+
+	if market.has_expired:
+		assets_number = Asset.objects.filter(market=market).count()
+		args = {'market': market, 'assets_number': assets_number}
+
+		return render(request, 'market/display_market_ended.html', args)
 	else:
-		user_karma = request.user.public_karma
-	assets_number = Asset.objects.filter(market=market).count()
+		if community:
+			user_karma = JoinedCommunity.objects.get(community=community, user=request.user).private_karma
+		else:
+			user_karma = request.user.public_karma
+		assets_number = Asset.objects.filter(market=market).count()
 
-	asset_form = CreateAssetForm(user=request.user, market=market)
-	args = {'market': market, 'assets_number': assets_number, 'asset_form': asset_form, 'user_karma': user_karma}
+		asset_form = CreateAssetForm(user=request.user, market=market)
+		args = {'market': market, 'assets_number': assets_number, 'asset_form': asset_form, 'user_karma': user_karma}
 
-	return render(request, 'market/display_market.html', args)
+		return render(request, 'market/display_market.html', args)
 
 
 def ajax_related_markets(request):
@@ -512,6 +519,7 @@ def buy_asset_view(request):
 	market = get_object_or_404(Market, pk=market_id)
 	community = market.community
 
+	check_market_has_not_expired(market)
 	check_user_is_member_of_community(user=user, community=community)
 
 	if request.method == "POST":
@@ -557,7 +565,7 @@ def list_markets_view(request):
 		user_verified = user.is_verified
 
 	q_public_communities |= q_private_communities
-	all_markets = Market.objects.filter(Q(is_judged=False) & q_public_communities & q_category).order_by('end_date')
+	all_markets = Market.objects.filter(q_public_communities & q_category).order_by('is_judged', 'end_date')
 
 	paginator = Paginator(all_markets, per_page=10)
 	page = request.GET.get('page')
@@ -573,4 +581,126 @@ def list_markets_view(request):
 
 	return render(request, 'market/list_markets.html', args)
 
+
+def list_judge_public_markets(request, created=False):
+	if not request.user.is_staff:
+		raise PermissionDenied(_("Must be logged as Admin."))
+
+	q = Q(community=None, is_judged=False, end_date__lt=datetime.date.today())
+	if created:
+		q &= Q(creator=request.user)
+
+	markets_to_judge = Market.objects.filter(q)
+	paginator = Paginator(markets_to_judge, per_page=10)
+	page = request.GET.get('page')
+
+	try:
+		markets = paginator.get_page(page)
+	except PageNotAnInteger:
+		markets = paginator.get_page(1)
+	except EmptyPage:
+		markets = paginator.page(paginator.num_pages)
+
+	args = {'markets': markets, 'created': created}
+
+	return render(request, 'market/list_judge_markets.html', args)
+
+
+def judge_market(request, market_id, slug):
+	market = get_object_or_404(Market, pk=market_id)
+	user = request.user
+	creator = market.creator
+
+	if not market.has_expired:
+		raise ObjectDoesNotExist(_("The market does not exist or it has not expired"))
+
+	if market.community is None:  #  Market is public, only moderators and is creator if he is verified can judge
+		if creator.is_verified and not user == creator:
+			raise PermissionDenied(_("Must be the market creator."))
+		elif creator.is_staff and not user.is_staff:
+			raise PermissionDenied(_("Must be logged as Admin."))
+	else:  #  Market is not public, only the creator of the market can judge it (the community moderator)
+		if not user == creator:
+			raise PermissionDenied(_("Must be the creator of the Market"))
+
+	if request.method == "POST":
+		if market.is_binary:
+			options = market.option_set.values_list('id', flat=True)
+			if get_language() == "es":
+				option_choices = [(options[0], "Sí"), (options[1], "No")]
+			else:
+				option_choices = [(options[0], "Yes"), (options[1], "No")]
+
+			form = JudgeBinaryMarketForm(request.POST, option_choices=option_choices)
+			if form.is_valid():
+				correct_option_id = form.cleaned_data.get('options')
+				correct_option = get_object_or_404(Option, pk=correct_option_id)
+				if not int(correct_option_id) in options:
+					raise PermissionDenied(_("The option is not from this market."))
+
+				with transaction.atomic():
+					market.is_judged = True
+					market.save()
+					correct_option.is_correct = True
+					correct_option.save()
+					pay_winner_option(option=correct_option, non_exclusive_market=False, is_yes=None)
+
+				return redirect("/market/?marketId=" + str(market.pk))
+
+		elif market.is_exclusive:
+			options = market.option_set.values_list('id', 'name')
+			form = JudgeBinaryMarketForm(request.POST, option_choices=options)
+			if form.is_valid():
+				correct_option_id = form.cleaned_data.get('options')
+				correct_option = get_object_or_404(Option, pk=correct_option_id)
+				if not correct_option in market.option_set.all():
+					raise PermissionDenied(_("The option is not from this market."))
+
+				with transaction.atomic():
+					market.is_judged = True
+					market.save()
+					correct_option.is_correct = True
+					correct_option.save()
+					pay_winner_option(option=correct_option, non_exclusive_market=False, is_yes=None)
+
+				return redirect("/market/?marketId=" + str(market.pk))
+		else:
+			options = market.option_set.values_list('id', 'name')
+			form = JudgeMultipleNonExclusiveMarketForm(request.POST, option_choices=options)
+			if form.is_valid():
+				correct_options_ids = form.cleaned_data.get('options')
+				try:
+					with transaction.atomic():
+						market.is_judged = True
+						market.save()
+						correct_options = market.option_set.filter(pk__in=correct_options_ids)
+						incorrect_options = market.option_set.exclude(pk__in=correct_options_ids)
+						for correct_option in correct_options:
+							correct_option.is_correct = True
+							correct_option.save()
+							pay_winner_option(option=correct_option, non_exclusive_market=True, is_yes=True)
+						for incorrect_option in incorrect_options:
+							pay_winner_option(option=incorrect_option, non_exclusive_market=True, is_yes=False)
+				except:
+					raise PermissionDenied()
+				return redirect("/market/?marketId=" + str(market.pk))
+
+	else:
+		if market.is_binary:
+			options = market.option_set.values_list('id', flat=True)
+			if get_language() == "es":
+				option_choices = [(options[0], "Sí"),(options[1], "No")]
+			else:
+				option_choices = [(options[0], "Yes"),(options[1], "No")]
+
+			form = JudgeBinaryMarketForm(option_choices=option_choices)
+		elif market.is_exclusive:
+			options = market.option_set.values_list('id', 'name')
+			form = JudgeBinaryMarketForm(option_choices=options)
+		else:
+			options = market.option_set.values_list('id', 'name')
+			form = JudgeMultipleNonExclusiveMarketForm(option_choices=options)
+
+	args = {'form': form, 'market': market}
+	return render(request, 'market/judge_market.html', args)
 

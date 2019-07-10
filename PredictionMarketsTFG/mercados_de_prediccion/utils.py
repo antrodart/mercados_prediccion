@@ -15,6 +15,10 @@ def add_months(sourcedate, months):
 	return datetime.date(year, month, day)
 
 
+def check_market_has_not_expired(market):
+	if market.has_expired:
+		raise PermissionDenied(_("The market has ended and you can no longer place bets."))
+
 def check_user_is_member_of_community(user, community):
 	if community:
 		try:
@@ -51,16 +55,16 @@ def user_subtract_karma(user, asset, community, market):
 		user.save()
 
 
-def save_asset_queryset_to_user(asset_queryset):
+def save_asset_queryset_to_user(asset_queryset, new_asset):
 	#  Saving the asset
 	if asset_queryset.exists():
 		#  Updates the asset object that the user already has, adding the quantity.
 		previous_asset = asset_queryset.first()
-		previous_asset.quantity = F('quantity') + asset_queryset.quantity
+		previous_asset.quantity = F('quantity') + new_asset.quantity
 		previous_asset.save()
 	else:
 		#  Create new asset associated to the user and option, and saves it.
-		asset_queryset.save()
+		new_asset.save()
 
 
 def recalculate_price_binary_options(option, asset):
@@ -100,10 +104,10 @@ def recalculate_price_binary_options(option, asset):
 		buy_price_betting_option = 99
 	elif buy_price_betting_option == 0:
 		buy_price_betting_option = 1
-	if buy_price_other_option == 100:
-		buy_price_other_option = 99
-	elif buy_price_other_option == 0:
+	if buy_price_other_option == 0:
 		buy_price_other_option = 1
+	elif buy_price_other_option == 100:
+		buy_price_other_option = 99
 
 	betting_option_price.buy_price = buy_price_betting_option
 	other_option_price.buy_price = buy_price_other_option
@@ -111,7 +115,7 @@ def recalculate_price_binary_options(option, asset):
 	other_option_price.save()
 
 	#  Saving the asset
-	save_asset_queryset_to_user(user_option_assets)
+	save_asset_queryset_to_user(asset_queryset=user_option_assets, new_asset=asset)
 
 
 def recalculate_price_exclusive_options(market, option, asset):
@@ -140,4 +144,22 @@ def recalculate_price_exclusive_options(market, option, asset):
 		other_option_price.save()
 
 	#  Saving the asset
-	save_asset_queryset_to_user(user_option_assets)
+	save_asset_queryset_to_user(asset_queryset=user_option_assets, new_asset=asset)
+
+
+def pay_winner_option(option, non_exclusive_market, is_yes):
+	if non_exclusive_market:
+		assets = option.asset_set.filter(is_yes=is_yes)
+	else:
+		assets = option.asset_set.all()
+
+	if option.market.community:
+		for asset in assets:
+			joined_community = JoinedCommunity.objects.get(user=asset.user, community=asset.market.community)
+			joined_community.private_karma = F('private_karma') + (asset.quantity * 100)
+			joined_community.save()
+	else:
+		for asset in assets:
+			user = asset.user
+			user.public_karma = F('public_karma') + (asset.quantity * 100)
+			user.save()

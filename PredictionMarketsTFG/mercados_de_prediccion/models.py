@@ -1,6 +1,8 @@
 from django.db import models
-from django.db.models import Sum
+from django.db.models import Sum, Value
+from django.db.models.functions import Coalesce
 from django.conf import settings
+from django.template.defaultfilters import slugify
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext_lazy as _
@@ -39,10 +41,13 @@ class Market(models.Model):
 	def __str__(self):
 		return self.title
 
+	def slug(self):
+		return slugify(self.title)
+
 
 class Option(models.Model):
 	name = models.CharField(max_length=40, blank=False)
-	is_correct = models.BooleanField(default=False, null=True)
+	is_correct = models.BooleanField(null=True, default=False)
 	binary_yes = models.BooleanField(default=None, null=True)
 	market = models.ForeignKey(Market, on_delete=models.CASCADE, null=False)
 
@@ -67,6 +72,9 @@ class Option(models.Model):
 
 	def get_todays_benefits_no(self):
 		return 100 - self.get_todays_price_no().buy_price
+
+	def get_all_assets_sold(self):
+		return self.asset_set.aggregate(quantity__sum=Coalesce(Sum('quantity'),Value(0)))['quantity__sum']
 
 
 class Price(models.Model):

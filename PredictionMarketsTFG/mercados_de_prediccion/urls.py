@@ -31,6 +31,9 @@ urlpatterns = [
 	path('market/edit/', views.edit_market_view, name='edit_market'),
 	path('market/', views.display_market_view, name='display_market'),
 	path('markets/', views.list_markets_view, name='markets'),
+	path('judge-markets/', views.list_judge_public_markets, {'created': False}, name='judge_public_markets'),
+	path('judge-markets/created/', views.list_judge_public_markets, {'created': True}, name='judge_public_markets'),
+	path('judge-markets/judge/<int:market_id>/<slug:slug>', views.judge_market, name='judge_market'),
 
 	#  Assets
 	path('asset/buy/', views.buy_asset_view, name='buy_asset'),

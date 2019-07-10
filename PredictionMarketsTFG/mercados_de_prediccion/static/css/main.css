@@ -154,12 +154,21 @@ h2 {
     margin-top: 20px;
 }
 
-.block {
+.block{
     display: flex;
     align-items: flex-start;
     background: #8AF3D9;
     padding: 1rem;
     margin: 0 0 1rem 0;
+
+}
+
+.block[data-judged="True"][data-correct="True"]{
+    background: #57f3a2; !important;
+}
+
+.block[data-judged="True"][data-correct="False"]{
+    background: #f39788; !important;
 }
 
 .block > img {
@@ -202,4 +211,8 @@ h2 {
     object-fit: cover;
     display: block;
     height: 183px;
+}
+
+.card[data-expired="True"]{
+    background: #fdc4ba; !important;
 }
