@@ -32,6 +32,76 @@
         {% endif %}
     </div>
 
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                {% for market in markets %}
+                    <div class="col-md-4">
+                        <div class="card mb-4 box-shadow" data-expired="{{ market.has_expired }}">
+                            <a href="/market/?marketId={{ market.id }}">
+                                <img class="card-img-top" alt="{{ market.title }}"
+                                     src="data:image/png;base64,{{ market.picture }}" data-holder-rendered="true">
+                            </a>
+                            <div class="card-body">
+                                <a href="/market/?marketId={{ market.id }}" style="color:#123C69;">
+                                    <p class="card-text">
+                                        <strong>{{ market.title }}</strong>
+                                    </p></a>
+
+                                {% if market.community == None %}
+                                    <small class="market-public">
+                                        <img src="{% static 'img/icons/unlock.png' %}"
+                                             title="{% trans "Public market" %}"
+                                             alt="{% trans "Public market" %}" style="max-height: 25px;">
+                                        {% trans "Public market" %}
+                                    </small>
+                                {% else %}
+                                    <small class="market-not-public">
+                                        <img src="{% static 'img/icons/community.png' %}"
+                                             title="{% trans "Community" %}"
+                                             alt="{% trans "Community" %}" style="max-height: 25px;">
+                                        <a href="/community/?communityId={{ market.community.pk }}"
+                                           style="color:unset;">
+                                            {{ market.community.name }}</a>
+                                    </small>
+                                {% endif %}
+
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    {% if market.has_expired %}
+                                        <small class="text-incorrect">
+                                            <img src="{% static 'img/icons/forbidden.png' %}"
+                                                 title="{% trans "Market ended" %}"
+                                                 alt="{% trans "Market ended" %}" style="max-height: 25px;">
+                                            {% trans "Ended on" %} {{ market.end_date }}
+                                        </small>
+                                    {% else %}
+                                        <small class="text-muted">
+                                            <img src="{% static 'img/icons/finish-flag.png' %}"
+                                                 title="{% trans "End date" %}"
+                                                 alt="{% trans "End date" %}" style="max-height: 25px;">
+                                            {{ market.end_date }}
+                                        </small>
+                                    {% endif %}
+                                    {% if user == market.creator %}
+                                        <a href='/market/edit/?marketId={{ market.id }}'
+                                           class="btn btn-warning"
+                                           role="button">
+                                            <img src="{% static 'img/icons/edit.png' %}"
+                                                 title="{% trans "Edit" %}"
+                                                 alt="{% trans "Edit" %}" style="max-height: 25px;"> {% trans "Edit" %}</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <br/>
     <div class="row">
         <div class="col">
             <nav aria-label="Pagination">
@@ -73,58 +143,6 @@
                 </div>
             </div>
         {% endif %}
-    </div>
-
-    <div class="album py-5 bg-light">
-        <div class="container">
-            <div class="row">
-                {% for market in markets %}
-                    <div class="col-md-4">
-                        <div class="card mb-4 box-shadow" data-expired="{{ market.has_expired }}">
-                            <a href="/market/?marketId={{ market.id }}">
-                                <img class="card-img-top" alt="{{ market.title }}"
-                                     src="data:image/png;base64,{{ market.picture }}" data-holder-rendered="true">
-                            </a>
-                            <div class="card-body">
-                                <a href="/market/?marketId={{ market.id }}" style="color:unset;">
-                                    <p class="card-text">
-                                        <strong>{{ market.title }}</strong>
-                                    </p></a>
-                                <small class="text-muted">
-                                    {% if market.community == None %}
-                                        <img src="{% static 'img/icons/unlock.png' %}"
-                                             title="{% trans "Public market" %}"
-                                             alt="{% trans "Public market" %}" style="max-height: 25px;">
-                                        {% trans "Public market" %}
-                                    {% else %}
-                                        <img src="{% static 'img/icons/community.png' %}"
-                                             title="{% trans "Community" %}"
-                                             alt="{% trans "Community" %}" style="max-height: 25px;">
-                                        <a href="/community/?communityId={{ market.community.pk }}" style="color:unset;">
-                                            {{ market.community.name }}</a>
-                                    {% endif %}
-                                </small>
-                            </div>
-                            <div class="card-footer">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">
-                                        <img src="{% static 'img/icons/finish-flag.png' %}"
-                                             title="{% trans "End date" %}"
-                                             alt="{% trans "End date" %}" style="max-height: 25px;">
-                                        {{ market.end_date }}
-                                    </small>
-                                    {% if user == market.creator %}
-                                        <a href='/market/edit/?marketId={{ market.id }}'
-                                           class="btn btn-outline-secondary"
-                                           role="button">{% trans "Edit" %}</a>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
     </div>
 
 {% endblock %}

@@ -22,9 +22,9 @@
         <div class="header-title">
             <h1 class="wv-heading--title">
                 {% if editing %}
-                    {% blocktrans %}Edit private community{% endblocktrans %}
+                    {% blocktrans %}Edit community{% endblocktrans %}
                 {% else %}
-                    {% blocktrans %}Create private community{% endblocktrans %}
+                    {% blocktrans %}Create community{% endblocktrans %}
                 {% endif %}
             </h1>
         </div>
@@ -118,9 +118,13 @@
                            onclick="return deleteConfirm()">
                             {% trans "Delete" %}
                         </button>
+                         <a href='/community/?communityId={{ form.instance.pk }}' class="btn btn-secondary" role="button">
+                                    {% trans "Cancel" %}</a>
                         <button type="submit" class="btn btn-primary">{% trans "Save" %}
                         </button>
                     {% else %}
+                        <a href='/communities/all' class="btn btn-secondary" role="button">
+                                    {% trans "Cancel" %}</a>
                          <button type="submit" class="btn btn-primary">{% blocktrans %}Create community{% endblocktrans %}
                         </button>
                     {% endif %}

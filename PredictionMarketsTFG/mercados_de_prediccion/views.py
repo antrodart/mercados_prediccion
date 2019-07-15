@@ -32,7 +32,7 @@ def list_categories_view(request):
 	else:
 		order = "title_es"
 	all_categories = Category.objects.all().order_by(order)
-	paginator = Paginator(all_categories, per_page=10)
+	paginator = Paginator(all_categories, per_page=12)
 	page = request.GET.get('page')
 
 	try:
@@ -87,7 +87,7 @@ def edit_category_view(request):
 @login_required()
 def list_created_communities_view(request):
 	created_communities = Community.objects.filter(moderator=request.user.id).order_by('creation_date')
-	paginator = Paginator(created_communities, per_page=10)
+	paginator = Paginator(created_communities, per_page=12)
 	page = request.GET.get('page')
 
 	try:
@@ -104,7 +104,7 @@ def list_created_communities_view(request):
 
 def list_all_communities_view(request):
 	all_communities = Community.objects.filter(is_visible=True).order_by('creation_date')
-	paginator = Paginator(all_communities, per_page=10)
+	paginator = Paginator(all_communities, per_page=12)
 	page = request.GET.get('page')
 
 	try:
@@ -407,9 +407,9 @@ def display_market_view(request):
 	community = market.community
 
 	check_user_is_member_of_community(user=request.user, community=community)
-
+	assets_number = Asset.objects.filter(market=market).aggregate(Sum('quantity'))['quantity__sum']
 	if market.has_expired:
-		assets_number = Asset.objects.filter(market=market).count()
+
 		args = {'market': market, 'assets_number': assets_number}
 
 		return render(request, 'market/display_market_ended.html', args)
@@ -418,7 +418,6 @@ def display_market_view(request):
 			user_karma = JoinedCommunity.objects.get(community=community, user=request.user).private_karma
 		else:
 			user_karma = request.user.public_karma
-		assets_number = Asset.objects.filter(market=market).count()
 
 		asset_form = CreateAssetForm(user=request.user, market=market)
 		args = {'market': market, 'assets_number': assets_number, 'asset_form': asset_form, 'user_karma': user_karma}
@@ -567,7 +566,7 @@ def list_markets_view(request):
 	q_public_communities |= q_private_communities
 	all_markets = Market.objects.filter(q_public_communities & q_category).order_by('is_judged', 'end_date')
 
-	paginator = Paginator(all_markets, per_page=10)
+	paginator = Paginator(all_markets, per_page=9)
 	page = request.GET.get('page')
 
 	try:
@@ -591,7 +590,7 @@ def list_judge_public_markets(request, created=False):
 		q &= Q(creator=request.user)
 
 	markets_to_judge = Market.objects.filter(q)
-	paginator = Paginator(markets_to_judge, per_page=10)
+	paginator = Paginator(markets_to_judge, per_page=9)
 	page = request.GET.get('page')
 
 	try:

@@ -22,6 +22,9 @@
         <div class="col-md-8 mx-auto">
             <h3>{{ market.title }}</h3>
             <h5>{{ market.description }}</h5>
+            <small class="text-muted">
+                {% trans "Created by" %} <a href="/user/?userId={{ market.creator.pk }}" >{{ market.creator.first_name }} {{ market.creator.last_name }}</a>.
+                {% trans "Ended on" %} {{ market.end_date }}.
             <div class="myform form ">
                 <form method="post" id="judge_form">
                     <div>
@@ -53,6 +56,8 @@
                         {% endif %}
 
                         <div class="text-center">
+                            <a href='/judge-markets' class="btn btn-secondary" role="button">
+                                {% trans "Cancel" %}</a>
                             <button type="submit" class=" btn btn-primary">
                                 {% blocktrans %}Judge market{% endblocktrans %}
                             </button>

@@ -26,6 +26,64 @@
         </div>
     {% endif %}
 
+
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                {% for community in communities %}
+                    <div class="col-md-3">
+                        <div class="card mb-4 box-shadow">
+                            <a href="/community/?communityId={{ community.id }}">
+                                <img class="card-img-top" alt="{{ community.name }}"
+                                     src="data:image/png;base64,{{ community.picture }}" data-holder-rendered="true">
+                            </a>
+                            <div class="card-body">
+                                {% if not community.is_visible %}
+                                    <img src="{% static 'img/icons/locked.png' %}"
+                                         alt="{% trans "Private community" %}"
+                                         style="max-height: 25px;">
+                                {% endif %}
+                                <a href="/community/?communityId={{ community.id }}"
+                                   style="color:#123C69;">
+                                    <p class="card-text"><strong>{{ community.name }}</strong></p></a>
+
+                                <small class="text-muted">
+                                    {% trans "Created by" %} <a href="/user/?userId={{ community.moderator.pk }}">
+                                    {{ community.moderator.first_name }} {{ community.moderator.last_name }}</a>
+                                </small>
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted text-blue">{{ community.market_set.count }}
+                                        {% if community.market_set.count == 1 %}
+                                            {% trans "market" %}
+                                        {% else %}
+                                            {% trans "markets" %}
+                                        {% endif %}
+                                    </small>
+                                    <small class="text-muted text-blue">{{ community.joinedcommunity_set.count }}
+                                        {% if community.joinedcommunity_set.count == 1 %}
+                                            {% trans "member" %}
+                                        {% else %}
+                                            {% trans "members" %}
+                                        {% endif %}
+                                    </small>
+                                    {% if view_name == "list_created" %}
+                                        <a href='/community/edit/?communityId={{ community.id }}'
+                                           class="btn btn-outline-secondary"
+                                           role="button">{% trans "Edit" %}</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <br/>
+
     <div class="row">
         <div class="col">
             <nav aria-label="Pagination">
@@ -67,58 +125,6 @@
                 </div>
             </div>
         {% endif %}
-    </div>
-
-
-    <div class="album py-5 bg-light">
-        <div class="container">
-            <div class="row">
-                {% for community in communities %}
-                    <div class="col-md-3">
-                        <div class="card mb-4 box-shadow">
-                            <a href="/community/?communityId={{ community.id }}">
-                                <img class="card-img-top" alt="{{ community.name }}"
-                                     src="data:image/png;base64,{{ community.picture }}" data-holder-rendered="true">
-                            </a>
-                            <div class="card-body">
-                                <p class="card-text">
-                                    {% if not community.is_visible %}
-                                        <img src="{% static 'img/icons/locked.png' %}"
-                                             alt="{% trans "Private community" %}"
-                                             style="max-height: 25px;">
-                                    {% endif %}
-                                    <a href="/community/?communityId={{ community.id }}"
-                                       style="color:unset;"><strong>{{ community.name }}</strong></a>
-                                </p>
-                            </div>
-                            <div class="card-footer">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">{{ community.market_set.count }}
-                                        {% if community.market_set.count == 1 %}
-                                            {% trans "market" %}
-                                        {% else %}
-                                            {% trans "markets" %}
-                                        {% endif %}
-                                    </small>
-                                    <small class="text-muted">{{ community.joinedcommunity_set.count }}
-                                        {% if community.joinedcommunity_set.count == 1 %}
-                                            {% trans "participant" %}
-                                        {% else %}
-                                            {% trans "participants" %}
-                                        {% endif %}
-                                    </small>
-                                    {% if view_name == "list_created" %}
-                                        <a href='/community/edit/?communityId={{ community.id }}'
-                                           class="btn btn-outline-secondary"
-                                           role="button">{% trans "Edit" %}</a>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
     </div>
 
 {% endblock %}

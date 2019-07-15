@@ -1,7 +1,8 @@
 body {
     padding: 0;
     margin: 0;
-    background: #f2f6e9;
+    /*background: #f2f6e9;*/
+    background: #EEE2DC;
 }
 
 .login-container {
@@ -154,28 +155,34 @@ h2 {
     margin-top: 20px;
 }
 
-.block{
+.block {
     display: flex;
     align-items: flex-start;
-    background: #8AF3D9;
+    background: #AFF0F3;
     padding: 1rem;
     margin: 0 0 1rem 0;
+    border-style: ridge;
+    border-width: 3px;
+    border-color: #AC3B61;
 
 }
 
-.block[data-judged="True"][data-correct="True"]{
-    background: #57f3a2; !important;
+.block[data-judged="True"][data-correct="True"] {
+    background: #57f3a2;
+!important;
 }
 
-.block[data-judged="True"][data-correct="False"]{
-    background: #f39788; !important;
+.block[data-judged="True"][data-correct="False"] {
+    background: #f39788;
+!important;
 }
 
 .block > img {
     width: 100px;
     height: 100px;
-    object-fit: scale-down;
+    object-fit: cover;
     margin: 0 1rem 0 0;
+    display: block;
 
 }
 
@@ -213,6 +220,150 @@ h2 {
     height: 183px;
 }
 
-.card[data-expired="True"]{
-    background: #fdc4ba; !important;
+.card[data-expired="True"], .block[data-expired="True"] {
+    background: #eac0b7;
+!important;
+}
+
+.img-header {
+    height: 200px;
+    width: 255px;
+    display: block;
+    object-fit: cover;
+}
+
+.img-related-market{
+    max-height: 150px;
+    display: block;
+    object-fit: cover;
+}
+
+.market-expired {
+    color: #ea4335;
+}
+
+.market-public {
+    color: #3fa746;
+}
+
+.market-not-public, .text-blue {
+    color: #123C69 !important;
+}
+
+.text-red{
+    color: #AC3B61 !important;
+}
+
+.text-correct{
+    color: #03850a !important;
+}
+
+.text-incorrect{
+    color: #ac1a13 !important;
+}
+
+/*Bootstrap default colours overwrite*/
+.btn-primary {
+    color: #EEE2DC;
+    background-color: #123C69;
+    border-color: #AC3B61;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active,
+.open > .dropdown-toggle.btn-primary, .btn-primary:active:focus {
+    color: #EEE2DC;
+    background-color: #AC3B61;
+    border-color: #123C69;
+}
+
+.btn-secondary {
+    color: #EEE2DC;
+    background-color: #9b9396;
+    border-color: #AC3B61;
+}
+
+.btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active, .btn-secondary.active,
+.open > .dropdown-toggle.btn-secondary, .btn-secondary:active:focus {
+    color: #EEE2DC;
+    background-color: #AC3B61;
+    border-color: #123C69;
+}
+
+.btn-warning {
+    color: #123C69;
+    background-color: #FFA31A;
+    border-color: #AC3B61;
+}
+
+.btn-warning:hover, .btn-warning:focus, .btn-warning:active, .btn-warning.active,
+.open > .dropdown-toggle.btn-warning, .btn-warning:active:focus {
+    color: #EEE2DC;
+    background-color: #AC3B61;
+    border-color: #123C69;
+}
+
+.btn-info {
+    color: #123C69;
+    background-color: #96dfd3;
+    border-color: #123C69;
+}
+
+.btn-info:hover, .btn-info:focus, .btn-info:active, .btn-info.active,
+.open > .dropdown-toggle.btn-info, .btn-info:active:focus {
+    color: #EEE2DC;
+    background-color: #AC3B61;
+    border-color: #123C69;
+}
+
+.btn-danger {
+    color: #ffffff;
+    background-color: #dc3545;
+    border-color: #433939;
+}
+
+.btn-danger:hover, .btn-danger:focus, .btn-danger:active, .btn-danger.active,
+.open > .dropdown-toggle.btn-danger, .btn-danger:active:focus {
+    color: #EEE2DC;
+    background-color: #AC3B61;
+    border-color: #123C69;
+}
+
+.back-to-top {
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    color: #EEE2DC;
+    background-color: #123C69;
+    border-color: #AC3B61;
+}
+
+.back-to-top:hover {
+    color: #EDC7B7;
+}
+
+.page-item.active .page-link {
+    color: #EEE2DC;
+    background-color: #123C69;
+    border-color: #AC3B61;
+}
+
+.page-item.disabled .page-link {
+    color: #123C69;
+    background-color: #BAB2B5;
+    border-color: #EDC7B7;
+}
+
+.page-item .page-link {
+    color: #123C69;
+    background-color: #ffffff;
+}
+
+.text-info{
+    color: #AC3B61 !important;
+}
+
+.custom-control-label{
+    color: #123C69 !important;
 }

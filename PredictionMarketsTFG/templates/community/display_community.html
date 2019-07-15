@@ -9,7 +9,7 @@
 {% block content %}
     <div class="row top-buffer"> {% comment %}Top buffer adds 20px for top margin{% endcomment %}
         <div class="col-md-3">
-            <img class="img-fluid img-thumbnail" alt="{{ community.name }}" style="max-height: 255px"
+            <img class="img-fluid img-thumbnail img-header" alt="{{ community.name }}"
                  src="data:image/png;base64,{{ community.picture }}" data-holder-rendered="true">
         </div>
         <div class="col-md-9 my-auto"> {% comment %}Puts column and text in the center{% endcomment %}
@@ -18,9 +18,10 @@
                     <div class="row">
                         <div class="col">
                             <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
-                                <h1 style="word-break: break-all;">
+                                <h1 class="text-blue" style="word-break: break-all;">
                                     {% if not community.is_visible %}
-                                        <img src="{% static 'img/icons/locked.png' %}" alt="{% trans "Private community" %}"
+                                        <img src="{% static 'img/icons/locked.png' %}"
+                                             alt="{% trans "Private community" %}"
                                              style="max-height: 40px;">
                                     {% endif %}
                                     {{ community.name }}
@@ -30,8 +31,10 @@
                     </div>
                     <div class="row">
                         <div class="col text-muted">
-                            {% blocktrans %}Created by{% endblocktrans %} {{ community.moderator }}
-                            - {{ community.creation_date |date }}
+                            {% blocktrans %}Created by{% endblocktrans %}
+                            <a href="/user/?userId={{ community.moderator.pk }}">
+                                {{ community.moderator.first_name }} {{ community.moderator.last_name }}</a>
+                            {% trans "on" %} {{ community.creation_date |date }}
                             <p>
                                 {{ community.joinedcommunity_accepted_set.count }}
                                 {% if community.joinedcommunity_accepted_set.count == 1 %}
@@ -46,19 +49,19 @@
                 {% if community.moderator == user %}
                     <div class="col-md-3">
                         <div style="margin-bottom: 1rem">
-                            <h2>
+                            <h2 class="text-red">
                                 <img src="{% static 'img/icons/options-3.png' %}" alt="Options"
                                      style="max-height: 25px;">
-                                {% trans "Community options:" %}
+                                {% trans "Options:" %}
                             </h2>
                         </div>
                         <div class="col">
                             <a href='/community/members/?communityId={{ community.id }}'
-                               class="btn btn-outline-info btn-block text-left">
+                               class="btn btn-info btn-block text-left">
                                 <img src="{% static 'img/icons/users.png' %}" alt="Members"
                                      style="max-height: 25px;"/> {% trans "Members" %}</a>
                             <a href='/community/edit/?communityId={{ community.id }}'
-                               class="btn btn-outline-warning btn-block text-left">
+                               class="btn btn-warning btn-block text-left">
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
                                      style="max-height: 25px;"/> {% trans "Edit" %}</a>
                         </div>
@@ -73,7 +76,7 @@
             <div class="row">
                 <div class="col">
                     <div style="margin-bottom: 1rem">
-                        <h2>
+                        <h2 class="text-red">
                             <img src="{% static 'img/icons/community-rules.png' %}" alt="Description"
                                  style="max-height: 25px;">
                             {% trans "Description:" %}
@@ -87,7 +90,7 @@
             <div class="row">
                 <div class="col">
                     <div class="header-title">
-                        <h2>
+                        <h2 class="text-red">
                             <img src="{% static 'img/icons/users.png' %}" alt="Users" style="max-height: 25px;">
                             {% trans "Members:" %}
                         </h2>
@@ -95,7 +98,8 @@
                             <ul>
                                 {% for joined_community in community.joinedcommunity_accepted_set.all %}
                                     <li><a href="/user/?userId={{ joined_community.user.pk }}">
-                                        {{ joined_community.user.first_name }} {{ joined_community.user.last_name }}</a></li>
+                                        {{ joined_community.user.first_name }} {{ joined_community.user.last_name }}</a>
+                                    </li>
                                 {% endfor %}
                             </ul>
                         </div>
@@ -107,7 +111,7 @@
             <hr>
             <div class="row">
                 <div class="col">
-                    <h2 style="margin-bottom: 1rem">
+                    <h2 class="text-red" style="margin-bottom: 1rem">
                         <img src="{% static 'img/icons/markets.png' %}" alt="Markets" style="max-height: 25px;">
                         {% trans "Markets:" %}
                     </h2>
@@ -141,25 +145,30 @@
                         <p>{% blocktrans %}This community has no markets yet.{% endblocktrans %}</p>
                     {% else %}
                         {% for market in community.descending_ordered_market_set.all %}
-                            <div class="block">
+                            <div class="block" data-expired="{{ market.has_expired }}">
                                 <img class="img-fluid img-thumbnail" src="data:image/png;base64,{{ market.picture }}"
                                      alt="">
                                 <div>
                                     {% if user_is_accepted %}
                                         <a href="/market/?marketId={{ market.id }}">
-                                            <h2>{{ market.title }}</h2>
+                                            <h2 class="text-blue">{{ market.title }}</h2>
                                         </a>
                                     {% else %}
-                                        <h2>{{ market.title }}</h2>
+                                        <h2 class="text-blue">{{ market.title }}</h2>
                                     {% endif %}
-                                    <p>
-                                        {% if market.has_expired %}
-                                            {% blocktrans %}The market is over.{% endblocktrans %}
-                                        {% else %}
+                                    {% if market.has_expired %}
+                                        <p class="market-expired">
+                                            <img src="{% static 'img/icons/forbidden.png' %}"
+                                                 title="{% trans "Market ended" %}"
+                                                 alt="{% trans "Market ended" %}" style="max-height: 25px;">
+                                            {% blocktrans %}The market ended on{% endblocktrans %} {{ market.end_date }}
+                                        </p>
+                                    {% else %}
+                                        <p>
                                             {% blocktrans %}You can place bets on this market until{% endblocktrans %}
                                             {{ market.end_date }}.
-                                        {% endif %}
-                                    </p>
+                                        </p>
+                                    {% endif %}
                                 </div>
                             </div>
                         {% endfor %}

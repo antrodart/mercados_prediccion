@@ -9,7 +9,7 @@
 {% block content %}
     <div class="row top-buffer"> {% comment %}Top buffer adds 20px for top margin{% endcomment %}
         <div class="col-md-3">
-            <img class="img-fluid img-thumbnail" alt="{{ user_profile.first_name }}" style="max-height: 200px"
+            <img class="img-fluid img-thumbnail img-header" alt="{{ user_profile.first_name }}"
                  src="data:image/png;base64,{{ user_profile.picture }}" data-holder-rendered="true">
         </div>
         <div class="col-md-9 my-auto"> {% comment %}Puts column and text in the center{% endcomment %}
