@@ -42,7 +42,7 @@ class SignupForm(UserCreationForm):
 	                              label=_('Biography'))
 	date_of_birth = forms.DateField(label=_("Date of birth"), widget=forms.DateInput, required=False,
 	                              validators=[validate_date_is_past])
-	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
+	picture = forms.ImageField(label=_('Picture'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))
 
 	class Meta(UserCreationForm.Meta):
@@ -78,7 +78,7 @@ class EditProfileForm(forms.ModelForm):
 	                            widget=forms.Textarea(attrs={'placeholder': _(
 		                            'Describe yourself: your hobbies, life goals, preferences, interests...')}),
 	                            label=_('Biography'))
-	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
+	picture = forms.ImageField(label=_('Picture'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))
 
 	class Meta:

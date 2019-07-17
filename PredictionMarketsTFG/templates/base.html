@@ -59,6 +59,7 @@
                         <div class="dropdown-divider"></div>
                         {% if user.is_authenticated %}
                             <a class="dropdown-item" href="{% url 'list_created_communities' %}">
+                                <img src="{% static "img/icons/community2.png" %}" alt="{% trans "Created communities" %}" class="img-profile"/>
                                 {% blocktrans %}Created communities{% endblocktrans %}</a>
                             <div class="dropdown-divider"></div>
                             {% for joined_community in user.get_joined_community_accepted_set.all %}
@@ -90,6 +91,10 @@
                                 <img src="{% static "img/icons/profile.png" %}" alt="Profile"
                                  class="img-profile"/>
                                 {% blocktrans %}My profile{% endblocktrans %}</a>
+                            <a class="dropdown-item" href="/bets/{{ user.pk }}">
+                                <img src="{% static "img/icons/moneybox.png" %}" alt="Bets"
+                                 class="img-profile"/>
+                                {% blocktrans %}My past bets{% endblocktrans %}</a>
                             {% if user.is_staff %}
                                 <a class="dropdown-item" href="{% url 'create_admin' %}">
                                     {% blocktrans %}Create admin{% endblocktrans %}</a>

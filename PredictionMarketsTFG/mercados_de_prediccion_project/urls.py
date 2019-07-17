@@ -24,6 +24,7 @@ urlpatterns = [
     path('login/', login_view, name="login"),
 	path('logout/', auth_views.LogoutView.as_view(), name="logout"),
 	path('signup/', signup, name="signup"),
+	url(r'^auth/', include('social_django.urls', namespace='social')),
 	path('user/edit/', edit_profile, name="edit_profile"),
 	path('create-admin/', create_admin, name='create_admin'),
     path('',include('mercados_de_prediccion.urls')),

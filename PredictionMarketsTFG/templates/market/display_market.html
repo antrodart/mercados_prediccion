@@ -139,7 +139,7 @@
                                                     {% trans "Yes" %}
                                                 </h4>
                                             {% else %}
-                                                <h4>
+                                                <h4 class="text-blue">
                                                     <img src="{% static 'img/icons/no-cross.png' %}" alt="No"
                                                          style="max-height: 50px;"/>
                                                     {% trans "No" %}
@@ -240,7 +240,7 @@
                                                                value="{{ option.pk }}">
                                                         <div
                                                                 class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
-                                                            <h6 class="text-blue">{% trans "'Yes' price" %}</h6>
+                                                            <h6 class="text-correct">{% trans "'Yes' price" %}</h6>
                                                             {{ YES_PRICE }} karma
                                                         </div>
                                                         <div
@@ -258,7 +258,7 @@
                                                         </div>
                                                         <div
                                                                 class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
-                                                            <h6 class="text-blue">{% trans "'No' price" %}</h6>
+                                                            <h6 class="text-incorrect">{% trans "'No' price" %}</h6>
                                                             {{ NO_PRICE }} karma
                                                         </div>
                                                         <div
@@ -482,9 +482,8 @@
                         list_html += "<div class='col-md-12'>";
                         list_html += "<div class='card mb-4 box-shadow'>";
                         list_html += "<a href='/market/?marketId=" + returnedData[i].id + "'>";
-                        list_html += "<img class='card-img-top img-thumbnail'";
+                        list_html += "<img class='card-img-top img-thumbnail img-related-market'";
                         list_html += "alt='" + returnedData[i].title + "'";
-                        list_html += "class='img-related-market'";
                         list_html += "src='data:image/png;base64," + returnedData[i].picture + "'";
                         list_html += "data-holder-rendered='true'>";
                         list_html += "</a>";

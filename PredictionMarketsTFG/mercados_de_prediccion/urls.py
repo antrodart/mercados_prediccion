@@ -42,4 +42,7 @@ urlpatterns = [
 	path('ajax/related_markets/', views.ajax_related_markets, name='related_markets'),
 	path('ajax/chart/', views.ajax_charts, name='ajax_charts'),
 
+	#  Bets
+	path('bets/<int:user_id>', views.past_bets, name='past_bets'),
+
 ]

@@ -385,7 +385,10 @@ def display_profile_view(request):
 	user_profile_id = request.GET.get('userId')
 	user_profile = get_object_or_404(User, pk=user_profile_id)
 
-	args = {'user_profile': user_profile}
+	created_communities = Community.objects.filter(moderator=request.user.pk)
+	assets = Asset.objects.filter(user=request.user.pk, market__is_judged=False)
+
+	args = {'user_profile': user_profile, 'created_communities': created_communities, 'assets': assets}
 
 	return render(request, 'user/display_user.html', args)
 
@@ -702,4 +705,37 @@ def judge_market(request, market_id, slug):
 
 	args = {'form': form, 'market': market}
 	return render(request, 'market/judge_market.html', args)
+
+
+def past_bets(request, user_id):
+	user = get_object_or_404(User, pk=user_id)
+
+	if not request.user.is_authenticated:
+		communities = None
+		markets = Market.objects.filter(is_judged=True, community__isnull=True)
+	elif request.user.pk == user.pk:
+		communities = Community.objects.filter(joinedcommunity__user_id=user.pk, joinedcommunity__is_accepted=True)
+		if communities:
+			markets = Market.objects.filter(is_judged=True, community__in=communities) | Market.objects.filter(
+				is_judged=True, community__isnull=True)
+		else:
+			markets = Market.objects.filter(is_judged=True, community__isnull=True)
+	else:
+		user_logged = request.user
+		user_logged_communities = Community.objects.filter(joinedcommunity__user_id=user_logged.pk,
+		                                                   joinedcommunity__is_accepted=True)
+		user_communities = Community.objects.filter(joinedcommunity__user_id=user.pk, joinedcommunity__is_accepted=True)
+		communities = user_logged_communities & user_communities
+		if communities:
+			markets = Market.objects.filter(is_judged=True, community__in=communities) | Market.objects.filter(
+				is_judged=True, community__isnull=True)
+		else:
+			markets = Market.objects.filter(is_judged=True, community__isnull=True)
+
+
+	assets = Asset.objects.filter(user=user, market__in=markets)
+
+	args = {'assets': assets, 'user_past_bets': user, 'communities': communities}
+
+	return render(request, 'statistics/past_bets.html', args)
 

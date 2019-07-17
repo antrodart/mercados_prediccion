@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% load i18n %}
+{% load static %}
 
 <head>
     <title>{% block title %}
@@ -28,7 +29,7 @@
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="{{ form.description.id_for_label }}" class="text-info">* {{ form.description.label }}</label>
+                        <label for="{{ form.description.id_for_label }}" class="text-info">{{ form.description.label }}</label>
                         {% if form.description.errors %}
                             {{ form.description | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
                             <small>{{ form.description.help_text }}</small>
@@ -60,6 +61,8 @@
                         </div>
                     {% endif %}
                     <div class="text-center">
+                        <a href='/community/?communityId={{ community.pk }}' class="btn btn-secondary">
+                            {% trans "Back to community" %}</a>
                         <button type="submit" class=" btn btn-primary">{% blocktrans %}Send request{% endblocktrans %}
                         </button>
                     </div>

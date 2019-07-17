@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+<head>
+    <title>{% block title %}{% trans "Past bets of" %} {{ user_past_bets.first_name }}{% endblock %}</title>
+</head>
+
+{% block content %}
+    <div class="col-md-6 mx-auto text-center top-buffer">
+        <div class="header-title">
+            <h1 class="wv-heading--title">
+                {% blocktrans %}Past bets{% endblocktrans %}
+            </h1>
+            <span class="text-muted">
+                {% trans "Only displaying assets bought from markets that you and" %} {{ user_past_bets.first_name }} {% trans "both have access" %}.
+                {% trans "This includes public markets" %}.
+            </span>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <div style="margin-bottom: 1rem">
+                        <h2 class="text-red">
+                            <img src="{% static 'img/icons/communities.png' %}" alt="Communities"
+                                 style="max-height: 25px;">
+                            {% trans "Communities in common:" %}
+                        </h2>
+                    </div>
+                    <div class="album bg-light" style="margin-bottom: 1rem">
+                        <div class="container">
+                            <div class="row">
+                                {% for community in communities %}
+                                    <div class="col-md-12">
+                                        <div class='card mb-4 box-shadow'>
+                                            <a href="/community/?communityId={{ community.id }}">
+                                                <img class='card-img-top img-thumbnail img-related-market'
+                                                     alt="{{ community.title }}"
+                                                     src="data:image/png;base64,{{ community.picture }}"
+                                                     data-holder-rendered="true">
+                                            </a>
+                                            <div class="card-body">
+                                                <p class="card-text">
+                                                    <a href="/community/?communityId={{ community.id }}"
+                                                       class="text-blue">
+                                                        <strong>{{ community.name }}</strong>
+                                                    </a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col">
+                    <h2 class="text-red" style="margin-bottom: 1rem">
+                        <img src="{% static 'img/icons/markets.png' %}" alt="Markets" style="max-height: 25px;">
+                        {% trans "Assets" %}:
+                    </h2>
+                </div>
+                <div class="col">
+                    <div class="float-right">
+                        <a href="/user/?userId={{ user_past_bets.pk }}">
+                                <button type="button" class="btn btn-secondary">
+                                    {% blocktrans %}Back to user profile{% endblocktrans %}
+                                </button>
+                            </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {% if assets.count == 0 %}
+                        <p>{% blocktrans %}This user has not placed any bet yet.{% endblocktrans %}</p>
+                    {% else %}
+                        {% for asset in assets %}
+                            <div class="block" data-judged="True" data-correct="{{ asset.option.is_correct }}"
+                                 data-binary="{{ asset.market.is_binary }}" data-exclusive="{{ asset.market.is_exclusive }}"
+                                 data-yes="{{ asset.is_yes }}">
+                                <div class="row">
+                                    <div class="col-md-6 mx-auto my-auto">
+                                        <h5 class="text-blue">
+                                            <a href="/market/?marketId={{ asset.market.pk }}"
+                                               class="text-blue">{{ asset.market.title }}</a>
+                                        </h5>
+                                    </div>
+                                    <div class="col-md-3 mx-auto my-auto text-center">
+                                        <h5 class="text-blue">{% trans "Option" %}</h5>
+                                        {% if asset.market.is_binary or asset.market.is_exclusive %}
+                                            <h5 class="text-red">{{ asset.option.name }}</h5>
+                                        {% elif asset.is_yes %}
+                                            <h5 class="text-red">{{ asset.option.name }}<span
+                                                    class="text-correct"> ({% trans "Yes" %})</span></h5>
+                                        {% else %}
+                                            <h5 class="text-red">{{ asset.option.name }}<span
+                                                    class="text-incorrect"> ({% trans "No" %})</span></h5>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-3 mx-auto my-auto text-center">
+                                        <h5 class="text-blue">{% trans "Assets" %}</h5>
+                                        <h5 class="text-red">{{ asset.quantity }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

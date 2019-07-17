@@ -115,7 +115,7 @@ class Community(models.Model):
 
 
 class JoinedCommunity(models.Model):
-	private_karma = models.IntegerField(null=False, default=0)
+	private_karma = models.IntegerField(null=False, default=500)
 	joined_date = models.DateTimeField(auto_now_add=True)
 	description = models.TextField(blank=True)
 	is_accepted = models.BooleanField(null=False, default=False)

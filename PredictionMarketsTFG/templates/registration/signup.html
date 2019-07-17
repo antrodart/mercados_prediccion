@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load widget_tweaks %}
+{% load static %}
 
 <head>
     <title>{% block title %}
@@ -19,7 +20,7 @@
 {% block content %}
 
     {% if not admin_creation %}
-        <div class="col-md-6 mx-auto text-center">
+        <div class="col-md-8 mx-auto text-center">
             <div class="header-title">
                 <h1 class="wv-heading--title">
                     {% blocktrans %}Sign up{% endblocktrans %}
@@ -147,11 +148,11 @@
                     </div>
                     <div class="text-center ">
                         {% if not admin_creation %}
-                            <button type="submit" class=" btn btn-block send-button tx-tfm">
+                            <button type="submit" class="btn btn-primary btn-block ">
                                 {% blocktrans %}Sign up{% endblocktrans %}
                             </button>
                         {% else %}
-                            <button type="submit" class=" btn btn-block send-button tx-tfm">
+                            <button type="submit" class="btn btn-primary btn-block">
                                 {% blocktrans %}Create admin{% endblocktrans %}
                             </button>
                         {% endif %}
@@ -170,17 +171,17 @@
                         <div class="col-md-12 ">
                             <div class="login-or">
                                 <hr class="hr-or">
-                                <span class="span-or">or</span>
+                                <span class="span-or">{% trans "or" %}</span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <a class="btn btn-block g-button" href="#">
-                                <i class="fa fa-google"></i> Sign up with Google
+                        <div class="text-center">
+                            <a class="btn btn-info btn-block" href="#">
+                                <img src="{% static "img/icons/google.png" %}" alt="G" style="max-height: 25px;"/>
+                                {% trans "Sign up with Google" %}
                             </a>
                         </div>
-                        <p class="small mt-3">By signing up, you are indicating that you have read and agree to the
-                            <a href="#" class="ps-hero__content__link">Terms of Use</a> and <a
-                                    href="#">Privacy Policy</a>.
+                        <p class="small mt-3">{% trans "By signing up, you are indicating that you have read and agree to the" %}
+                            <a href="#" >{% trans "Terms of Use and Privacy Policy" %}</a>.
                         </p>
                     {% endif %}
                 </form>
