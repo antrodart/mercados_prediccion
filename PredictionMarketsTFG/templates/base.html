@@ -95,10 +95,6 @@
                                 <img src="{% static "img/icons/moneybox.png" %}" alt="Bets"
                                  class="img-profile"/>
                                 {% blocktrans %}My past bets{% endblocktrans %}</a>
-                            {% if user.is_staff %}
-                                <a class="dropdown-item" href="{% url 'create_admin' %}">
-                                    {% blocktrans %}Create admin{% endblocktrans %}</a>
-                            {% endif %}
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{% url 'logout' %}">
                                 <img src="{% static "img/icons/logout.png" %}" alt="Logout"
@@ -123,6 +119,8 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{% url 'create_category' %}">
                                 {% blocktrans %}Create category{% endblocktrans %}</a>
+                            <a class="dropdown-item" href="{% url 'create_market' %}">
+                                {% blocktrans %}Create market{% endblocktrans %}</a>
                             <a class="dropdown-item" href="{% url 'create_admin' %}">
                                 {% blocktrans %}Create admin{% endblocktrans %}</a>
                             <div class="dropdown-divider"></div>

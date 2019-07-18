@@ -142,7 +142,7 @@
             <div class="row">
                 <div class="col">
                     {% if community.market_set.count == 0 %}
-                        <p>{% blocktrans %}This community has no markets yet.{% endblocktrans %}</p>
+                        <p class="text-muted">{% blocktrans %}This community has no markets yet.{% endblocktrans %}</p>
                     {% else %}
                         {% for market in community.descending_ordered_market_set.all %}
                             <div class="block" data-expired="{{ market.has_expired }}">
