@@ -1,4 +1,5 @@
 from django.db import models
+from django.template.defaultfilters import slugify
 from django.core.validators import MinValueValidator
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from mercados_de_prediccion_project.validators import validate_date_is_past
@@ -61,3 +62,5 @@ class User(AbstractUser):
 	def get_joined_community_accepted_set(self):
 		return self.joinedcommunity_set.filter(is_accepted=True)
 
+	def slug(self):
+		return slugify(self.first_name + " " + self.last_name)

@@ -17,12 +17,13 @@
                     {% blocktrans %}Join community{% endblocktrans %}
                 </h1>
             </div>
-            <div style="margin-bottom: 5px;">
+            <div class="text-muted" style="margin-bottom: 5px;">
                 {% blocktrans %}Before joining the community, you must write a short request describing your reasons.{% endblocktrans %}
                 {% blocktrans %}It will be evaluated by the moderator/s of the community.{% endblocktrans %}
             </div>
         </div>
     </div>
+    <br>
     <div class="row">
         <div class="col-md-6 mx-auto">
             <div class="myform form ">
@@ -61,7 +62,7 @@
                         </div>
                     {% endif %}
                     <div class="text-center">
-                        <a href='/community/?communityId={{ community.pk }}' class="btn btn-secondary">
+                        <a href='/community/{{ community.pk }}/{{ community.slug }}' class="btn btn-secondary">
                             {% trans "Back to community" %}</a>
                         <button type="submit" class=" btn btn-primary">{% blocktrans %}Send request{% endblocktrans %}
                         </button>

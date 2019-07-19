@@ -38,12 +38,12 @@
                 {% for market in markets %}
                     <div class="col-md-4">
                         <div class="card mb-4 box-shadow" data-expired="{{ market.has_expired }}">
-                            <a href="/market/?marketId={{ market.id }}">
+                            <a href="/market/{{ market.id }}/{{ market.slug }}">
                                 <img class="card-img-top" alt="{{ market.title }}"
                                      src="data:image/png;base64,{{ market.picture }}" data-holder-rendered="true">
                             </a>
                             <div class="card-body">
-                                <a href="/market/?marketId={{ market.id }}" style="color:#123C69;">
+                                <a href="/market/{{ market.id }}/{{ market.slug }}" style="color:#123C69;">
                                     <p class="card-text">
                                         <strong>{{ market.title }}</strong>
                                     </p></a>
@@ -85,7 +85,7 @@
                                         </small>
                                     {% endif %}
                                     {% if user == market.creator %}
-                                        <a href='/market/edit/?marketId={{ market.id }}'
+                                        <a href='/market/edit/{{ market.id }}/{{ market.slug }}'
                                            class="btn btn-warning"
                                            role="button">
                                             <img src="{% static 'img/icons/edit.png' %}"

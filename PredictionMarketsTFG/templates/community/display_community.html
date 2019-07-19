@@ -32,7 +32,7 @@
                     <div class="row">
                         <div class="col text-muted">
                             {% blocktrans %}Created by{% endblocktrans %}
-                            <a href="/user/?userId={{ community.moderator.pk }}">
+                            <a href="/user/{{ community.moderator.pk }}/{{ community.moderator.slug }}">
                                 {{ community.moderator.first_name }} {{ community.moderator.last_name }}</a>
                             {% trans "on" %} {{ community.creation_date |date }}
                             <p>
@@ -56,11 +56,11 @@
                             </h2>
                         </div>
                         <div class="col">
-                            <a href='/community/members/?communityId={{ community.id }}'
+                            <a href='/community/members/{{ community.id }}/{{ community.slug }}'
                                class="btn btn-info btn-block text-left">
                                 <img src="{% static 'img/icons/users.png' %}" alt="Members"
                                      style="max-height: 25px;"/> {% trans "Members" %}</a>
-                            <a href='/community/edit/?communityId={{ community.id }}'
+                            <a href='/community/edit/{{ community.id }}/{{ community.slug }}'
                                class="btn btn-warning btn-block text-left">
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
                                      style="max-height: 25px;"/> {% trans "Edit" %}</a>
@@ -97,7 +97,7 @@
                         <div>
                             <ul>
                                 {% for joined_community in community.joinedcommunity_accepted_set.all %}
-                                    <li><a href="/user/?userId={{ joined_community.user.pk }}">
+                                    <li><a href="/user/{{ joined_community.user.pk }}/{{ joined_community.user.slug }}">
                                         {{ joined_community.user.first_name }} {{ joined_community.user.last_name }}</a>
                                     </li>
                                 {% endfor %}
@@ -119,13 +119,13 @@
                 <div class="col">
                     <div class="float-right">
                         {% if community.moderator == user %}
-                            <a href="/market/create/?communityId={{ community.pk }}">
+                            <a href="/market/create/{{ community.pk }}/{{ community.slug }}">
                                 <button type="button" class="btn btn-primary">
                                     {% blocktrans %}Create market{% endblocktrans %}
                                 </button>
                             </a>
                         {% elif not user_has_requested %}
-                            <a href="/community/request-join/?communityId={{ community.pk }}">
+                            <a href="/community/request-join/{{ community.pk }}/{{ community.slug }}">
                                 <button type="button" class="btn btn-primary">
                                     {% blocktrans %}Join community{% endblocktrans %}
                                 </button>
@@ -150,7 +150,7 @@
                                      alt="">
                                 <div>
                                     {% if user_is_accepted %}
-                                        <a href="/market/?marketId={{ market.id }}">
+                                        <a href="/market/{{ market.id }}/{{ market.slug }}">
                                             <h2 class="text-blue">{{ market.title }}</h2>
                                         </a>
                                     {% else %}

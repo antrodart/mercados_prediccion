@@ -33,7 +33,8 @@
                     </div>
                     <div class="row">
                         <div class="col text-muted">
-                            {% blocktrans %}Created by{% endblocktrans %} {{ market.creator }}
+                            {% blocktrans %}Created by{% endblocktrans %}
+                            <a href="/user/{{ market.creator.pk }}/{{ market.creator.slug }}">{{ market.creator.first_name }} {{ market.creator.last_name }}</a>
                             {% trans "on" %} {{ market.creation_date |date }}
                             <p>
                                 {{ assets_number }}
@@ -67,7 +68,7 @@
                             </h2>
                         </div>
                         <div class="col">
-                            <a href='/market/edit/?marketId={{ market.id }}'
+                            <a href='/market/edit/{{ market.id }}/{{ market.slug }}'
                                class="btn btn-warning btn-block text-left">
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
                                      style="max-height: 25px;"/> {% trans "Edit market" %}</a>
@@ -481,7 +482,7 @@
                     for (var i = 0; i < returnedData.length; i++) {
                         list_html += "<div class='col-md-12'>";
                         list_html += "<div class='card mb-4 box-shadow'>";
-                        list_html += "<a href='/market/?marketId=" + returnedData[i].id + "'>";
+                        list_html += "<a href='/market/" + returnedData[i].id + "/" + returnedData[i].slug + "'>";
                         list_html += "<img class='card-img-top img-thumbnail img-related-market'";
                         list_html += "alt='" + returnedData[i].title + "'";
                         list_html += "src='data:image/png;base64," + returnedData[i].picture + "'";
@@ -489,7 +490,7 @@
                         list_html += "</a>";
                         list_html += "<div class='card-body'>";
                         list_html += "<p class='card-text'>";
-                        list_html += "<a href='/market/?marketId=" + returnedData[i].id + "'";
+                        list_html += "<a href='/market/" + returnedData[i].id + "/" + returnedData[i].slug + "'";
                         list_html += " class='text-blue'><strong>" + returnedData[i].title + "</strong></a>";
                         list_html += "</p></div></div></div>";
                     }

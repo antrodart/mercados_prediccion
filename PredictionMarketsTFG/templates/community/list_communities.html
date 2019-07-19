@@ -33,7 +33,7 @@
                 {% for community in communities %}
                     <div class="col-md-3">
                         <div class="card mb-4 box-shadow">
-                            <a href="/community/?communityId={{ community.id }}">
+                            <a href="/community/{{ community.id }}/{{ community.slug }}">
                                 <img class="card-img-top" alt="{{ community.name }}"
                                      src="data:image/png;base64,{{ community.picture }}" data-holder-rendered="true">
                             </a>
@@ -43,12 +43,12 @@
                                          alt="{% trans "Private community" %}"
                                          style="max-height: 25px;">
                                 {% endif %}
-                                <a href="/community/?communityId={{ community.id }}"
+                                <a href="/community/{{ community.id }}/{{ community.slug }}"
                                    style="color:#123C69;">
                                     <p class="card-text"><strong>{{ community.name }}</strong></p></a>
 
                                 <small class="text-muted">
-                                    {% trans "Created by" %} <a href="/user/?userId={{ community.moderator.pk }}">
+                                    {% trans "Created by" %} <a href="/user/{{ community.moderator.pk }}/{{ community.moderator.slug }}">
                                     {{ community.moderator.first_name }} {{ community.moderator.last_name }}</a>
                                 </small>
                             </div>
@@ -69,7 +69,7 @@
                                         {% endif %}
                                     </small>
                                     {% if view_name == "list_created" %}
-                                        <a href='/community/edit/?communityId={{ community.id }}'
+                                        <a href='/community/edit/{{ community.id }}/{{ community.slug }}'
                                            class="btn btn-outline-secondary"
                                            role="button">{% trans "Edit" %}</a>
                                     {% endif %}

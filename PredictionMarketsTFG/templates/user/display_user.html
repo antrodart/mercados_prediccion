@@ -106,7 +106,7 @@
                                     {% for community in created_communities %}
                                         <div class="col-md-12">
                                             <div class='card mb-4 box-shadow'>
-                                                <a href="/community/?communityId={{ community.id }}">
+                                                <a href="/community/{{ community.id }}/{{ community.slug }}">
                                                     <img class='card-img-top img-thumbnail img-related-market'
                                                          alt="{{ community.title }}"
                                                          src="data:image/png;base64,{{ community.picture }}"
@@ -114,7 +114,7 @@
                                                 </a>
                                                 <div class="card-body">
                                                     <p class="card-text">
-                                                        <a href="/community/?communityId={{ community.id }}"
+                                                        <a href="/community/{{ community.id }}/{{ community.slug }}"
                                                            class="text-blue">
                                                             <strong>{{ community.name }}</strong>
                                                         </a>
@@ -146,7 +146,7 @@
                                         {% if joined_community.community.is_visible or user_profile == user %}
                                             <div class="col-md-12">
                                                 <div class='card mb-4 box-shadow'>
-                                                    <a href="/community/?communityId={{ joined_community.community.id }}">
+                                                    <a href="/community/{{ joined_community.community.id }}/{{ joined_community.community.slug }}">
                                                         <img class='card-img-top img-thumbnail img-related-market'
                                                              alt="{{ joined_community.community.title }}"
                                                              src="data:image/png;base64,{{ joined_community.community.picture }}"
@@ -154,7 +154,7 @@
                                                     </a>
                                                     <div class="card-body">
                                                         <p class="card-text">
-                                                            <a href="/community/?communityId={{ joined_community.community.id }}"
+                                                            <a href="/community/{{ joined_community.community.id }}/{{ joined_community.community.slug }}"
                                                                class="text-blue">
                                                                 <strong>{{ joined_community.community.name }}</strong>
                                                             </a>

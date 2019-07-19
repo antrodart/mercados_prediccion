@@ -118,7 +118,7 @@
                            onclick="return deleteConfirm()">
                             {% trans "Delete" %}
                         </button>
-                         <a href='/community/?communityId={{ form.instance.pk }}' class="btn btn-secondary" role="button">
+                         <a href='/community/{{ form.instance.pk }}/{{ form.instance.slug }}' class="btn btn-secondary" role="button">
                                     {% trans "Cancel" %}</a>
                         <button type="submit" class="btn btn-primary">{% trans "Save" %}
                         </button>

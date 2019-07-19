@@ -15,6 +15,9 @@ class Category(models.Model):
 	title_es = models.CharField(_('Title in Spanish'), max_length=140, blank=False)
 	picture = models.TextField(_('Picture'))
 
+	def slug(self):
+		return slugify(self.title)
+
 
 class Market(models.Model):
 	title = models.CharField(max_length=150, blank=False)
@@ -113,9 +116,12 @@ class Community(models.Model):
 	def user_accepted_set(self):
 		return self.joinedcommunity_accepted_set().values_list('user', flat=True)
 
+	def slug(self):
+		return slugify(self.name)
+
 
 class JoinedCommunity(models.Model):
-	private_karma = models.IntegerField(null=False, default=500)
+	private_karma = models.IntegerField(null=False, default=0)
 	joined_date = models.DateTimeField(auto_now_add=True)
 	description = models.TextField(blank=True)
 	is_accepted = models.BooleanField(null=False, default=False)

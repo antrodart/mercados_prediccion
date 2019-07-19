@@ -66,10 +66,9 @@ def create_category_view(request):
 
 
 @login_required()
-def edit_category_view(request):
+def edit_category_view(request, category_id, slug):
 	if not request.user.is_staff:
 		raise PermissionDenied(_("Must be logged as Admin."))
-	category_id = request.GET.get('categoryId')
 	category = get_object_or_404(Category, pk=category_id)
 	if request.method == "POST":
 		form = CreateCategoryForm(request.POST, request.FILES, instance=category)
@@ -136,7 +135,7 @@ def create_community_view(request):
 			joined_community = JoinedCommunity(is_accepted=True, user=request.user, community_id=community.pk)
 			joined_community.save()
 
-			return redirect('/community/?communityId=' + str(community.pk))
+			return redirect('/community/' + str(community.pk) + '/' + str(community.slug()))
 	else:
 		form = CreateCommunityForm(user=request.user)
 
@@ -145,8 +144,7 @@ def create_community_view(request):
 
 
 @login_required()
-def edit_community_view(request):
-	community_id = request.GET.get('communityId')
+def edit_community_view(request, community_id, slug):
 	community = get_object_or_404(Community, pk=community_id)
 	if not community.moderator == request.user:
 		raise PermissionDenied(_("You cannot edit this community."))
@@ -166,7 +164,7 @@ def edit_community_view(request):
 
 			community.save()
 
-			return redirect('/community/?communityId=' + str(community_id))
+			return redirect('/community/' + str(community_id) + '/' + str(community.slug()))
 	else:
 		form = CreateCommunityForm(instance=community, user=request.user)
 
@@ -175,8 +173,7 @@ def edit_community_view(request):
 
 
 @login_required()
-def display_community_view(request):
-	community_id = request.GET.get('communityId')
+def display_community_view(request, community_id, slug):
 	user = request.user
 	community = get_object_or_404(Community, pk=community_id)
 	try:
@@ -197,9 +194,8 @@ def display_community_view(request):
 
 
 @login_required()
-def create_market_view(request):
+def create_market_view(request, community_id = None, slug = None):
 	user = User.objects.get(pk=request.user.pk)
-	community_id = request.GET.get('communityId')
 	if community_id:
 		community = get_object_or_404(Community, pk=community_id)
 	else:
@@ -228,10 +224,10 @@ def create_market_view(request):
 						Price.objects.create(option=yes_option, is_yes=True, is_last=True)
 						Price.objects.create(option=no_option, is_yes=False, is_last=True)
 
-						return redirect('/market/?marketId=' + str(market.pk))
+						return redirect('/market/' + str(market.pk) + '/' + str(market.slug()))
 
 				except IntegrityError:
-					return redirect('/market/?marketId=' + str(market.pk))
+					return redirect('/market/' + str(market.pk) + '/' + str(market.slug()))
 
 			else:
 				if option_formset.is_valid():
@@ -259,10 +255,10 @@ def create_market_view(request):
 									price_yes = Price.objects.create(option=option, is_yes=True, is_last=True)
 									price_no = Price.objects.create(option=option, is_yes=False, is_last=True)
 
-						return redirect('/market/?marketId=' + str(market.pk))
+						return redirect('/market/' + str(market.pk) + '/' + str(market.slug()))
 
 					except IntegrityError:
-						return redirect('/market/?marketId=' + str(market.pk))
+						return redirect('/market/' + str(market.pk) + '/' + str(market.slug()))
 
 	else:
 		market_form = CreateMarketForm(user=request.user, community=community)
@@ -273,8 +269,7 @@ def create_market_view(request):
 
 
 @login_required()
-def edit_market_view(request):
-	market_id = request.GET.get('marketId')
+def edit_market_view(request, market_id, slug):
 	market = get_object_or_404(Market, pk=market_id)
 	user = request.user
 	if not market.creator == user:
@@ -285,7 +280,7 @@ def edit_market_view(request):
 			community = market.community
 			market.delete()
 			if community:
-				return redirect('/community/?communityId=' + str(community.pk))
+				return redirect('/community/' + str(community.pk) + '/' + str(community.slug()))
 			else:
 				return redirect('/')
 
@@ -294,7 +289,7 @@ def edit_market_view(request):
 		if market_form.is_valid():
 			market = market_form.save()
 
-			return redirect('/market/?marketId=' + str(market.pk))
+			return redirect('/market/' + str(market.pk) + '/' + str(market.slug()))
 	else:
 		market_form = EditMarketForm(instance=market)
 
@@ -303,9 +298,8 @@ def edit_market_view(request):
 
 
 @login_required()
-def request_to_join_community(request):
+def request_to_join_community(request, community_id, slug):
 	user = request.user
-	community_id = request.GET.get('communityId')
 	community = Community.objects.get(pk=community_id)
 	try:
 		joined_community = JoinedCommunity.objects.get(user=user, community=community)
@@ -329,8 +323,7 @@ def request_to_join_community(request):
 
 
 @login_required()
-def accept_user_to_community_view(request):
-	joined_community_id = request.GET.get('joinedCommunityId')
+def accept_user_to_community_view(request, joined_community_id):
 	joined_community = get_object_or_404(JoinedCommunity, pk=joined_community_id)
 	if not joined_community.community.moderator == request.user:
 		raise PermissionDenied(_("Only moderatos can access this page."))
@@ -338,30 +331,30 @@ def accept_user_to_community_view(request):
 	try:
 		joined_community.is_accepted = True
 		joined_community.joined_date = datetime.datetime.now()
+		joined_community.private_karma = 500
 		joined_community.save()
-		return redirect('/community/members/?communityId=' + str(joined_community.community.pk))
+		return redirect('/community/members/' + str(joined_community.community.pk) + '/' + str(joined_community.community.slug()))
 	except:
 		raise PermissionDenied(_("Only moderatos can access this page."))
 
 
 @login_required()
-def reject_user_to_community_view(request):
-	joined_community_id = request.GET.get('joinedCommunityId')
+def reject_user_to_community_view(request, joined_community_id):
 	joined_community = get_object_or_404(JoinedCommunity, pk=joined_community_id)
 	if not joined_community.community.moderator == request.user:
 		raise PermissionDenied(_("Only moderatos can access this page."))
 
 	try:
 		community_id = str(joined_community.community.pk)
+		community_slug = str(joined_community.community.slug())
 		joined_community.delete()
-		return redirect('/community/members/?communityId=' + community_id)
+		return redirect('/community/members/' + community_id + '/' + community_slug)
 	except:
 		raise PermissionDenied(_("Only moderatos can access this page."))
 
 
 @login_required()
-def list_members_community_view(request):
-	community_id = request.GET.get('communityId')
+def list_members_community_view(request, community_id, slug):
 	community = get_object_or_404(Community, pk=community_id)
 	if not community.moderator == request.user:
 		raise PermissionDenied(_("Only moderators can access this page."))
@@ -376,16 +369,15 @@ def list_members_community_view(request):
 	except EmptyPage:
 		joined_communities = paginator.page(paginator.num_pages)
 
-	args = {'joined_communities': joined_communities, 'view_name': 'member_list', 'community_id': community_id}
+	args = {'joined_communities': joined_communities, 'view_name': 'member_list', 'community_id': community_id, 'community_slug': community.slug()}
 
 	return render(request, 'community/list_members.html', args)
 
 
-def display_profile_view(request):
-	user_profile_id = request.GET.get('userId')
-	user_profile = get_object_or_404(User, pk=user_profile_id)
+def display_profile_view(request, user_id, slug):
+	user_profile = get_object_or_404(User, pk=user_id)
 
-	created_communities = Community.objects.filter(moderator=request.user.pk)
+	created_communities = Community.objects.filter(moderator=user_profile.pk)
 	assets = Asset.objects.filter(user=request.user.pk, market__is_judged=False)
 
 	args = {'user_profile': user_profile, 'created_communities': created_communities, 'assets': assets}
@@ -404,8 +396,7 @@ def cancel_deletion_user_view(request):
 	return render(request, 'user/display_user.html', args)
 
 
-def display_market_view(request):
-	market_id = request.GET.get('marketId')
+def display_market_view(request, market_id, slug):
 	market = get_object_or_404(Market, pk=market_id)
 	community = market.community
 
@@ -457,6 +448,7 @@ def ajax_related_markets(request):
 			'id': market.pk,
 			'title': market.title,
 			'picture': market.picture,
+			'slug': market.slug(),
 		}
 		related_markets_list.append(json_dummy)
 
@@ -548,12 +540,11 @@ def buy_asset_view(request):
 			return redirect('/market/?marketId=' + str(market_id))
 
 
-def list_markets_view(request):
+def list_markets_view(request, category_id=None, slug=None):
 	user = request.user
-	category_id = request.GET.get('categoryId')
 	if category_id:
-		category = Category.objects.get(pk=category_id)
-		q_category = Q(categories__in=category_id)
+		category = get_object_or_404(Category, pk=category_id)
+		q_category = Q(categories__in=[category_id])
 	else:
 		category = None
 		q_category = Q()
