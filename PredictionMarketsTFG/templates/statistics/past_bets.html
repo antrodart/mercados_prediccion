@@ -7,15 +7,34 @@
 </head>
 
 {% block content %}
-    <div class="col-md-6 mx-auto text-center top-buffer">
-        <div class="header-title">
-            <h1 class="wv-heading--title">
-                {% blocktrans %}Past bets{% endblocktrans %}
-            </h1>
-            <span class="text-muted">
-                {% trans "Only displaying assets bought from markets that you and" %} {{ user_past_bets.first_name }} {% trans "both have access" %}.
-                {% trans "This includes public markets" %}.
-            </span>
+
+    <div class="row top-buffer"> {% comment %}Top buffer adds 20px for top margin{% endcomment %}
+        <div class="col-md-3">
+            <img class="img-fluid img-thumbnail img-header" alt="{{ user_past_bets.first_name }}"
+                 title="{{ user_past_bets.first_name }}"
+                 src="data:image/png;base64,{{ user_past_bets.picture }}" data-holder-rendered="true">
+        </div>
+        <div class="col-md-9 my-auto"> {% comment %}Puts column and text in the center{% endcomment %}
+            <div class="row text-center">
+                <div class="col-md">
+                    <div class="row">
+                        <div class="col">
+                            <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
+                                <h3 class="text-blue" style="overflow-wrap: break-word;">
+                                    {% blocktrans %}Betting history
+                                        of{% endblocktrans %} {{ user_past_bets.first_name }} {{ user_past_bets.last_name }}
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-muted text-center">
+                            {% trans "Only displaying assets bought from markets that you and" %} {{ user_past_bets.first_name }} {% trans "both have access" %}.
+                            {% trans "This includes public markets" %}.
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <hr>
@@ -119,6 +138,39 @@
                             </div>
                         {% endfor %}
                     {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <nav aria-label="Pagination">
+                        <ul class="pagination">
+                            {% if assets.has_previous %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?page={{ assets.previous_page_number }}">&laquo;</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                            {% endif %}
+
+                            {% for page_num in assets.paginator.page_range %}
+                                {% if assets.number == page_num %}
+                                    <li class="page-item active"><span class="page-link">{{ page_num }} <span
+                                            class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link"
+                                                             href="?page={{ page_num }}">{{ page_num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if assets.has_next %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?page={{ assets.next_page_number }}">&raquo;</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>

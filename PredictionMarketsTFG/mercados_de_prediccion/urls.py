@@ -46,6 +46,6 @@ urlpatterns = [
 	path('ajax/chart/', views.ajax_charts, name='ajax_charts'),
 
 	#  Bets
-	path('bets/<int:user_id>', views.past_bets, name='past_bets'),
+	path('bets/<int:user_id>/<slug:slug>', views.past_bets, name='past_bets'),
 
 ]

@@ -30,8 +30,7 @@
     width: 25px;
 }
 .clicked{
-    background: #AC3B61; !important;
-    /*background: #123C69;!important;*/
+    background: #AC3B61 !important;
     border-style: solid;
     border-width: 1px;
     border-color: #EEE2DC;
@@ -47,4 +46,11 @@
     width: 25px;
     border-radius: 25px;
     object-fit: cover;
+}
+
+.public-karma-block{
+    /*background: #FFA31A !important;
+    color: #123C69;
+    border-radius: 10%;*/
+    color: #FFA31A;
 }

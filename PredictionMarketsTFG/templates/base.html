@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load babel %}
+{% load intspace %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -87,6 +88,16 @@
             </ul>
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}
+                    <span class="navbar-text public-karma-block" style="margin-right: 10px;">
+                    {% get_current_language as LANGUAGE %}
+                        {% if LANGUAGE == "es" %}
+                            {% intspace_dot user.public_karma %}
+                        {% else %}
+                            {% intspace_comma user.public_karma %}
+                        {% endif %}
+                        {% trans "Karma" %}
+                    </span>
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUser" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -99,10 +110,10 @@
                                 <img src="{% static "img/icons/profile.png" %}" alt="Profile"
                                      class="img-profile"/>
                                 {% blocktrans %}My profile{% endblocktrans %}</a>
-                            <a class="dropdown-item" href="/bets/{{ user.pk }}">
+                            <a class="dropdown-item" href="/bets/{{ user.pk }}/{{ user.slug }}">
                                 <img src="{% static "img/icons/moneybox.png" %}" alt="Bets"
                                      class="img-profile"/>
-                                {% blocktrans %}My past bets{% endblocktrans %}</a>
+                                {% blocktrans %}Betting history{% endblocktrans %}</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{% url 'logout' %}">
                                 <img src="{% static "img/icons/logout.png" %}" alt="Logout"

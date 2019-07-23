@@ -42,10 +42,11 @@
                     <div class="text-center">
                         <a class="btn btn-info btn-block" href="{% url 'social:begin' 'google-oauth2' %}">
                             <img src="{% static "img/icons/google.png" %}" alt="G" style="max-height: 25px;"/>
-                            {% trans "Sign up with Google" %}
+                            {% trans "Log in with Google" %}
                         </a>
                     </div>
                     {% if form.non_field_errors %}
+                        <br/>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             {% for err in form.non_field_errors %}
                                 {{ err }}
@@ -56,7 +57,7 @@
                         </div>
                     {% endif %}
                     <div class="form-group">
-                        <a href="#" class="ForgetPwd">Forget Password?</a>
+                        <a href="{% url "password_reset" %}" class="ForgetPwd">{% trans "Forget Password?" %}</a>
                     </div>
                 </form>
             </div>

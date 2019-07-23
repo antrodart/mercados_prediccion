@@ -26,6 +26,7 @@ class Market(models.Model):
 	creation_date = models.DateField(auto_now_add=True)
 	picture = models.TextField()
 	is_judged = models.BooleanField(default=False, null=False)
+	judgement_date = models.DateTimeField(default=None, null=True)
 	is_binary = models.BooleanField(default=True, null=False)
 	is_exclusive = models.BooleanField(null=True)
 	creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)

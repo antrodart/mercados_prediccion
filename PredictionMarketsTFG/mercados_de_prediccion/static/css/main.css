@@ -55,7 +55,7 @@ h2 {
 
 .login-or {
     position: relative;
-    color: #aaa;
+    color: #AC3B61;
     margin-top: 10px;
     margin-bottom: 10px;
     padding-top: 10px;
@@ -68,7 +68,7 @@ h2 {
     left: 50%;
     top: -2px;
     margin-left: -25px;
-    background-color: #fff;
+    background-color: #EEE2DC;
     width: 50px;
     text-align: center;
 }

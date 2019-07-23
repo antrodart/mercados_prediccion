@@ -60,7 +60,7 @@
                                         <img src="{% static 'img/icons/community.png' %}"
                                              title="{% trans "Community" %}"
                                              alt="{% trans "Community" %}" style="max-height: 25px;">
-                                        <a href="/community/?communityId={{ market.community.pk }}"
+                                        <a href="/community/{{ market.community.pk }}/{{ market.community.slug }}"
                                            style="color:unset;">
                                             {{ market.community.name }}</a>
                                     </small>

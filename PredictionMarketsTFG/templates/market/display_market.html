@@ -44,15 +44,33 @@
                                     {% trans "assets sold" %}.
                                 {% endif %}
                             </p>
+                            {% if market.community %}
+                                <h4 class="market-not-public">
+                                    <img src="{% static 'img/icons/communities.png' %}"
+                                         title="{% trans "Community" %}"
+                                         alt="{% trans "Community" %}" style="max-height: 40px;">
+                                    <a href="/community/{{ market.community.pk }}/{{ market.community.slug }}" style="color:unset;">
+                                        {{ market.community.name }}</a>
+                                </h4>
+                            {% else %}
+                                <h4 class="market-public">
+                                    <img src="{% static 'img/icons/unlock.png' %}"
+                                         title="{% trans "Public" %}"
+                                         alt="{% trans "Public" %}"
+                                         style="max-height: 40px;">{% trans "Public market" %}
+                                </h4>
+                            {% endif %}
                             <h4>
                                 {% if market.has_expired %}
                                     <img src="{% static 'img/icons/forbidden.png' %}"
-                                             title="{% trans "Market ended" %}"
-                                             alt="{% trans "Market ended" %}" style="max-height: 40px;"> {% trans "This market ended on" %} {{ market.end_date |date }}
+                                         title="{% trans "Market ended" %}"
+                                         alt="{% trans "Market ended" %}" style="max-height: 40px;">
+                                    {% trans "This market ended on" %} {{ market.end_date |date }}
                                 {% else %}
                                     <img src="{% static 'img/icons/finish-flag.png' %}"
-                                             title="{% trans "End date" %}"
-                                             alt="{% trans "End date" %}" style="max-height: 40px;"> {% trans "Ending date" %}: {{ market.end_date |date }}
+                                         title="{% trans "End date" %}"
+                                         alt="{% trans "End date" %}" style="max-height: 40px;">
+                                    {% trans "Ending date" %}: {{ market.end_date |date }}
                                 {% endif %}
                             </h4>
                         </div>

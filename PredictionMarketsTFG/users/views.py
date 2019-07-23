@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, authenticate
+from django.contrib import messages
+from django.contrib.auth import login, authenticate, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext_lazy as _
@@ -89,3 +91,25 @@ def edit_profile(request):
 	args = {'form': form, 'model': user}
 
 	return render(request, 'user/edit_profile.html', args)
+
+
+@login_required()
+def change_password(request):
+	if request.method == "POST":
+		form = PasswordChangeForm(request.user, request.POST)
+		if form.is_valid():
+			user = form.save()
+			update_session_auth_hash(request, user)
+			updated = True
+			msg =  _('Your password was successfully updated')
+
+		else:
+			updated = False
+			msg = _('Please correct the error below.')
+	else:
+		msg = None
+		updated = False
+		form = PasswordChangeForm(request.user)
+
+	args = {'form': form, 'user_id': request.user.pk, 'user_slug': request.user.slug, 'msg':msg, 'updated': updated}
+	return render(request, 'user/change_password.html', args)

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+{% load intspace %}
 
 <head>
     <title>{% block title %}{{ user_profile.first_name }} {{ user_profile.last_name }}{% endblock %}</title>
@@ -37,7 +38,13 @@
                     <div class="row">
                         <div class="col text-muted">
                             <h4 class="text-red">
-                                {{ user_profile.public_karma }} {% trans "public Karma" %}
+                                {% get_current_language as LANGUAGE %}
+                                {% if LANGUAGE == "es" %}
+                                    {% intspace_dot user_profile.public_karma %}
+                                {% else %}
+                                    {% intspace_comma user_profile.public_karma %}
+                                {% endif %}
+                                {% trans "public Karma" %}
                             </h4>
                             {% if user_profile.biography %}
                                 {{ user_profile.biography }}<br/>
@@ -46,7 +53,8 @@
                             {% if user_profile.date_of_birth %}
                                 {% trans "Date of birth" %}: {{ user_profile.date_of_birth }}<br/>
                             {% endif %}
-                            {% blocktrans %}Joined on{% endblocktrans %} {{ user_profile.date_joined|date }}.
+                            {% blocktrans %}Joined on{% endblocktrans %} {{ user_profile.date_joined|date }}.<br/>
+                            <a href="/user/export">{% trans "Export my data" %}</a>
                         </div>
                         {% if user_profile.deletion_date %}
                             <div class="alert alert-danger" role="alert">
@@ -66,19 +74,19 @@
                         </h2>
                     </div>
                     <div class="col">
-                        <a href='/bets/{{ user_profile.pk }}'
+                        <a href='/bets/{{ user_profile.pk }}/{{ user_profile.slug }}'
                            class="btn btn-info btn-block text-left">
                             <img src="{% static 'img/icons/moneybox.png' %}" alt="Bets"
-                                 style="max-height: 25px;"/> {% trans "Past bets" %}</a>
+                                 style="max-height: 20px;"/> {% trans "Bet history" %}</a>
                         {% if user == user_profile %}
                             <a href='/user/edit/'
                                class="btn btn-warning btn-block text-left">
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
                                      style="max-height: 25px;"/> {% trans "Edit profile" %}</a>
-                            <a href='/user/export/'
-                               class="btn btn-info btn-block text-left">
-                                <img src="{% static 'img/icons/export.png' %}" alt="Export"
-                                     style="max-height: 25px;"/> {% trans "Export data" %}</a>
+                            <a href='/user/password/'
+                               class="btn btn-secondary btn-block text-left">
+                                <img src="{% static 'img/icons/password.png' %}" alt="Password"
+                                     style="max-height: 25px;"/> {% trans "Change password" %}</a>
                         {% endif %}
                     </div>
                 </div>

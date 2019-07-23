@@ -558,7 +558,7 @@ def list_markets_view(request, category_id=None, slug=None):
 		user_verified = user.is_verified
 
 	q_public_communities |= q_private_communities
-	all_markets = Market.objects.filter(q_public_communities & q_category).order_by('is_judged', 'end_date')
+	all_markets = Market.objects.filter(q_public_communities & q_category).order_by('is_judged', '-judgement_date','end_date')
 
 	paginator = Paginator(all_markets, per_page=9)
 	page = request.GET.get('page')
@@ -633,6 +633,7 @@ def judge_market(request, market_id, slug):
 
 				with transaction.atomic():
 					market.is_judged = True
+					market.judgement_date = datetime.datetime.now()
 					market.save()
 					correct_option.is_correct = True
 					correct_option.save()
@@ -651,6 +652,7 @@ def judge_market(request, market_id, slug):
 
 				with transaction.atomic():
 					market.is_judged = True
+					market.judgement_date = datetime.datetime.now()
 					market.save()
 					correct_option.is_correct = True
 					correct_option.save()
@@ -665,6 +667,7 @@ def judge_market(request, market_id, slug):
 				try:
 					with transaction.atomic():
 						market.is_judged = True
+						market.judgement_date = datetime.datetime.now()
 						market.save()
 						correct_options = market.option_set.filter(pk__in=correct_options_ids)
 						incorrect_options = market.option_set.exclude(pk__in=correct_options_ids)
@@ -698,7 +701,7 @@ def judge_market(request, market_id, slug):
 	return render(request, 'market/judge_market.html', args)
 
 
-def past_bets(request, user_id):
+def past_bets(request, user_id, slug):
 	user = get_object_or_404(User, pk=user_id)
 
 	if not request.user.is_authenticated:
@@ -724,7 +727,17 @@ def past_bets(request, user_id):
 			markets = Market.objects.filter(is_judged=True, community__isnull=True)
 
 
-	assets = Asset.objects.filter(user=user, market__in=markets)
+	assets = Asset.objects.filter(user=user, market__in=markets).order_by('market__judgement_date')
+
+	paginator = Paginator(assets, per_page=10)
+	page = request.GET.get('page')
+
+	try:
+		assets = paginator.get_page(page)
+	except PageNotAnInteger:
+		assets = paginator.get_page(1)
+	except EmptyPage:
+		assets = paginator.page(paginator.num_pages)
 
 	args = {'assets': assets, 'user_past_bets': user, 'communities': communities}
 
