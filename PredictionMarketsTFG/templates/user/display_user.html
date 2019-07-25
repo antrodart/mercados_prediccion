@@ -22,8 +22,8 @@
                                 <h1 class="text-blue">{{ user_profile.first_name }} {{ user_profile.last_name }}
                                     {% if user_profile.is_verified %}
                                         <img src="{% static 'img/icons/verified-green.png' %}"
-                                             alt="{% trans "User is verified" %}"
-                                             title="{% trans "User is verified" %}"
+                                             alt="{% trans "Verified user" %}"
+                                             title="{% trans "Verified user" %}"
                                              style="max-height: 40px;">
                                     {% elif user_profile.is_staff %}
                                         <img src="{% static 'img/icons/crown.png' %}"
@@ -32,20 +32,19 @@
                                              style="max-height: 40px;">
                                     {% endif %}
                                 </h1>
+                                <h2 class="text-blue">{{ user_profile.alias }}<span
+                                        class="text-red"> {% get_current_language as LANGUAGE %}
+                                    {% if LANGUAGE == "es" %}
+                                        {% intspace_dot user_profile.public_karma %}
+                                    {% else %}
+                                        {% intspace_comma user_profile.public_karma %}
+                                    {% endif %}
+                                    {% trans "public Karma" %}</span></h2>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col text-muted">
-                            <h4 class="text-red">
-                                {% get_current_language as LANGUAGE %}
-                                {% if LANGUAGE == "es" %}
-                                    {% intspace_dot user_profile.public_karma %}
-                                {% else %}
-                                    {% intspace_comma user_profile.public_karma %}
-                                {% endif %}
-                                {% trans "public Karma" %}
-                            </h4>
                             {% if user_profile.biography %}
                                 {{ user_profile.biography }}<br/>
                             {% endif %}

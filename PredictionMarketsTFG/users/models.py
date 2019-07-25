@@ -47,6 +47,7 @@ class User(AbstractUser):
 	first_name = models.CharField(max_length=30, blank=False)
 	last_name = models.CharField(max_length=60, blank=False)
 	email = models.EmailField(unique=True, max_length=150)
+	alias = models.CharField(max_length=30, blank=False, unique=True)
 	date_of_birth = models.DateField(blank=True, null=True, validators=[validate_date_is_past])
 	biography = models.TextField(blank=True, null=True)
 	public_karma = models.IntegerField(null=False, default=500, validators=[MinValueValidator(0)])
@@ -63,4 +64,11 @@ class User(AbstractUser):
 		return self.joinedcommunity_set.filter(is_accepted=True)
 
 	def slug(self):
-		return slugify(self.first_name + " " + self.last_name)
+		return slugify(self.alias)
+
+
+class VerifyRequest(models.Model):
+	institution = models.CharField(max_length=60, blank=False)
+	description = models.TextField(null=False)
+	is_accepted = models.BooleanField(default=None, null=True)
+	user = models.OneToOneField(User, on_delete=models.DO_NOTHING, null=False)

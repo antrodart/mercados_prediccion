@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
-from users.views import signup, edit_profile, create_admin, login_view, change_password
+from users.views import signup, edit_profile, create_admin, login_view, change_password, verify_account, list_verify_requests, accept_verify_request, reject_verify_request
 
 urlpatterns = [
 	path('admin/', admin.site.urls),
@@ -27,6 +27,10 @@ urlpatterns = [
 	url(r'^auth/', include('social_django.urls', namespace='social')),
 	path('user/edit/', edit_profile, name="edit_profile"),
 	path('user/password/', change_password, name="change_password"),
+	path('verify/create/', verify_account, name='verify_account'),
+	path('verify/list-requests/', list_verify_requests, name='list_verify_requests'),
+	path('verify/accept/<int:verify_request_id>/', accept_verify_request, name='accept_verify_request'),
+	path('verify/reject/<int:verify_request_id>/', reject_verify_request, name='reject_verify_request'),
 	path('create-admin/', create_admin, name='create_admin'),
 	path('', include('mercados_de_prediccion.urls')),
 	url(r'^i18n/', include('django.conf.urls.i18n')),

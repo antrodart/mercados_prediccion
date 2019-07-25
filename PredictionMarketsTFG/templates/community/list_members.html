@@ -63,7 +63,7 @@
         <thead class="thead-light">
         <tr>
             <th scope="col">Karma</th>
-            <th scope="col">{% trans "Name" %}</th>
+            <th scope="col">{% trans "Name (alias)" %}</th>
             <th scope="col">{% trans "Description" %}</th>
             <th scope="col">{% trans "Accepted" %}</th>
         </tr>
@@ -73,7 +73,7 @@
             <tr {% if not joined_community.is_accepted %} class="table-warning" {% endif %}>
                 <th scope="row">{{ joined_community.private_karma }}</th>
                 <td><a href="/user/{{ joined_community.user.pk }}/{{ joined_community.user.slug }}">
-                    {{ joined_community.user.first_name }} {{ joined_community.user.last_name }}</a></td>
+                    {{ joined_community.user.first_name }} {{ joined_community.user.last_name }} ({{ joined_community.user.alias }})</a></td>
                 <td>{{ joined_community.description }}</td>
                 {% if joined_community.is_accepted %}
                     <td>{% trans "User joined on" %} {{ joined_community.joined_date }}</td>

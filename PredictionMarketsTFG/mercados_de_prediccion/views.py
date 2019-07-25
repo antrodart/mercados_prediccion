@@ -176,6 +176,7 @@ def edit_community_view(request, community_id, slug):
 def display_community_view(request, community_id, slug):
 	user = request.user
 	community = get_object_or_404(Community, pk=community_id)
+	private_karma = 0
 	try:
 		joined_community = JoinedCommunity.objects.get(user=user, community=community)
 	except:
@@ -186,9 +187,10 @@ def display_community_view(request, community_id, slug):
 	if joined_community:
 		user_has_requested = True
 		user_is_accepted = joined_community.is_accepted
+		private_karma = joined_community.private_karma
 
 
-	args = {'community': community, 'user_has_requested': user_has_requested, 'user_is_accepted': user_is_accepted}
+	args = {'community': community, 'user_has_requested': user_has_requested, 'user_is_accepted': user_is_accepted, 'private_karma': private_karma}
 
 	return render(request, 'community/display_community.html', args)
 
@@ -402,17 +404,17 @@ def display_market_view(request, market_id, slug):
 
 	check_user_is_member_of_community(user=request.user, community=community)
 	assets_number = Asset.objects.filter(market=market).aggregate(Sum('quantity'))['quantity__sum']
-	if market.has_expired:
 
-		args = {'market': market, 'assets_number': assets_number}
+	if community:
+		user_karma = JoinedCommunity.objects.get(community=community, user=request.user).private_karma
+	else:
+		user_karma = request.user.public_karma
+
+	if market.has_expired:
+		args = {'market': market, 'assets_number': assets_number, 'user_karma': user_karma}
 
 		return render(request, 'market/display_market_ended.html', args)
 	else:
-		if community:
-			user_karma = JoinedCommunity.objects.get(community=community, user=request.user).private_karma
-		else:
-			user_karma = request.user.public_karma
-
 		asset_form = CreateAssetForm(user=request.user, market=market)
 		args = {'market': market, 'assets_number': assets_number, 'asset_form': asset_form, 'user_karma': user_karma}
 

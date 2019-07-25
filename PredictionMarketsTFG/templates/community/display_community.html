@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+{% load intspace %}
 
 <head>
     <title>{% block title %}{{ community.name }}{% endblock %}</title>
@@ -33,7 +34,8 @@
                         <div class="col text-muted">
                             {% blocktrans %}Created by{% endblocktrans %}
                             <a href="/user/{{ community.moderator.pk }}/{{ community.moderator.slug }}">
-                                {{ community.moderator.first_name }} {{ community.moderator.last_name }}</a>
+                                {{ community.moderator.first_name }} {{ community.moderator.last_name }}
+                                ({{ community.moderator.alias }})</a>
                             {% trans "on" %} {{ community.creation_date |date }}
                             <p>
                                 {{ community.joinedcommunity_accepted_set.count }}
@@ -98,7 +100,7 @@
                             <ul>
                                 {% for joined_community in community.joinedcommunity_accepted_set.all %}
                                     <li><a href="/user/{{ joined_community.user.pk }}/{{ joined_community.user.slug }}">
-                                        {{ joined_community.user.first_name }} {{ joined_community.user.last_name }}</a>
+                                        {{ joined_community.user.alias }}</a>
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -179,4 +181,24 @@
     </div>
 
 
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        {% if user_is_accepted %}
+            $(document).ready(function () {
+                const selector = $('#private-karma-block');
+                const private_karma = '{{ private_karma }}';
+                let msg = '';
+                {% get_current_language as LANGUAGE %}
+                {% if LANGUAGE == "es" %}
+                    msg = "{% intspace_dot private_karma %} Karma en esta comunidad";
+                    {% else %}
+                    msg = "{% intspace_comma private_karma %} Karma in this community";
+                    {% endif %}
+                selector.text(msg);
+                selector.removeAttr('hidden');
+            });
+        {% endif %}
+    </script>
 {% endblock %}
