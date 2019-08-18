@@ -9,6 +9,7 @@ urlpatterns = [
 
 	#  Users
 	path('user/<int:user_id>/<slug:slug>', views.display_profile_view, name='display_profile'),
+	path('user/<int:user_id>/', views.display_profile_view, name='display_profile'),
 	path('user/cancel-deletion', views.cancel_deletion_user_view, name='cancel_deletion_user'),
 
 	#  Categories

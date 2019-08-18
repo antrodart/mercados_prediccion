@@ -66,6 +66,12 @@
                                class="btn btn-warning btn-block text-left">
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
                                      style="max-height: 25px;"/> {% trans "Edit" %}</a>
+                            {% if not community.is_visible %}
+                                <a href='/community/edit/{{ community.id }}/{{ community.slug }}'
+                                   class="btn btn-warning btn-block text-left">
+                                    <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
+                                         style="max-height: 25px;"/> {% trans "Get link to join" %}</a>
+                            {% endif %}
                         </div>
                     </div>
                 {% endif %}
@@ -193,9 +199,9 @@
                 {% get_current_language as LANGUAGE %}
                 {% if LANGUAGE == "es" %}
                     msg = "{% intspace_dot private_karma %} Karma en esta comunidad";
-                    {% else %}
+                {% else %}
                     msg = "{% intspace_comma private_karma %} Karma in this community";
-                    {% endif %}
+                {% endif %}
                 selector.text(msg);
                 selector.removeAttr('hidden');
             });

@@ -21,8 +21,7 @@
                         <div class="col">
                             <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
                                 <h3 class="text-blue" style="overflow-wrap: break-word;">
-                                    {% blocktrans %}Betting history
-                                        of{% endblocktrans %} {{ user_past_bets.first_name }} {{ user_past_bets.last_name }}
+                                    {% trans "Betting history of" %} {{ user_past_bets.first_name }} {{ user_past_bets.last_name }}
                                 </h3>
                             </div>
                         </div>
@@ -46,7 +45,7 @@
                         <h2 class="text-red">
                             <img src="{% static 'img/icons/communities.png' %}" alt="Communities"
                                  style="max-height: 25px;">
-                            {% trans "Communities in common:" %}
+                            {% trans "Communities in common" %}:
                         </h2>
                     </div>
                     {% if communities.count == 0 %}
@@ -59,7 +58,7 @@
                                     {% for community in communities %}
                                         <div class="col-md-12">
                                             <div class='card mb-4 box-shadow'>
-                                                <a href="/community/?communityId={{ community.id }}">
+                                                <a href="/community/{{ community.id }}/{{ community.slug }}">
                                                     <img class='card-img-top img-thumbnail img-related-market'
                                                          alt="{{ community.title }}"
                                                          src="data:image/png;base64,{{ community.picture }}"
@@ -67,7 +66,7 @@
                                                 </a>
                                                 <div class="card-body">
                                                     <p class="card-text">
-                                                        <a href="/community/?communityId={{ community.id }}"
+                                                        <a href="/community/{{ community.id }}/{{ community.slug }}"
                                                            class="text-blue">
                                                             <strong>{{ community.name }}</strong>
                                                         </a>
@@ -114,7 +113,7 @@
                                 <div class="row">
                                     <div class="col-md-6 mx-auto my-auto">
                                         <h5 class="text-blue">
-                                            <a href="/market/?marketId={{ asset.market.pk }}"
+                                            <a href="/market/{{ asset.market.pk }}/{{ asset.market.slug }}"
                                                class="text-blue">{{ asset.market.title }}</a>
                                         </h5>
                                     </div>

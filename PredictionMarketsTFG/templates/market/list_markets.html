@@ -32,6 +32,49 @@
         {% endif %}
     </div>
 
+    <div class="row">
+        <div class="col">
+            <nav aria-label="Pagination">
+                <ul class="pagination">
+                    {% if markets.has_previous %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ markets.previous_page_number }}">&laquo;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                    {% endif %}
+
+                    {% for page_num in markets.paginator.page_range %}
+                        {% if markets.number == page_num %}
+                            <li class="page-item active"><span class="page-link">{{ page_num }} <span
+                                    class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if markets.has_next %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ markets.next_page_number }}">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% if user.is_staff or user_verified %}
+            <div class="col">
+                <div class="float-right">
+                    <a href="{% url 'create_market' %}">
+                        <button type="button" class="btn btn-primary">
+                            {% blocktrans %}Create market{% endblocktrans %}
+                        </button>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
     <div class="album py-5 bg-light">
         <div class="container">
             <div class="row">

@@ -35,7 +35,19 @@
                     <div class="row">
                         <div class="col text-muted">
                             {% blocktrans %}Created by{% endblocktrans %}
-                            <a href="/user/{{ market.creator.pk }}/{{ market.creator.slug }}">{{ market.creator.alias }}</a>
+                            <a href="/user/{{ market.creator.pk }}/{{ market.creator.slug }}">{{ market.creator.alias }}
+                                {% if market.creator.is_verified %}
+                                    <img src="{% static 'img/icons/verified-green.png' %}"
+                                         alt="{% trans "Verified user" %}"
+                                         title="{% trans "Verified user" %}"
+                                         style="max-height: 20px;">
+                                {% elif market.creator.is_staff %}
+                                    <img src="{% static 'img/icons/crown.png' %}"
+                                         alt="{% trans "User is staff" %}"
+                                         title="{% trans "User is staff" %}"
+                                         style="max-height: 20px;">
+                                {% endif %}
+                            </a>
                             {% trans "on" %} {{ market.creation_date |date }}
                             <p>
                                 {{ assets_number }}
@@ -45,6 +57,23 @@
                                     {% trans "assets sold" %}.
                                 {% endif %}
                             </p>
+                            {% if market.community %}
+                                <h4 class="market-not-public">
+                                    <img src="{% static 'img/icons/communities.png' %}"
+                                         title="{% trans "Community" %}"
+                                         alt="{% trans "Community" %}" style="max-height: 40px;">
+                                    <a href="/community/{{ market.community.pk }}/{{ market.community.slug }}"
+                                       style="color:unset;">
+                                        {{ market.community.name }}</a>
+                                </h4>
+                            {% else %}
+                                <h4 class="market-public">
+                                    <img src="{% static 'img/icons/unlock.png' %}"
+                                         title="{% trans "Public" %}"
+                                         alt="{% trans "Public" %}"
+                                         style="max-height: 40px;">{% trans "Public market" %}
+                                </h4>
+                            {% endif %}
                             <h4 class="text-incorrect">
                                 <img src="{% static 'img/icons/forbidden.png' %}"
                                      title="{% trans "Market ended" %}"
@@ -157,11 +186,11 @@
                                                 {% if option.is_correct %}
                                                     <img src="{% static 'img/icons/correct.png' %}" alt="Correct"
                                                          style="max-height: 30px;"/>
-                                                    <span class="text-correct" ><strong>{% trans "Correct option" %}</strong></span>
+                                                    <span class="text-correct"><strong>{% trans "Correct option" %}</strong></span>
                                                 {% else %}
                                                     <img src="{% static 'img/icons/incorrect.png' %}" alt="Incorrect"
                                                          style="max-height: 30px;"/>
-                                                    <span class="text-incorrect" ><strong>{% trans "Incorrect option" %}</strong></span>
+                                                    <span class="text-incorrect"><strong>{% trans "Incorrect option" %}</strong></span>
                                                 {% endif %}
                                             {% else %}
                                                 {% trans "The market hasn't been judged yet." %}
@@ -207,8 +236,8 @@
                                             <div class="col-md-2 mx-auto my-auto">
                                                 <h5 class="text-blue">{{ option.name }}</h5>
                                             </div>
-                                             <div class="col-md-3 mx-auto my-auto">
-                                                 {% trans "Final price" %}: <strong>{{ YES_PRICE }} karma</strong>
+                                            <div class="col-md-3 mx-auto my-auto">
+                                                {% trans "Final price" %}: <strong>{{ YES_PRICE }} karma</strong>
                                             </div>
                                             <div class="col-md-3 mx-auto my-auto">
                                                 {% if market.is_judged %}
@@ -356,9 +385,9 @@
                 {% get_current_language as LANGUAGE %}
                 {% if LANGUAGE == "es" %}
                     msg = "{% intspace_dot user_karma %} Karma en esta comunidad";
-                    {% else %}
+                {% else %}
                     msg = "{% intspace_comma user_karma %} Karma in this community";
-                    {% endif %}
+                {% endif %}
                 selector.text(msg);
                 selector.removeAttr('hidden');
             });

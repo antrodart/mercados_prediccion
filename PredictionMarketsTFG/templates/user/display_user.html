@@ -166,6 +166,9 @@
                                                                 <strong>{{ joined_community.community.name }}</strong>
                                                             </a>
                                                         </p>
+                                                        <span class="text-red">
+                                                           {{ joined_community.private_karma }} Karma
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -199,7 +202,7 @@
                                 <div class="row">
                                     <div class="col-md-6 mx-auto my-auto">
                                         <h5 class="text-blue">
-                                            <a href="/market/?marketId={{ asset.market.pk }}"
+                                            <a href="/market/{{ asset.market.pk }}/{{ asset.market.slug }}"
                                                class="text-blue">{{ asset.market.title }}</a>
                                         </h5>
                                     </div>

@@ -35,7 +35,19 @@
                     <div class="row">
                         <div class="col text-muted">
                             {% blocktrans %}Created by{% endblocktrans %}
-                            <a href="/user/{{ market.creator.pk }}/{{ market.creator.slug }}">{{ market.creator.alias }}</a>
+                            <a href="/user/{{ market.creator.pk }}/{{ market.creator.slug }}">{{ market.creator.alias }}
+                                {% if market.creator.is_verified %}
+                                    <img src="{% static 'img/icons/verified-green.png' %}"
+                                         alt="{% trans "Verified user" %}"
+                                         title="{% trans "Verified user" %}"
+                                         style="max-height: 20px;">
+                                {% elif market.creator.is_staff %}
+                                    <img src="{% static 'img/icons/crown.png' %}"
+                                         alt="{% trans "User is staff" %}"
+                                         title="{% trans "User is staff" %}"
+                                         style="max-height: 20px;">
+                                {% endif %}
+                            </a>
                             {% trans "on" %} {{ market.creation_date |date }}
                             <p>
                                 {{ assets_number }}
@@ -50,7 +62,8 @@
                                     <img src="{% static 'img/icons/communities.png' %}"
                                          title="{% trans "Community" %}"
                                          alt="{% trans "Community" %}" style="max-height: 40px;">
-                                    <a href="/community/{{ market.community.pk }}/{{ market.community.slug }}" style="color:unset;">
+                                    <a href="/community/{{ market.community.pk }}/{{ market.community.slug }}"
+                                       style="color:unset;">
                                         {{ market.community.name }}</a>
                                 </h4>
                             {% else %}
@@ -62,17 +75,10 @@
                                 </h4>
                             {% endif %}
                             <h4>
-                                {% if market.has_expired %}
-                                    <img src="{% static 'img/icons/forbidden.png' %}"
-                                         title="{% trans "Market ended" %}"
-                                         alt="{% trans "Market ended" %}" style="max-height: 40px;">
-                                    {% trans "This market ended on" %} {{ market.end_date |date }}
-                                {% else %}
-                                    <img src="{% static 'img/icons/finish-flag.png' %}"
-                                         title="{% trans "End date" %}"
-                                         alt="{% trans "End date" %}" style="max-height: 40px;">
-                                    {% trans "Ending date" %}: {{ market.end_date |date }}
-                                {% endif %}
+                                <img src="{% static 'img/icons/finish-flag.png' %}"
+                                     title="{% trans "End date" %}"
+                                     alt="{% trans "End date" %}" style="max-height: 40px;">
+                                {% trans "Ending date" %}: {{ market.end_date |date }}
                             </h4>
                         </div>
                     </div>
@@ -351,16 +357,23 @@
                     <p><span id="body-option-benefits"></span></p>
                 </div>
                 <div class="modal-footer">
-                    <p hidden id="body-no-karma" class="text-danger">{% trans "You don't have enough karma" %}.</p>
+                    {% if user.is_authenticated %}
+                        <p hidden id="body-no-karma" class="text-danger">{% trans "You don't have enough karma" %}.</p>
+                    {% else %}
+                        <p hidden id="body-no-karma"
+                           class="text-danger">{% trans "You must be logged in order to buy assets" %}.</p>
+                    {% endif %}
                     <button type="button" class="btn btn-secondary"
                             data-dismiss="modal">{% trans "Close" %}
                     </button>
-                    <button type="submit" class="btn btn-primary"
-                            id="buysubmit">
-                        <img src="{% static 'img/icons/buy.png' %}"
-                             alt="Buy" style="max-height: 25px;"/>
-                        {% trans "Buy" %}
-                    </button>
+                    {% if user.is_authenticated %}
+                        <button type="submit" class="btn btn-primary"
+                                id="buysubmit">
+                            <img src="{% static 'img/icons/buy.png' %}"
+                                 alt="Buy" style="max-height: 25px;"/>
+                            {% trans "Buy" %}
+                        </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -380,6 +393,12 @@
             let asset_price;
             if (binary) {
                 asset_price = button.data('assetprice');
+                {% get_current_language as LANGUAGE %}
+                {% if LANGUAGE == "es" %}
+                    if (option_name === "Yes") {
+                        option_name = "Sí";
+                    }
+                {% endif %}
             } else {
                 let checkbox_id = button.data('checkboxid');
                 const yes_case = $('#' + checkbox_id).is(":checked");
@@ -529,9 +548,9 @@
                 {% get_current_language as LANGUAGE %}
                 {% if LANGUAGE == "es" %}
                     msg = "{% intspace_dot user_karma %} Karma en esta comunidad";
-                    {% else %}
+                {% else %}
                     msg = "{% intspace_comma user_karma %} Karma in this community";
-                    {% endif %}
+                {% endif %}
                 selector.text(msg);
                 selector.removeAttr('hidden');
             });

@@ -69,6 +69,6 @@ class User(AbstractUser):
 
 class VerifyRequest(models.Model):
 	institution = models.CharField(max_length=60, blank=False)
-	description = models.TextField(null=False)
+	description = models.TextField(null=False, blank=False)
 	is_accepted = models.BooleanField(default=None, null=True)
 	user = models.OneToOneField(User, on_delete=models.DO_NOTHING, null=False)

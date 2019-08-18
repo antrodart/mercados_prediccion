@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-05-11 21:40+0200\n"
+"POT-Creation-Date: 2019-08-18 11:02+0200\n"
 "PO-Revision-Date: 2019-04-22 13:43+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -18,35 +18,281 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 
-#: mercados_de_prediccion/forms.py:10 mercados_de_prediccion/models.py:9
+#: mercados_de_prediccion/forms.py:13 mercados_de_prediccion/models.py:14
 msgid "Title in English"
 msgstr "Título en inglés"
 
-#: mercados_de_prediccion/forms.py:11 mercados_de_prediccion/models.py:10
+#: mercados_de_prediccion/forms.py:14 mercados_de_prediccion/models.py:15
 msgid "Title in Spanish"
 msgstr "Título en español"
 
-#: mercados_de_prediccion/forms.py:12
+#: mercados_de_prediccion/forms.py:15 mercados_de_prediccion/forms.py:41
+#: mercados_de_prediccion/forms.py:92 mercados_de_prediccion/forms.py:143
 msgid "Image"
 msgstr "Imagen"
 
-#: mercados_de_prediccion/forms.py:12
+#: mercados_de_prediccion/forms.py:15 mercados_de_prediccion/forms.py:42
+#: mercados_de_prediccion/forms.py:93 mercados_de_prediccion/forms.py:144
+#: users/forms.py:76 users/forms.py:117
 msgid "Only .png and .jpg images format are accepted."
 msgstr "Sólo se aceptan imágenes con formatos .jpg o .png"
 
-#: mercados_de_prediccion/models.py:11
+#: mercados_de_prediccion/forms.py:37
+msgid "Community name"
+msgstr "Nombre de la comunidad"
+
+#: mercados_de_prediccion/forms.py:39
+msgid "Describe your community: rules, objectives and general information"
+msgstr "Describe la comunidad: normas, objetivos e información general"
+
+#: mercados_de_prediccion/forms.py:40 mercados_de_prediccion/forms.py:88
+#: mercados_de_prediccion/forms.py:142 mercados_de_prediccion/forms.py:206
+#: templates/community/list_members.html:67
+#: templates/user/list_judge_verify_requests.html:59 users/forms.py:36
+msgid "Description"
+msgstr "Descripción"
+
+#: mercados_de_prediccion/forms.py:43
+msgid "Visibility"
+msgstr "Visibilidad"
+
+#: mercados_de_prediccion/forms.py:43
+msgid "Visible communities can be seen by anyone."
+msgstr "Las comunidades visibles pueden ser vistas por cualquiera."
+
+#: mercados_de_prediccion/forms.py:83 templates/market/edit_market.html:26
+msgid "Title"
+msgstr "Título"
+
+#: mercados_de_prediccion/forms.py:84
+msgid "The title should briefly describe the event and the end date."
+msgstr "El título debe describir brevemente el evento y la fecha de finalización."
+
+#: mercados_de_prediccion/forms.py:87 mercados_de_prediccion/forms.py:140
+msgid ""
+"It must contain all the possible information of the event to be "
+"predicted, so that no user has any doubt."
+msgstr ""
+"Debe contener toda la información del evento para ser predicho, de forma "
+"que los usuarios no tengan dudas-"
+
+#: mercados_de_prediccion/forms.py:89 templates/market/display_market.html:85
+#: templates/market/display_market.html:86 templates/market/edit_market.html:48
+#: templates/market/list_judge_markets.html:61
+#: templates/market/list_judge_markets.html:62
+#: templates/market/list_markets.html:125
+#: templates/market/list_markets.html:126
+msgid "End date"
+msgstr "Fecha de finalización"
+
+#: mercados_de_prediccion/forms.py:90
+msgid ""
+"The date on which the market is finished and you can no longer bet. Must "
+"be format mm/dd/yyyy."
+msgstr ""
+"La fecha en la que el mercado finalizará y los usuarios no podrán "
+"apostar. Debe estar en formato dd/mm/yyyy."
+
+#: mercados_de_prediccion/forms.py:94 templates/base.html:84
+#: templates/base.html:86 templates/category/list_categories.html:6
+#: templates/category/list_categories.html:15
+msgid "Categories"
+msgstr "Categorías"
+
+#: mercados_de_prediccion/forms.py:95
+msgid "Binary"
+msgstr "Binario"
+
+#: mercados_de_prediccion/forms.py:95
+msgid "Multiple: exclusive"
+msgstr "Múltiple: exclusivo"
+
+#: mercados_de_prediccion/forms.py:95
+msgid "Multiple: non-exclusive"
+msgstr "Múltiple: no exclusivo"
+
+#: mercados_de_prediccion/forms.py:96 templates/market/edit_market.html:86
+msgid "Type of market"
+msgstr "Tipo de mercado"
+
+#: mercados_de_prediccion/forms.py:99
+msgid ""
+"Binary markets only accept yes/no contract options. Multiple markets "
+"accept two or more predefined options; in exclusive multiple markets the "
+"asset prices are divided between all the options, and in non-exclusive "
+"multiple markets each option has its own \"binary market\" included, "
+"where people can vote if that option will take place or not."
+msgstr ""
+"Los mercados binarios sólo aceptan activos para opciones de sí/no. Los "
+"mercados múltiples aceptan dos o más opciones predefinidas; en los "
+"múltiples exclusivos los precios de las acciones son divididos entre "
+"todas las opciones, mientras que en los múltiples no exclusivos cada "
+"opción tiene su propio \"mercado binario\" incluido, donde los usuarios "
+"pueden elegir si dicha opción tendrá lugar o no."
+
+#: mercados_de_prediccion/forms.py:145
+msgid "Category"
+msgstr "Categoría"
+
+#: mercados_de_prediccion/forms.py:173 templates/market/edit_market.html:104
+#: templates/statistics/past_bets.html:121 templates/user/display_user.html:207
+msgid "Option"
+msgstr "Opción"
+
+#: mercados_de_prediccion/forms.py:174
+msgid "The option that participants can bet on"
+msgstr "La opción en la que los participantes pueden apostar."
+
+#: mercados_de_prediccion/forms.py:204
+msgid ""
+"It must contain all the possible information to help the moderators "
+"decide to invite you."
+msgstr ""
+"Debe contener toda la información posible para ayudar a los moderadores a"
+" invitarte."
+
+#: mercados_de_prediccion/forms.py:230 templates/market/display_market.html:195
+#: templates/market/display_market.html:239
+#: templates/market/display_market.html:299
+#: templates/market/display_market.html:360
+msgid "Quantity"
+msgstr "Cantidad"
+
+#: mercados_de_prediccion/forms.py:230
+msgid "The quantity of assets you want to buy."
+msgstr "La cantidad de activos que quieres comprar."
+
+#: mercados_de_prediccion/forms.py:255
+msgid "Winner option"
+msgstr "Opción ganadora"
+
+#: mercados_de_prediccion/forms.py:255
+msgid "Select the winner option for this market."
+msgstr "Selecciona la opción ganadora para este mercado."
+
+#: mercados_de_prediccion/forms.py:265
+msgid "Winner options"
+msgstr "Opciones ganadoras"
+
+#: mercados_de_prediccion/forms.py:265
+msgid ""
+"Select the winner options for this market. More than one can be selected "
+"holding the Control key."
+msgstr ""
+"Selecciona las opciones ganadoras para este mercado. Se puede seleccionar"
+" más de una manteniendo pulsada la tecla Control."
+
+#: mercados_de_prediccion/models.py:16 mercados_de_prediccion/models.py:103
+#: users/forms.py:75 users/forms.py:116
 msgid "Picture"
 msgstr "Imagen"
 
-#: mercados_de_prediccion/validators.py:8
-msgid "Images must be in PNG or JPG format."
-msgstr "Las imágenes deben estar con formato .PNG o .JPG"
+#: mercados_de_prediccion/models.py:60 mercados_de_prediccion/models.py:71
+msgid "This method can only be used for binary or exclusive markets options."
+msgstr ""
+"Este método solo se puede usar para opciones de mercados binarios o "
+"exclusivos."
+
+#: mercados_de_prediccion/utils.py:20
+msgid "The market has ended and you can no longer place bets."
+msgstr "El mercado ha finalizado y ya no acepta apuestas."
+
+#: mercados_de_prediccion/utils.py:26 mercados_de_prediccion/utils.py:28
+msgid "The market is part of a private community in which you do not have access."
+msgstr "El mercado es parte de una comunidad privada a la que no tienes acceso."
+
+#: mercados_de_prediccion/views.py:54 mercados_de_prediccion/views.py:71
+#: mercados_de_prediccion/views.py:590 mercados_de_prediccion/views.py:624
+#: users/views.py:55 users/views.py:148 users/views.py:169 users/views.py:187
+msgid "Must be logged as Admin."
+msgstr "Debe estar logueado como Admin."
+
+#: mercados_de_prediccion/views.py:153
+msgid "You cannot edit this community."
+msgstr "No puedes editar esta comunidad."
+
+#: mercados_de_prediccion/views.py:188
+#: templates/community/display_community.html:25
+#: templates/community/list_communities.html:43
+msgid "Private community"
+msgstr "Comunidad privada"
+
+#: mercados_de_prediccion/views.py:212
+msgid "You can't create a market in this community."
+msgstr "No puedes crear un mercado en esta comunidad."
+
+#: mercados_de_prediccion/views.py:214
+msgid ""
+"You can't create a public market. Please contact us if you want to verify"
+" your account and create public markets."
+msgstr ""
+"No puedes crear un mercado público. Por favor contáctanos si quieres "
+"verificar tu cuenta y crear mercados públicos."
+
+#: mercados_de_prediccion/views.py:283
+msgid "You can't edit this market."
+msgstr "No puedes editar este mercado."
+
+#: mercados_de_prediccion/views.py:317
+msgid "You are already member of this community."
+msgstr "Ya eres miembro de esta comunidad."
+
+#: mercados_de_prediccion/views.py:336 mercados_de_prediccion/views.py:345
+#: mercados_de_prediccion/views.py:352 mercados_de_prediccion/views.py:360
+#: mercados_de_prediccion/views.py:367
+msgid "Only moderators can access this page."
+msgstr "Sólo los moderadores pueden acceder a esta página."
+
+#: mercados_de_prediccion/views.py:618
+msgid "The market does not exist or it has not expired"
+msgstr "El mercado no existe o ha expirado"
+
+#: mercados_de_prediccion/views.py:622
+msgid "Must be the market creator."
+msgstr "Debes ser el creador del mercado."
+
+#: mercados_de_prediccion/views.py:627
+msgid "Must be the creator of the Market"
+msgstr "Debes ser el creador del mercado"
+
+#: mercados_de_prediccion/views.py:642 mercados_de_prediccion/views.py:661
+msgid "The option is not from this market."
+msgstr "La opción no es de este mercado."
+
+#: mercados_de_prediccion/templatetags/assets_by_option_user.py:14
+#: mercados_de_prediccion/templatetags/assets_by_option_user.py:27
+msgid "You must be logged"
+msgstr "Debes estar logueado"
+
+#: mercados_de_prediccion/templatetags/assets_by_option_user.py:15
+msgid "You don't have any assets yet."
+msgstr "No tienes ningún activo todavía."
+
+#: mercados_de_prediccion/templatetags/assets_by_option_user.py:18
+msgid "You have "
+msgstr "Tienes "
+
+#: mercados_de_prediccion/templatetags/assets_by_option_user.py:20
+msgid " assets for this option"
+msgstr " activos para esta opción"
+
+#: mercados_de_prediccion/templatetags/assets_by_option_user.py:28
+msgid "You didn't buy any asset"
+msgstr "No compraste ningún activo"
+
+#: mercados_de_prediccion/templatetags/assets_by_option_user.py:31
+msgid "You bought "
+msgstr "Compraste "
+
+#: mercados_de_prediccion/templatetags/assets_by_option_user.py:31
+msgid " assets"
+msgstr " activos"
 
 #: templates/403.html:6
 msgid "Permission denied"
 msgstr "Permiso denegado"
 
-#: templates/403.html:10
+#: templates/403.html:13
 msgid "Error 403 - Permission denied"
 msgstr "Error 403 - Permiso denegado"
 
@@ -54,11 +300,11 @@ msgstr "Error 403 - Permiso denegado"
 msgid "Page not found"
 msgstr "Página no encontrada"
 
-#: templates/404.html:10
+#: templates/404.html:13
 msgid "Error 404 - Page not found"
 msgstr "Error 404 - Página no encontrada"
 
-#: templates/about.html:5 templates/base.html:52
+#: templates/about.html:5
 msgid "About"
 msgstr "Sobre nosotros"
 
@@ -66,106 +312,986 @@ msgstr "Sobre nosotros"
 msgid "About."
 msgstr "Sobre nosotros."
 
-#: templates/base.html:8
+#: templates/base.html:9
 msgid "Prediction Markets"
 msgstr "Mercados de predicción"
 
-#: templates/base.html:55 templates/category/list_categories.html:5
-#: templates/category/list_categories.html:14
-msgid "Categories"
-msgstr "Categorías"
+#: templates/base.html:37
+msgid "Home"
+msgstr "Inicio"
 
-#: templates/base.html:65 templates/editProfile.html:6
-#: templates/editProfile.html:14 templates/editProfile.html:59
-msgid "Edit profile"
-msgstr "Editar perfil"
+#: templates/base.html:47 templates/base.html:48
+#: templates/category/list_categories.html:86
+#: templates/category/list_categories.html:87
+#: templates/market/list_judge_markets.html:6
+#: templates/market/list_markets.html:6 templates/market/list_markets.html:14
+msgid "Markets"
+msgstr "Mercados"
 
-#: templates/base.html:68 templates/registration/signup.html:10
-#: templates/registration/signup.html:112
-msgid "Create admin"
-msgstr "Crear admin"
+#: templates/base.html:53 templates/base.html:75
+#: templates/market/display_market.html:63
+#: templates/market/display_market.html:64
+#: templates/market/list_markets.html:104
+#: templates/market/list_markets.html:105
+msgid "Community"
+msgstr "Comunidad"
 
-#: templates/base.html:71
+#: templates/base.html:55 templates/community/list_communities.html:6
+msgid "Communities"
+msgstr "Comunidades"
+
+#: templates/base.html:59 templates/base.html:61
+#: templates/community/list_communities.html:23
+msgid "All communities"
+msgstr "Todas las comunidades"
+
+#: templates/base.html:66 templates/base.html:67
+msgid "Created communities"
+msgstr "Comunidades creadas"
+
+#: templates/base.html:101 templates/user/display_user.html:42
+msgid "public Karma"
+msgstr "Karma público"
+
+#: templates/base.html:115
+msgid "My profile"
+msgstr "Mi perfil"
+
+#: templates/base.html:119
+msgid "Betting history"
+msgstr "Historial de apuestas"
+
+#: templates/base.html:124
+msgid "Verify my account"
+msgstr "Verificar mi cuenta"
+
+#: templates/base.html:130
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: templates/base.html:76 templates/registration/login.html:6
+#: templates/base.html:135 templates/registration/login.html:7
+#: templates/registration/login.html:15 templates/registration/login.html:34
 msgid "Login"
 msgstr "Iniciar sesión"
 
-#: templates/base.html:79 templates/registration/signup.html:8
-#: templates/registration/signup.html:21 templates/registration/signup.html:108
+#: templates/base.html:138 templates/registration/signup.html:9
+#: templates/registration/signup.html:27 templates/registration/signup.html:171
 msgid "Sign up"
 msgstr "Registrarse"
 
-#: templates/base.html:86
-msgid "Admin functions"
-msgstr "Funciones de administrador"
+#: templates/base.html:145
+msgid "Admin"
+msgstr "Admin"
 
-#: templates/base.html:90 templates/category/create_category.html:6
+#: templates/base.html:149 templates/category/create_category.html:6
 #: templates/category/create_category.html:14
+#: templates/category/list_categories.html:55
 msgid "Create category"
 msgstr "Crear categoría"
 
-#: templates/base.html:95 templates/contact.html:5 templates/contact.html:10
-msgid "Contact"
-msgstr "Contacto"
+#: templates/base.html:151 templates/community/display_community.html:132
+#: templates/market/create_market.html:7
+#: templates/market/create_market.html:201
+#: templates/market/list_markets.html:70 templates/market/list_markets.html:183
+msgid "Create market"
+msgstr "Crear mercado"
 
-#: templates/base.html:101
+#: templates/base.html:153 templates/registration/signup.html:11
+#: templates/registration/signup.html:175
+msgid "Create admin"
+msgstr "Crear admin"
+
+#: templates/base.html:156
+msgid "Judge markets"
+msgstr "Juzgar mercados"
+
+#: templates/base.html:158
+msgid "Judge verify requests"
+msgstr "Juzgar peticiones de verificación"
+
+#: templates/base.html:166 templates/base.html:167
 msgid "Language"
 msgstr "Idioma"
 
-#: templates/editProfile.html:29 templates/registration/signup.html:44
-msgid "The name is not valid"
-msgstr "El nombre no es válido"
+#: templates/base.html:194
+msgid "Back to top"
+msgstr "Volver arriba"
 
-#: templates/editProfile.html:40 templates/registration/signup.html:55
-msgid "The last name is not valid"
-msgstr "El apellido no es válido"
-
-#: templates/editProfile.html:51 templates/registration/signup.html:66
-msgid "The date of birth is not valid"
-msgstr "La fecha de nacimiento no es válida"
+#: templates/contact.html:5 templates/contact.html:10
+msgid "Contact"
+msgstr "Contacto"
 
 #: templates/home.html:7
 msgid "Homepage."
 msgstr "Página de inicio"
 
-#: templates/category/create_category.html:55
+#: templates/category/create_category.html:56
+#: templates/community/create_community.html:83
+#: templates/market/create_market.html:99 templates/market/edit_market.html:70
+#: templates/registration/signup.html:118 templates/user/edit_profile.html:106
 msgid "Upload picture"
 msgstr "Cargar imagen"
 
-#: templates/category/create_category.html:60
+#: templates/category/create_category.html:61
+#: templates/community/create_community.html:88
+#: templates/market/create_market.html:104 templates/market/edit_market.html:75
+#: templates/registration/signup.html:123 templates/user/edit_profile.html:111
 msgid "Choose file"
 msgstr "Escoge un archivo"
 
-#: templates/category/create_category.html:88
+#: templates/category/create_category.html:92
+#: templates/community/create_community.html:119
+#: templates/market/edit_market.html:131
+msgid "Delete"
+msgstr "Borrar"
+
+#: templates/category/create_category.html:95
+#: templates/category/create_category.html:101
+#: templates/community/create_community.html:122
+#: templates/community/create_community.html:127
+#: templates/market/create_market.html:195
+#: templates/market/create_market.html:198
+#: templates/market/edit_market.html:128 templates/market/judge_market.html:60
+#: templates/registration/password_reset_form.html:37
+#: templates/user/change_password.html:104 templates/user/edit_profile.html:132
+#: templates/user/verify_account.html:90
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: templates/category/create_category.html:97
+#: templates/community/create_community.html:123
+#: templates/market/edit_market.html:134
+msgid "Save"
+msgstr "Guardar"
+
+#: templates/category/create_category.html:102
 msgid "Create"
 msgstr "Crear"
 
-#: templates/category/list_categories.html:65
+#: templates/category/list_categories.html:90
+#: templates/community/list_communities.html:59
 msgid "market"
 msgstr "mercado"
 
-#: templates/category/list_categories.html:67
+#: templates/category/list_categories.html:92
+#: templates/community/list_communities.html:61
 msgid "markets"
 msgstr "mercados"
 
-#: templates/category/list_categories.html:72
+#: templates/category/list_categories.html:98
+#: templates/community/display_community.html:68
+#: templates/community/list_communities.html:74
+#: templates/market/list_markets.html:135
+#: templates/market/list_markets.html:136
 msgid "Edit"
 msgstr "Editar"
 
-#: templates/registration/signup.html:29
+#: templates/community/create_community.html:8
+#: templates/community/create_community.html:25
+msgid "Edit community"
+msgstr "Editar comunidad"
+
+#: templates/community/create_community.html:10
+#: templates/community/create_community.html:27
+#: templates/community/create_community.html:128
+#: templates/community/list_communities.html:122
+msgid "Create community"
+msgstr "Crear comunidad"
+
+#: templates/community/create_community.html:68
+msgid "Visible"
+msgstr "Visible"
+
+#: templates/community/create_community.html:69
+msgid "Not visible"
+msgstr "No visible"
+
+#: templates/community/create_community.html:78
+#: templates/market/create_market.html:86 templates/market/edit_market.html:57
+#: templates/registration/signup.html:85 templates/registration/signup.html:98
+#: templates/registration/signup.html:113 templates/user/edit_profile.html:87
+#: templates/user/edit_profile.html:102
+msgid "(Optional)"
+msgstr "(Opcional)"
+
+#: templates/community/create_request_join.html:8
+#: templates/community/create_request_join.html:17
+#: templates/community/display_community.html:138
+msgid "Join community"
+msgstr "Unirse a comunidad"
+
+#: templates/community/create_request_join.html:21
+msgid ""
+"Before joining the community, you must write a short request describing "
+"your reasons."
+msgstr ""
+"Antes de unirte a la comunidad, debes escribir un pequeño texto "
+"describiendo tus motivos."
+
+#: templates/community/create_request_join.html:22
+msgid "It will be evaluated by the moderator/s of the community."
+msgstr "Será evaluado por el moderador de la comunidad."
+
+#: templates/community/create_request_join.html:66
+#: templates/community/list_members.html:55
+#: templates/community/list_members.html:130
+msgid "Back to community"
+msgstr "Volver a la comunidad"
+
+#: templates/community/create_request_join.html:67
+#: templates/user/verify_account.html:91
+msgid "Send request"
+msgstr "Enviar petición"
+
+#: templates/community/display_community.html:35
+#: templates/community/list_communities.html:51
+#: templates/market/display_market.html:37
+#: templates/market/display_market_ended.html:37
+#: templates/market/judge_market.html:26
+#: templates/market/list_judge_markets.html:54
+msgid "Created by"
+msgstr "Creado por"
+
+#: templates/community/display_community.html:39
+#: templates/market/display_market.html:51
+#: templates/market/display_market_ended.html:51
+msgid "on"
+msgstr "el"
+
+#: templates/community/display_community.html:43
+#: templates/community/list_communities.html:66
+msgid "member"
+msgstr "miembro"
+
+#: templates/community/display_community.html:45
+#: templates/community/list_communities.html:68
+msgid "members"
+msgstr "miembros"
+
+#: templates/community/display_community.html:57
+msgid "Options:"
+msgstr "Opciones:"
+
+#: templates/community/display_community.html:64
+#: templates/community/list_members.html:6
+msgid "Members"
+msgstr "Miembros"
+
+#: templates/community/display_community.html:73
+msgid "Get link to join"
+msgstr "Obtener enlace para unirme"
+
+#: templates/community/display_community.html:90
+#: templates/market/display_market.html:123
+#: templates/market/display_market_ended.html:105
+msgid "Description:"
+msgstr "Descripción"
+
+#: templates/community/display_community.html:103
+msgid "Members:"
+msgstr "Miembros:"
+
+#: templates/community/display_community.html:124
+msgid "Markets:"
+msgstr "Mercados:"
+
+#: templates/community/display_community.html:143
+msgid "Request sent"
+msgstr "Petición enviada"
+
+#: templates/community/display_community.html:153
+msgid "This community has no markets yet."
+msgstr "Esta comunidad no tiene ningún mercado todavía."
+
+#: templates/community/display_community.html:170
+#: templates/community/display_community.html:171
+#: templates/market/display_market.html:80
+#: templates/market/display_market.html:81
+#: templates/market/display_market_ended.html:62
+#: templates/market/display_market_ended.html:63
+#: templates/market/list_markets.html:118
+#: templates/market/list_markets.html:119
+msgid "Market ended"
+msgstr "El mercado finalizó"
+
+#: templates/community/display_community.html:172
+msgid "The market ended on"
+msgstr "El mercado finalizó el"
+
+#: templates/community/display_community.html:176
+msgid "You can place bets on this market until"
+msgstr "Puedes apostar en este mercado hasta el"
+
+#: templates/community/list_communities.html:15
+msgid "My created communities"
+msgstr ""
+
+#: templates/community/list_members.html:15
+msgid "Member list"
+msgstr "Lista de miembros"
+
+#: templates/community/list_members.html:66
+#: templates/user/list_judge_verify_requests.html:57
+msgid "Name (alias)"
+msgstr "Nombre (alias)"
+
+#: templates/community/list_members.html:68
+#: templates/user/list_judge_verify_requests.html:60
+msgid "Accepted"
+msgstr "Aceptado"
+
+#: templates/community/list_members.html:79
+msgid "User joined on"
+msgstr "El usuario se unió el"
+
+#: templates/community/list_members.html:83
+#: templates/user/list_judge_verify_requests.html:75
+#: templates/user/list_judge_verify_requests.html:89
+msgid "Accept"
+msgstr "Aceptar"
+
+#: templates/community/list_members.html:84
+msgid "Accept request"
+msgstr "Aceptar petición"
+
+#: templates/community/list_members.html:87
+#: templates/user/list_judge_verify_requests.html:79
+msgid "Reject"
+msgstr "Rechazar"
+
+#: templates/community/list_members.html:88
+#: templates/user/list_judge_verify_requests.html:80
+msgid "Reject request"
+msgstr "Rechazar petición"
+
+#: templates/market/create_market.html:21
+msgid "Create prediction market"
+msgstr "Crear mercado de predicción"
+
+#: templates/market/create_market.html:73
+msgid ""
+"The end date is not valid. It must be\r\n"
+"                                                future."
+msgstr "La fecha de finalización no es válida. Debe ser futura."
+
+#: templates/market/display_market.html:41
+#: templates/market/display_market.html:42
+#: templates/market/display_market_ended.html:41
+#: templates/market/display_market_ended.html:42
+#: templates/user/display_user.html:25 templates/user/display_user.html:26
+msgid "Verified user"
+msgstr "Usuario verificado"
+
+#: templates/market/display_market.html:46
+#: templates/market/display_market.html:47
+#: templates/market/display_market_ended.html:46
+#: templates/market/display_market_ended.html:47
+#: templates/user/display_user.html:30 templates/user/display_user.html:31
+msgid "User is staff"
+msgstr "El usuario es admin"
+
+#: templates/market/display_market.html:55
+#: templates/market/display_market_ended.html:55
+msgid "asset sold"
+msgstr "activo vendidos"
+
+#: templates/market/display_market.html:57
+#: templates/market/display_market_ended.html:57
+msgid "assets sold"
+msgstr "activos vendidos"
+
+#: templates/market/display_market.html:72
+#: templates/market/display_market.html:73
+msgid "Public"
+msgstr "Público"
+
+#: templates/market/display_market.html:74
+#: templates/market/list_markets.html:97 templates/market/list_markets.html:98
+#: templates/market/list_markets.html:99
+msgid "Public market"
+msgstr "Mercado público"
+
+#: templates/market/display_market.html:82
+#: templates/market/display_market_ended.html:64
+msgid "This market ended on"
+msgstr "Este mercado finalizó el"
+
+#: templates/market/display_market.html:87
+msgid "Ending date"
+msgstr "Fecha de finalización"
+
+#: templates/market/display_market.html:99
+#: templates/market/display_market_ended.html:75
+msgid "Market options:"
+msgstr "Opciones del mercado:"
+
+#: templates/market/display_market.html:106
+#: templates/market/display_market_ended.html:82
+#: templates/market/edit_market.html:7
+msgid "Edit market"
+msgstr "Editar mercado"
+
+#: templates/market/display_market.html:135
+#: templates/market/display_market.html:137
+#: templates/market/display_market_ended.html:117
+#: templates/market/display_market_ended.html:119
+msgid "Related markets"
+msgstr "Mercados relacionados"
+
+#: templates/market/display_market.html:156
+#: templates/market/display_market_ended.html:138
+msgid "Contracts"
+msgstr "Opciones"
+
+#: templates/market/display_market.html:172
+#: templates/market/display_market_ended.html:154
+#: templates/statistics/past_bets.html:126 templates/user/display_user.html:212
+msgid "Yes"
+msgstr "Sí"
+
+#: templates/market/display_market.html:178
+#: templates/market/display_market_ended.html:160
+#: templates/statistics/past_bets.html:129 templates/user/display_user.html:215
+msgid "No"
+msgstr "No"
+
+#: templates/market/display_market.html:191
+#: templates/market/display_market.html:235
+msgid "Price"
+msgstr "Precio"
+
+#: templates/market/display_market.html:201
+#: templates/market/display_market.html:245
+#: templates/market/display_market.html:379
+msgid "Buy"
+msgstr "Comprar"
+
+#: templates/market/display_market.html:211
+#: templates/market/display_market.html:255
+#: templates/market/display_market.html:314
+msgid "Buy assets"
+msgstr "Comprar activo"
+
+#: templates/market/display_market.html:276
+msgid "'Yes' price"
+msgstr "Precio 'sí'"
+
+#: templates/market/display_market.html:281
+msgid "Yes or no?"
+msgstr "¿Sí o no?"
+
+#: templates/market/display_market.html:284
+msgid "Buy yes"
+msgstr "Comprar sí"
+
+#: templates/market/display_market.html:285
+msgid "Buy no"
+msgstr "Comprar no"
+
+#: templates/market/display_market.html:294
+msgid "'No' price"
+msgstr "Precio 'no'"
+
+#: templates/market/display_market.html:360
+msgid "assets"
+msgstr "activos"
+
+#: templates/market/display_market.html:362
+msgid "Price per asset"
+msgstr "Precio por activo"
+
+#: templates/market/display_market.html:363
+msgid "Total price"
+msgstr "Precio total"
+
+#: templates/market/display_market.html:368
+msgid "You don't have enough karma"
+msgstr "No tienes suficiente Karma"
+
+#: templates/market/display_market.html:370
+msgid "You must be logged in order to buy assets"
+msgstr "Debes iniciar sesión para comprar activos"
+
+#: templates/market/display_market.html:373
+msgid "Close"
+msgstr "Cerrar"
+
+#: templates/market/display_market_ended.html:87
+#: templates/market/judge_market.html:7 templates/market/judge_market.html:16
+#: templates/market/judge_market.html:62
+msgid "Judge market"
+msgstr "Juzgar mercado"
+
+#: templates/market/display_market_ended.html:165
+#: templates/market/display_market_ended.html:195
+#: templates/market/display_market_ended.html:223
+msgid "Final price"
+msgstr "Precio final"
+
+#: templates/market/display_market_ended.html:172
+#: templates/market/display_market_ended.html:202
+#: templates/market/display_market_ended.html:230
+msgid "Correct option"
+msgstr "Opción correcta"
+
+#: templates/market/display_market_ended.html:176
+#: templates/market/display_market_ended.html:207
+#: templates/market/display_market_ended.html:235
+msgid "Incorrect option"
+msgstr "Opción incorrecta"
+
+#: templates/market/display_market_ended.html:179
+#: templates/market/display_market_ended.html:210
+#: templates/market/display_market_ended.html:238
+msgid "The market hasn't been judged yet."
+msgstr "El mercado no ha sido juzgado todavía."
+
+#: templates/market/display_market_ended.html:183
+#: templates/market/display_market_ended.html:214
+#: templates/market/display_market_ended.html:242
+msgid "assets for this option were sold"
+msgstr "activos fueron vendidos para esta acción"
+
+#: templates/market/edit_market.html:15
+msgid "Edit prediction market"
+msgstr "Editar mercado de predicción"
+
+#: templates/market/edit_market.html:88
+msgid "binary"
+msgstr "binario"
+
+#: templates/market/edit_market.html:91
+msgid "exclusive multiple"
+msgstr "múltiple exclusivo"
+
+#: templates/market/edit_market.html:93
+msgid "non-exclusive multiple"
+msgstr "múltiple no exclusivo"
+
+#: templates/market/edit_market.html:98
+msgid ""
+"Binary markets only accept yes/no contract options. Multiple markets "
+"accept two or more predefined options; in exclusive multiple markets the "
+"asset prices are divided between all the options, and in non-exclusive "
+"multiple markets each option has its own 'binary market' included, where "
+"people can vote if that option will take place or not."
+msgstr ""
+"Los mercados binarios sólo aceptan opciones de sí/no. Los mercados "
+"múltiples aceptan dos o más opciones predefinidas; en los mercados "
+"múltiples exclusivos los precios de las acciones son divididos entre "
+"todas las opciones, mientras que en los múltiple no exclusivos cada "
+"opción tiene su propio 'mercado binario' incorporado, donde los "
+"participantes pueden votar si esa opción tendrá lugar o no."
+
+#: templates/market/judge_market.html:27
+#: templates/market/list_judge_markets.html:63
+#: templates/market/list_markets.html:120
+msgid "Ended on"
+msgstr "Finalizó el"
+
+#: templates/market/list_judge_markets.html:14
+msgid "Judge finished markets"
+msgstr "Juzgar mercados finalizados"
+
+#: templates/market/list_judge_markets.html:20
+msgid "Showing only public markets created by you"
+msgstr "Mostrando sólo los mercados públicos creados por mi"
+
+#: templates/market/list_judge_markets.html:23
+msgid "Click to show all public markets"
+msgstr "Clic para mostrar todos los mercados públicos"
+
+#: templates/market/list_judge_markets.html:29
+msgid "Showing all public markets"
+msgstr "Mostrando todos los mercados públicos"
+
+#: templates/market/list_judge_markets.html:32
+msgid "Click to show only markets created by you"
+msgstr "Clic para mostrar sólo los mercados creados por mi"
+
+#: templates/market/list_judge_markets.html:69
+#: templates/market/list_judge_markets.html:70
+msgid "Judge"
+msgstr "Juzgar"
+
+#: templates/market/list_markets.html:20
+msgid "Filtering by category"
+msgstr "Filtrando por categoría"
+
+#: templates/market/list_markets.html:29
+msgid "Click to cancel the filtering"
+msgstr "Clic para cancelar el filtrado"
+
+#: templates/registration/login.html:30
+msgid "Password"
+msgstr "Contraseña"
+
+#: templates/registration/login.html:39 templates/registration/signup.html:193
+msgid "or"
+msgstr "o"
+
+#: templates/registration/login.html:45 templates/registration/signup.html:199
+msgid "Log in with Google"
+msgstr "Loguearse con Google"
+
+#: templates/registration/login.html:60
+msgid "Forget Password?"
+msgstr "¿Olvidaste la contraseña?"
+
+#: templates/registration/password_reset_complete.html:10
+msgid "Password reset"
+msgstr "Resetear contraseña"
+
+#: templates/registration/password_reset_complete.html:18
+msgid "Your password has been set. You may go ahead and"
+msgstr "Has establecido tu contraseña. Puedes "
+
+#: templates/registration/password_reset_complete.html:19
+msgid "log in"
+msgstr "iniciar sesión"
+
+#: templates/registration/password_reset_complete.html:19
+msgid "now"
+msgstr "ahora"
+
+#: templates/registration/password_reset_confirm.html:11
+#: templates/registration/password_reset_confirm.html:69
+#: templates/user/change_password.html:6 templates/user/change_password.html:15
+#: templates/user/display_user.html:88
+msgid "Change password"
+msgstr "Cambiar contraseña"
+
+#: templates/registration/password_reset_confirm.html:37
+#: templates/user/change_password.html:73
+msgid "Your password can't be too similar to your other personal information"
+msgstr "Tu conraseña no puede ser demasiado similar a tu otra información personal"
+
+#: templates/registration/password_reset_confirm.html:40
+#: templates/user/change_password.html:76
+msgid "Your password must contain at least 8 characters"
+msgstr "Tu contraseña debe contener por lo menos 8 caracteres"
+
+#: templates/registration/password_reset_confirm.html:43
+#: templates/user/change_password.html:79
+msgid "Your password can't be a commonly used password"
+msgstr "Tu contraseña no puede ser una usada comúnmente"
+
+#: templates/registration/password_reset_confirm.html:46
+#: templates/user/change_password.html:82
+msgid "Your password can't be entirely numeric"
+msgstr "Tu contraseña no puede ser numérica entera"
+
+#: templates/registration/password_reset_confirm.html:76
+msgid ""
+"The password reset link was invalid, possibly because it has already been"
+" used"
+msgstr ""
+"El enlace para restablecer la contraseña no es válido, posiblemente "
+"porque ya ha sido usado"
+
+#: templates/registration/password_reset_confirm.html:77
+msgid "Please request a new password reset"
+msgstr "Por favor, pide de nuevo restablecer la contraseña"
+
+#: templates/registration/password_reset_done.html:10
+msgid "Email sent"
+msgstr "Email enviado"
+
+#: templates/registration/password_reset_done.html:19
+msgid ""
+"We've emailed you instructions for setting your password, if an account "
+"exists with the email you entered"
+msgstr ""
+"Te hemos enviado las instrucciones para establecer tu contraseña, si "
+"existe una cuenta con el email insertado"
+
+#: templates/registration/password_reset_done.html:20
+msgid "You should receive them shortly"
+msgstr "Debes recibirlas en breve"
+
+#: templates/registration/password_reset_done.html:23
+msgid ""
+"If you don't receive an email, please make sure you've entered the "
+"address you registered with,"
+msgstr ""
+"Si no recibes el email, por favor asegúrate de que has introducido la "
+"dirección de correo con la que te registraste,"
+
+#: templates/registration/password_reset_done.html:24
+msgid "and check your spam folder"
+msgstr "y comprueba tu carpeta de spam"
+
+#: templates/registration/password_reset_email.html:4
+msgid "To initiate the password reset process for your"
+msgstr "Para iniciar el proceso de restablecer contraseña de tu"
+
+#: templates/registration/password_reset_email.html:4
+msgid "Predictmarket Account"
+msgstr "cuenta de Predictmarket"
+
+#: templates/registration/password_reset_email.html:5
+msgid "click the link below"
+msgstr "haz clic en el enlace de abajo"
+
+#: templates/registration/password_reset_email.html:9
+msgid "If clicking the link above doesn't work"
+msgstr "Si el enlace de abajo no funciona"
+
+#: templates/registration/password_reset_email.html:9
+msgid "please copy and paste the URL in a new browser window instead"
+msgstr "por favor copia y pega la URL en una nueva ventana del navegador"
+
+#: templates/registration/password_reset_email.html:11
+msgid "Sincerely"
+msgstr "Un saludo"
+
+#: templates/registration/password_reset_email.html:12
+msgid "The Predictmarket Team"
+msgstr "El equipo de Predictmarket"
+
+#: templates/registration/password_reset_form.html:10
+msgid "Forgot password"
+msgstr "Contraseña olvidada"
+
+#: templates/registration/password_reset_form.html:32
+msgid "Email address of the account you want to recover the password"
+msgstr "Dirección de email de la cuenta que quieres recuperar"
+
+#: templates/registration/password_reset_form.html:38
+msgid "Submit"
+msgstr "Enviar"
+
+#: templates/registration/signup.html:35
 msgid "Create admin account"
 msgstr "Crear cuenta de admin"
 
-#: templates/registration/signup.html:77
+#: templates/registration/signup.html:51 templates/user/edit_profile.html:39
+msgid "The name is not valid"
+msgstr "El nombre no es válido"
+
+#: templates/registration/signup.html:63 templates/user/edit_profile.html:51
+msgid "The last name is not valid"
+msgstr "El apellido no es válido"
+
+#: templates/registration/signup.html:90 templates/user/edit_profile.html:77
+msgid "The date of birth is not valid"
+msgstr "La fecha de nacimiento no es válida"
+
+#: templates/registration/signup.html:138
 msgid "The email is not valid or is already in use"
 msgstr "El email no es válido o ya está en uso"
 
-#: templates/registration/signup.html:88 templates/registration/signup.html:99
+#: templates/registration/signup.html:150
+#: templates/registration/signup.html:162
 msgid "The password is not valid"
 msgstr "La contraseña no es válida"
+
+#: templates/registration/signup.html:202
+msgid "By signing up, you are indicating that you have read and agree to the"
+msgstr "Registrándote indica que aceptas que has leído y estás de acuerdo con los "
+
+#: templates/registration/signup.html:203
+msgid "Terms of Use and Privacy Policy"
+msgstr "Términos de uso y Política de Privacidad"
+
+#: templates/statistics/past_bets.html:6
+msgid "Past bets of"
+msgstr "Apuestas pasadas de"
+
+#: templates/statistics/past_bets.html:24
+msgid "Betting history of"
+msgstr "Historial de apuestas de"
+
+#: templates/statistics/past_bets.html:31
+msgid "Only displaying assets bought from markets that you and"
+msgstr "Sólo se muestran los activos comprados de mercados a los que tú y"
+
+#: templates/statistics/past_bets.html:31
+msgid "both have access"
+msgstr "ambos tenéis acceso"
+
+#: templates/statistics/past_bets.html:32
+msgid "This includes public markets"
+msgstr "Esto incluye mercados públicos"
+
+#: templates/statistics/past_bets.html:48
+msgid "Communities in common"
+msgstr "Comunidades en común"
+
+#: templates/statistics/past_bets.html:53
+msgid ""
+"You don't have any community in common with\r\n"
+"                            %(user_past_bets.first_name)s"
+msgstr "No tienes ninguna comunidad en común con %(user_past_bets.first_name)s"
+
+#: templates/statistics/past_bets.html:90
+#: templates/statistics/past_bets.html:133 templates/user/display_user.html:188
+#: templates/user/display_user.html:219
+msgid "Assets"
+msgstr "Activos"
+
+#: templates/statistics/past_bets.html:97
+msgid "Back to user profile"
+msgstr "Volver al perfil de usuario"
+
+#: templates/statistics/past_bets.html:106 templates/user/display_user.html:195
+msgid "This user has not placed any bet yet."
+msgstr "Este usuario no ha realizado ninguna apuesta todavía."
+
+#: templates/user/change_password.html:106 templates/user/edit_profile.html:134
+msgid "Save changes"
+msgstr "Guardar cambios"
+
+#: templates/user/display_user.html:51
+msgid "Email"
+msgstr "Email"
+
+#: templates/user/display_user.html:53 templates/user/edit_profile.html:73
+#: users/forms.py:73 users/forms.py:111
+msgid "Date of birth"
+msgstr "Fecha de nacimiento"
+
+#: templates/user/display_user.html:55
+msgid "Joined on"
+msgstr "Se unió el"
+
+#: templates/user/display_user.html:56
+msgid "Export my data"
+msgstr "Exportar mis datos"
+
+#: templates/user/display_user.html:60 templates/user/edit_profile.html:24
+msgid "Your account will be deleted on"
+msgstr "Tu cuenta será borrada el"
+
+#: templates/user/display_user.html:61
+msgid "You can cancel this by"
+msgstr "Puedes cancelar esto "
+
+#: templates/user/display_user.html:62
+msgid "clicking here"
+msgstr "haciendo clic aquí"
+
+#: templates/user/display_user.html:72
+msgid "User options:"
+msgstr "Opciones de usuario"
+
+#: templates/user/display_user.html:79
+msgid "Bet history"
+msgstr "Historial de apuestas"
+
+#: templates/user/display_user.html:84 templates/user/edit_profile.html:6
+#: templates/user/edit_profile.html:19
+msgid "Edit profile"
+msgstr "Editar perfil"
+
+#: templates/user/display_user.html:104
+msgid "Created communities:"
+msgstr "Comunidades creadas:"
+
+#: templates/user/display_user.html:108
+msgid "This user has not created any community"
+msgstr "Este usuario no ha creado ninguna comunidad"
+
+#: templates/user/display_user.html:143
+msgid "Joined communities:"
+msgstr "Comunidades unidas:"
+
+#: templates/user/display_user.html:147
+msgid "This user has not joined any community"
+msgstr "Este usuario no se ha unido a ninguna comunidad"
+
+#: templates/user/edit_profile.html:35 users/forms.py:63 users/forms.py:107
+msgid "First name"
+msgstr "Nombre"
+
+#: templates/user/edit_profile.html:47 users/forms.py:64 users/forms.py:108
+msgid "Last name"
+msgstr "Apellidos"
+
+#: templates/user/edit_profile.html:124
+msgid "Cancel account deletion"
+msgstr "Cancelar borrado de cuenta"
+
+#: templates/user/edit_profile.html:128
+msgid "Delete account"
+msgstr "Borrar cuenta"
+
+#: templates/user/list_judge_verify_requests.html:6
+msgid "Verify requests"
+msgstr "Verificar peticiones"
+
+#: templates/user/list_judge_verify_requests.html:15
+msgid "Judge verification requests"
+msgstr "Juzgar peticiones de verificación"
+
+#: templates/user/list_judge_verify_requests.html:58 users/forms.py:35
+msgid "Institution"
+msgstr "Institución"
+
+#: templates/user/list_judge_verify_requests.html:76
+#: templates/user/list_judge_verify_requests.html:90
+msgid "Verify user"
+msgstr "Verificar usuario"
+
+#: templates/user/list_judge_verify_requests.html:83
+msgid "Request accepted. User is verified."
+msgstr "Petición aceptada. El usuario es verificado."
+
+#: templates/user/list_judge_verify_requests.html:86
+msgid "Request rejected."
+msgstr "Petición rechazada."
+
+#: templates/user/verify_account.html:7
+msgid "Verify account"
+msgstr "Verificar cuenta"
+
+#: templates/user/verify_account.html:15
+msgid "Verify account request"
+msgstr "Petición de verificación de cuenta"
+
+#: templates/user/verify_account.html:19
+msgid ""
+"In order to get your account verified and create public markets and "
+"communities without restrictions,"
+msgstr ""
+"Para obtener tu cuenta verificada y crear mercados públiso y comunidades "
+"sin restricción,"
+
+#: templates/user/verify_account.html:20
+msgid ""
+"you must be part of a public or private institution, and send us a "
+"request that will be evaluated by the admins"
+msgstr ""
+"debes ser parte de una institución pública o privada, y enviarnos una "
+"petición que será evaluada por los admins"
+
+#: templates/user/verify_account.html:21
+msgid ""
+"To make this easier, you can send us an email to "
+"predictmarket.us@gmail.com with enough proofs"
+msgstr ""
+"Para hacerlo más fácil, puedes enviar un email a "
+"predictmarket.us@gmail.com con suficientes pruebas"
+
+#: templates/user/verify_account.html:25
+msgid ""
+"Your previous request was rejected. You can apply again to verify your "
+"account"
+msgstr ""
+"Tu petición anterior fue rechazada. Puedes realizar una nueva para "
+"verificar tu cuenta"
+
+#: templates/user/verify_account_sent.html:10
+msgid "Request already sent"
+msgstr "La petición ya ha sido enviada"
+
+#: templates/user/verify_account_sent.html:18
+msgid ""
+"You have already sent a verify account request, and must wait for it to "
+"be judged by an admin"
+msgstr ""
+"Ya has enviado una petición para verificar la cuenta, y debes esperar a "
+"que sea juzgada"
 
 #: users/admin.py:13
 msgid "Personal info"
@@ -179,35 +1305,59 @@ msgstr "Permisos"
 msgid "Important dates"
 msgstr "Fechas importantes"
 
-#: users/forms.py:18
+#: users/forms.py:22
 msgid "Sorry, that login was invalid. Please try again."
 msgstr ""
 "Lo sentimos, el inicio de sesión no fue correcto. Por favor, inténtelo de"
 " nuevo"
 
-#: users/forms.py:20
+#: users/forms.py:24
 msgid "Sorry, that user was banned."
 msgstr "Lo sentimos, ese usuario está baneado"
 
-#: users/forms.py:31 users/forms.py:44
-msgid "First name"
-msgstr "Nombre"
+#: users/forms.py:37
+msgid ""
+"Describe the institution you represent, and give us proofs that you are "
+"who you say you are. You can reference any email sent to "
+"predictmarket.us@gmail.com"
+msgstr ""
+"Describe la institución que representas, y da suficientes pruebas "
+"demostrando que eres quién dices ser. Puedes referenciar cualquier email "
+"enviado a predictmarket.us@gmail.com"
 
-#: users/forms.py:32 users/forms.py:45
-msgid "Last name"
-msgstr "Apellidos"
+#: users/forms.py:65 users/forms.py:109
+msgid "Alias"
+msgstr "Alias"
 
-#: users/forms.py:35
-msgid "Date of birth"
-msgstr "Fecha de nacimiento"
+#: users/forms.py:65 users/forms.py:109
+msgid "The nickname by which they will know you. Must be unique."
+msgstr "El apodo por el que te conocerán. Debe ser único."
 
-#: users/forms.py:46
-msgid "Birth date"
-msgstr "Fecha de nacimiento"
+#: users/forms.py:70 users/forms.py:113
+msgid "Describe yourself: your hobbies, life goals, preferences, interests..."
+msgstr ""
+"Descríbete a ti mismo: tus hobbies, objetivos en la vida, preferencias, "
+"intereses..."
 
-#: users/validators.py:8
-msgid "Date of birth must be in the past"
-msgstr "La fecha de nacimiento debe ser pasada"
+#: users/forms.py:72 users/forms.py:115
+msgid "Biography"
+msgstr "Biografía"
+
+#: users/views.py:77
+msgid "You cannot edit other user's profile."
+msgstr "No puedes editar el perfil de otro usuario."
+
+#: users/views.py:105
+msgid "Your password was successfully updated"
+msgstr "Tu contraseña fue actualizada correctamente"
+
+#: users/views.py:109
+msgid "Please correct the error below."
+msgstr "Por favor corrige los errores de abajo"
+
+#: users/views.py:122
+msgid "You must not be verified."
+msgstr "No debes estar verificado."
 
 #~ msgid "Home"
 #~ msgstr "Inicio"
@@ -264,4 +1414,48 @@ msgstr "La fecha de nacimiento debe ser pasada"
 #~ "\r\n"
 #~ "                                    Choose file"
 #~ msgstr ""
+
+#~ msgid "Images must be in PNG or JPG format."
+#~ msgstr "Las imágenes deben estar con formato .PNG o .JPG"
+
+#~ msgid "Birth date"
+#~ msgstr "Fecha de nacimiento"
+
+#~ msgid "Date of birth must be in the past"
+#~ msgstr "La fecha de nacimiento debe ser pasada"
+
+#~ msgid "You have  "
+#~ msgstr "Tienes "
+
+#~ msgid " assets for this option"
+#~ msgstr " activos para esta opción "
+
+#~ msgid "  assets"
+#~ msgstr "activos"
+
+#~ msgid "My created communities"
+#~ msgstr "Mis comunidades creadas"
+
+#~ msgid "Only moderatos can access this page."
+#~ msgstr ""
+
+#~ msgid "You have  assets for this option"
+#~ msgstr "Tienes  acciones para esta opción"
+
+#~ msgid "You bought  assets"
+#~ msgstr "Compraste  activos"
+
+#~ msgid "Admin functions"
+#~ msgstr "Funciones de administrador"
+
+#~ msgid "My communities created"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Betting history\r\n"
+#~ "                                        of"
+#~ msgstr "Historial de apuestas de "
+
+#~ msgid "Communities in common:"
+#~ msgstr "Comunidades en común"
 

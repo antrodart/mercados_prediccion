@@ -56,7 +56,7 @@
                         {% endif %}
 
                         <div class="text-center">
-                            <a href='/market/?marketId={{ market.pk }}' class="btn btn-secondary" role="button">
+                            <a href='/market/{{ market.pk }}/{{ market.slug }}' class="btn btn-secondary" role="button">
                                 {% trans "Cancel" %}</a>
                             <button type="submit" class=" btn btn-primary">
                                 {% blocktrans %}Judge market{% endblocktrans %}
