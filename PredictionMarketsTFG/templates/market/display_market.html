@@ -50,11 +50,12 @@
                             </a>
                             {% trans "on" %} {{ market.creation_date |date }}
                             <p>
-                                {{ assets_number }}
                                 {% if assets_number == 1 %}
-                                    {% trans "asset sold" %}.
+                                    1 {% trans "asset sold" %}.
+                                {% elif assets_number == 0 %}
+                                    0 {% trans "assets sold" %}.
                                 {% else %}
-                                    {% trans "assets sold" %}.
+                                    {{ assets_number }} {% trans "assets sold" %}.
                                 {% endif %}
                             </p>
                             {% if market.community %}

@@ -37,30 +37,3 @@ def overwrite_price(current_price):
 	new_price = Price.objects.create(option=current_price.option, is_yes=current_price.is_yes, is_last=True, buy_price=current_price.buy_price)
 
 	print("Price created. Price: " + str(new_price))
-
-
-
-#			if market.is_binary:  #  Binary markets
-#				print("Market is binary")
-#				yes_option = market.option_set.get(binary_yes=True)
-#				no_option = market.option_set.get(binary_yes=False)
-#
-#				current_price_yes = yes_option.get_todays_price()
-#				current_price_no = no_option.get_todays_price()
-#
-#				overwrite_price(current_price_yes)
-#				overwrite_price(current_price_no)
-#
-#			elif not market.is_exclusive:  #  Multiple non-exclusive markets
-#				print("Market is non-exclusive multiple")
-#				for option in market.option_set.all():
-			# 		current_price_yes = option.price_set.get(is_last=True, is_yes=True)
-			# 		current_price_no = option.price_set.get(is_last=True, is_yes=False)
-			#
-			# 		print("Entring the atomic method for option " + option.name)
-			# 		overwrite_price(current_price_yes)
-			# 		overwrite_price(current_price_no)
-			#
-			# else:  #  Multiple exclusive markets
-			# 	print("Market is exclusive multiple")
-

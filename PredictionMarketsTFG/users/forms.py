@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
 from .models import User, VerifyRequest
 from mercados_de_prediccion_project.validators import validate_date_is_past, validate_file_image_extension
+from mercados_de_prediccion_project import default_pictures
 import json
 import base64
 import os
@@ -62,7 +63,7 @@ class VerifyForm(forms.ModelForm):
 class SignupForm(UserCreationForm):
 	first_name = forms.CharField(label=_("First name"), max_length=30, required=True, widget=forms.TextInput(attrs={}))
 	last_name = forms.CharField(label=_("Last name"), max_length=60, required=True, widget=forms.TextInput(attrs={}))
-	alias = forms.CharField(label=_("Alias"), help_text=_("The nickname by which they will know you. Must be unique."),
+	alias = forms.CharField(label=_("Alias"), help_text=_("The nickname by which they will know you."),
 	                        max_length=30, required=True, widget=forms.TextInput(attrs={}))
 	email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.',
 	                         widget=forms.EmailInput(attrs={'autofocus': None}))
@@ -89,9 +90,7 @@ class SignupForm(UserCreationForm):
 		user.date_of_birth = self.cleaned_data['date_of_birth']
 		picture = self.cleaned_data['picture']
 		if not picture:
-			user.picture = \
-			json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_user_img.json')))[
-				"data"]
+			user.picture = default_pictures.DEFAULT_USER_PICTURE
 		else:
 			if isinstance(picture, str):
 				user.picture = picture
@@ -106,7 +105,7 @@ class SignupForm(UserCreationForm):
 class EditProfileForm(forms.ModelForm):
 	first_name = forms.CharField(label=_("First name"), max_length=30, required=True)
 	last_name = forms.CharField(label=_("Last name"), max_length=60, required=True)
-	alias = forms.CharField(label=_("Alias"), help_text=_("The nickname by which they will know you. Must be unique."),
+	alias = forms.CharField(label=_("Alias"), help_text=_("The nickname by which they will know you."),
 	                        max_length=30, required=True)
 	date_of_birth = forms.DateField(label=_("Date of birth"))
 	biography = forms.CharField(max_length=300, required=False,
