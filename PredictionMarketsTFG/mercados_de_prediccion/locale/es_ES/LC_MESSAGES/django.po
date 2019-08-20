@@ -222,7 +222,7 @@ msgstr "Debe estar logueado como Admin."
 #: mercados_de_prediccion/views.py:127
 #: templates/community/list_communities.html:151
 msgid "You must have more than 2000 Karma or be verified"
-msgstr "Debes tener más de 200 Karma o ser verificado"
+msgstr "Debes tener más de 2000 Karma o ser verificado"
 
 #: mercados_de_prediccion/views.py:155
 msgid "You cannot edit this community."
@@ -648,7 +648,7 @@ msgstr "Puedes apostar en este mercado hasta el"
 
 #: templates/community/list_communities.html:15
 msgid "My created communities"
-msgstr ""
+msgstr "Mis comunidades creadas"
 
 #: templates/community/list_communities.html:146
 msgid ""
