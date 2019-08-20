@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+{% load widget_tweaks %}
 
 <head>
     <title>{% block title %}{% trans "Markets" %}{% endblock %}</title>
@@ -32,18 +33,82 @@
         {% endif %}
     </div>
 
+    <div class="row">
+        <div class="col-sm">
+            <nav aria-label="Pagination">
+                <ul class="pagination">
+                    {% if markets.has_previous %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ markets.previous_page_number }}">&laquo;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                    {% endif %}
+
+                    {% for page_num in markets.paginator.page_range %}
+                        {% if markets.number == page_num %}
+                            <li class="page-item active"><span class="page-link">{{ page_num }} <span
+                                    class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if markets.has_next %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ markets.next_page_number }}">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+
+        <div class="col-sm">
+            <form action="{% url 'markets' %}" method="get">
+                <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
+                    <div class="input-group">
+                        {{ search_form.keyword }}
+                        <div class="input-group-append">
+                            <a href="{% url 'markets' %}">
+                                <button type="button" class="btn btn-link text-primary">
+                                    <img src="{% static 'img/icons/uncheck.png' %}" style="max-height: 22px;">
+                                </button>
+                            </a>
+                            <button id="button-addon1" type="submit" class="btn btn-link text-primary">
+                                <img src="{% static 'img/icons/search.png' %}" style="max-height: 25px;">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% if user.is_staff or user_verified %}
+            <div class="col-sm">
+                <div class="float-right">
+                    <a href="{% url 'create_market' %}">
+                        <button type="button" class="btn btn-primary">
+                            {% blocktrans %}Create market{% endblocktrans %}
+                        </button>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
     <div class="album py-5 bg-light">
         <div class="container">
             <div class="row">
                 {% for market in markets %}
                     <div class="col-md-4">
                         <div class="card mb-4 box-shadow" data-expired="{{ market.has_expired }}">
-                            <a href="/market/?marketId={{ market.id }}">
+                            <a href="/market/{{ market.id }}/{{ market.slug }}">
                                 <img class="card-img-top" alt="{{ market.title }}"
                                      src="data:image/png;base64,{{ market.picture }}" data-holder-rendered="true">
                             </a>
                             <div class="card-body">
-                                <a href="/market/?marketId={{ market.id }}" style="color:#123C69;">
+                                <a href="/market/{{ market.id }}/{{ market.slug }}" style="color:#123C69;">
                                     <p class="card-text">
                                         <strong>{{ market.title }}</strong>
                                     </p></a>
@@ -60,7 +125,7 @@
                                         <img src="{% static 'img/icons/community.png' %}"
                                              title="{% trans "Community" %}"
                                              alt="{% trans "Community" %}" style="max-height: 25px;">
-                                        <a href="/community/?communityId={{ market.community.pk }}"
+                                        <a href="/community/{{ market.community.pk }}/{{ market.community.slug }}"
                                            style="color:unset;">
                                             {{ market.community.name }}</a>
                                     </small>
@@ -85,12 +150,13 @@
                                         </small>
                                     {% endif %}
                                     {% if user == market.creator %}
-                                        <a href='/market/edit/?marketId={{ market.id }}'
+                                        <a href='/market/edit/{{ market.id }}/{{ market.slug }}'
                                            class="btn btn-warning"
                                            role="button">
                                             <img src="{% static 'img/icons/edit.png' %}"
                                                  title="{% trans "Edit" %}"
-                                                 alt="{% trans "Edit" %}" style="max-height: 25px;"> {% trans "Edit" %}</a>
+                                                 alt="{% trans "Edit" %}" style="max-height: 25px;"> {% trans "Edit" %}
+                                        </a>
                                     {% endif %}
                                 </div>
                             </div>

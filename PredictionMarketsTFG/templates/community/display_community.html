@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+{% load intspace %}
 
 <head>
     <title>{% block title %}{{ community.name }}{% endblock %}</title>
@@ -32,8 +33,9 @@
                     <div class="row">
                         <div class="col text-muted">
                             {% blocktrans %}Created by{% endblocktrans %}
-                            <a href="/user/?userId={{ community.moderator.pk }}">
-                                {{ community.moderator.first_name }} {{ community.moderator.last_name }}</a>
+                            <a href="/user/{{ community.moderator.pk }}/{{ community.moderator.slug }}">
+                                {{ community.moderator.first_name }} {{ community.moderator.last_name }}
+                                ({{ community.moderator.alias }})</a>
                             {% trans "on" %} {{ community.creation_date |date }}
                             <p>
                                 {{ community.joinedcommunity_accepted_set.count }}
@@ -56,14 +58,20 @@
                             </h2>
                         </div>
                         <div class="col">
-                            <a href='/community/members/?communityId={{ community.id }}'
+                            <a href='/community/members/{{ community.id }}/{{ community.slug }}'
                                class="btn btn-info btn-block text-left">
                                 <img src="{% static 'img/icons/users.png' %}" alt="Members"
                                      style="max-height: 25px;"/> {% trans "Members" %}</a>
-                            <a href='/community/edit/?communityId={{ community.id }}'
+                            <a href='/community/edit/{{ community.id }}/{{ community.slug }}'
                                class="btn btn-warning btn-block text-left">
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
                                      style="max-height: 25px;"/> {% trans "Edit" %}</a>
+                            {% if not community.is_visible %}
+                                <a href='/community/edit/{{ community.id }}/{{ community.slug }}'
+                                   class="btn btn-warning btn-block text-left">
+                                    <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
+                                         style="max-height: 25px;"/> {% trans "Get link to join" %}</a>
+                            {% endif %}
                         </div>
                     </div>
                 {% endif %}
@@ -94,14 +102,36 @@
                             <img src="{% static 'img/icons/users.png' %}" alt="Users" style="max-height: 25px;">
                             {% trans "Members:" %}
                         </h2>
-                        <div>
-                            <ul>
-                                {% for joined_community in community.joinedcommunity_accepted_set.all %}
-                                    <li><a href="/user/?userId={{ joined_community.user.pk }}">
-                                        {{ joined_community.user.first_name }} {{ joined_community.user.last_name }}</a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
+                        <div class="album bg-light" style="margin-bottom: 1rem">
+                            <div class="container">
+                                <div class="row">
+                                    {% for joined_community in community.joinedcommunity_accepted_ordered_set.all %}
+                                        <div class="col-md-12">
+                                            <div class='card mb-4 box-shadow'>
+                                                <a href="/user/{{ joined_community.user.pk }}/{{ joined_community.user.slug }}">
+                                                    <img class='card-img-top img-thumbnail img-related-market'
+                                                         alt="{{ joined_community.user.first_name }} {{ joined_community.user.last_name }}"
+                                                         src="data:image/png;base64,{{ joined_community.user.picture }}"
+                                                         data-holder-rendered="true">
+                                                </a>
+                                                <div class="card-body">
+                                                    <p class="card-text">
+                                                        <a href="/user/{{ joined_community.user.pk }}/{{ joined_community.user.slug }}"
+                                                           class="text-blue">
+                                                            {% if joined_community.user.alias == "" %}
+                                                                <strong>{{ joined_community.user.first_name }}</strong>
+                                                            {% else %}
+                                                                <strong>{{ joined_community.user.alias }}</strong>
+                                                            {% endif %}
+                                                        </a>
+                                                        <span class="text-red">{{ joined_community.private_karma }} Karma</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -119,13 +149,13 @@
                 <div class="col">
                     <div class="float-right">
                         {% if community.moderator == user %}
-                            <a href="/market/create/?communityId={{ community.pk }}">
+                            <a href="/market/create/{{ community.pk }}/{{ community.slug }}">
                                 <button type="button" class="btn btn-primary">
                                     {% blocktrans %}Create market{% endblocktrans %}
                                 </button>
                             </a>
                         {% elif not user_has_requested %}
-                            <a href="/community/request-join/?communityId={{ community.pk }}">
+                            <a href="/community/request-join/{{ community.pk }}/{{ community.slug }}">
                                 <button type="button" class="btn btn-primary">
                                     {% blocktrans %}Join community{% endblocktrans %}
                                 </button>
@@ -150,7 +180,7 @@
                                      alt="">
                                 <div>
                                     {% if user_is_accepted %}
-                                        <a href="/market/?marketId={{ market.id }}">
+                                        <a href="/market/{{ market.id }}/{{ market.slug }}">
                                             <h2 class="text-blue">{{ market.title }}</h2>
                                         </a>
                                     {% else %}
@@ -179,4 +209,24 @@
     </div>
 
 
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        {% if user_is_accepted %}
+            $(document).ready(function () {
+                const selector = $('#private-karma-block');
+                const private_karma = '{{ private_karma }}';
+                let msg = '';
+                {% get_current_language as LANGUAGE %}
+                {% if LANGUAGE == "es" %}
+                    msg = "{% intspace_dot private_karma %} Karma en esta comunidad";
+                {% else %}
+                    msg = "{% intspace_comma private_karma %} Karma in this community";
+                {% endif %}
+                selector.text(msg);
+                selector.removeAttr('hidden');
+            });
+        {% endif %}
+    </script>
 {% endblock %}

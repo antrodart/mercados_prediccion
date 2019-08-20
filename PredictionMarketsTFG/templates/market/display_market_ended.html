@@ -3,6 +3,7 @@
 {% load static %}
 {% load widget_tweaks %}
 {% load assets_by_option_user %}
+{% load intspace %}
 
 <head>
     <title>{% block title %}{{ market.title }}{% endblock %}</title>
@@ -34,7 +35,19 @@
                     <div class="row">
                         <div class="col text-muted">
                             {% blocktrans %}Created by{% endblocktrans %}
-                            <a href="/user/?userId={{ market.creator.pk }}">{{ market.creator.first_name }} {{ market.creator.last_name }}</a>
+                            <a href="/user/{{ market.creator.pk }}/{{ market.creator.slug }}">{{ market.creator.alias }}
+                                {% if market.creator.is_verified %}
+                                    <img src="{% static 'img/icons/verified-green.png' %}"
+                                         alt="{% trans "Verified user" %}"
+                                         title="{% trans "Verified user" %}"
+                                         style="max-height: 20px;">
+                                {% elif market.creator.is_staff %}
+                                    <img src="{% static 'img/icons/crown.png' %}"
+                                         alt="{% trans "User is staff" %}"
+                                         title="{% trans "User is staff" %}"
+                                         style="max-height: 20px;">
+                                {% endif %}
+                            </a>
                             {% trans "on" %} {{ market.creation_date |date }}
                             <p>
                                 {{ assets_number }}
@@ -44,6 +57,23 @@
                                     {% trans "assets sold" %}.
                                 {% endif %}
                             </p>
+                            {% if market.community %}
+                                <h4 class="market-not-public">
+                                    <img src="{% static 'img/icons/communities.png' %}"
+                                         title="{% trans "Community" %}"
+                                         alt="{% trans "Community" %}" style="max-height: 40px;">
+                                    <a href="/community/{{ market.community.pk }}/{{ market.community.slug }}"
+                                       style="color:unset;">
+                                        {{ market.community.name }}</a>
+                                </h4>
+                            {% else %}
+                                <h4 class="market-public">
+                                    <img src="{% static 'img/icons/unlock.png' %}"
+                                         title="{% trans "Public" %}"
+                                         alt="{% trans "Public" %}"
+                                         style="max-height: 40px;">{% trans "Public market" %}
+                                </h4>
+                            {% endif %}
                             <h4 class="text-incorrect">
                                 <img src="{% static 'img/icons/forbidden.png' %}"
                                      title="{% trans "Market ended" %}"
@@ -63,7 +93,7 @@
                             </h2>
                         </div>
                         <div class="col">
-                            <a href='/market/edit/?marketId={{ market.id }}'
+                            <a href='/market/edit/{{ market.id }}/{{ market.slug }}'
                                class="btn btn-warning btn-block text-left">
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
                                      style="max-height: 25px;"/> {% trans "Edit market" %}</a>
@@ -156,11 +186,11 @@
                                                 {% if option.is_correct %}
                                                     <img src="{% static 'img/icons/correct.png' %}" alt="Correct"
                                                          style="max-height: 30px;"/>
-                                                    <span class="text-correct" ><strong>{% trans "Correct option" %}</strong></span>
+                                                    <span class="text-correct"><strong>{% trans "Correct option" %}</strong></span>
                                                 {% else %}
                                                     <img src="{% static 'img/icons/incorrect.png' %}" alt="Incorrect"
                                                          style="max-height: 30px;"/>
-                                                    <span class="text-incorrect" ><strong>{% trans "Incorrect option" %}</strong></span>
+                                                    <span class="text-incorrect"><strong>{% trans "Incorrect option" %}</strong></span>
                                                 {% endif %}
                                             {% else %}
                                                 {% trans "The market hasn't been judged yet." %}
@@ -206,8 +236,8 @@
                                             <div class="col-md-2 mx-auto my-auto">
                                                 <h5 class="text-blue">{{ option.name }}</h5>
                                             </div>
-                                             <div class="col-md-3 mx-auto my-auto">
-                                                 {% trans "Final price" %}: <strong>{{ YES_PRICE }} karma</strong>
+                                            <div class="col-md-3 mx-auto my-auto">
+                                                {% trans "Final price" %}: <strong>{{ YES_PRICE }} karma</strong>
                                             </div>
                                             <div class="col-md-3 mx-auto my-auto">
                                                 {% if market.is_judged %}
@@ -327,16 +357,15 @@
                     for (var i = 0; i < returnedData.length; i++) {
                         list_html += "<div class='col-md-12'>";
                         list_html += "<div class='card mb-4 box-shadow'>";
-                        list_html += "<a href='/market/?marketId=" + returnedData[i].id + "'>";
-                        list_html += "<img class='card-img-top img-thumbnail'";
+                        list_html += "<a href='/market/" + returnedData[i].id + "/" + returnedData[i].slug + "'>";
+                        list_html += "<img class='card-img-top img-thumbnail img-related-market'";
                         list_html += "alt='" + returnedData[i].title + "'";
-                        list_html += "class='img-related-market'";
                         list_html += "src='data:image/png;base64," + returnedData[i].picture + "'";
                         list_html += "data-holder-rendered='true'>";
                         list_html += "</a>";
                         list_html += "<div class='card-body'>";
                         list_html += "<p class='card-text'>";
-                        list_html += "<a href='/market/?marketId=" + returnedData[i].id + "'";
+                        list_html += "<a href='/market/" + returnedData[i].id + "/" + returnedData[i].slug + "'";
                         list_html += " class='text-blue'><strong>" + returnedData[i].title + "</strong></a>";
                         list_html += "</p></div></div></div>";
                     }
@@ -347,5 +376,21 @@
             });
             return false;
         });
+    </script>
+    <script type="text/javascript">
+        {% if market.community %}
+            $(document).ready(function () {
+                const selector = $('#private-karma-block');
+                let msg = '';
+                {% get_current_language as LANGUAGE %}
+                {% if LANGUAGE == "es" %}
+                    msg = "{% intspace_dot user_karma %} Karma en esta comunidad";
+                {% else %}
+                    msg = "{% intspace_comma user_karma %} Karma in this community";
+                {% endif %}
+                selector.text(msg);
+                selector.removeAttr('hidden');
+            });
+        {% endif %}
     </script>
 {% endblock %}

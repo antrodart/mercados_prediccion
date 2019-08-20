@@ -7,15 +7,33 @@
 </head>
 
 {% block content %}
-    <div class="col-md-6 mx-auto text-center top-buffer">
-        <div class="header-title">
-            <h1 class="wv-heading--title">
-                {% blocktrans %}Past bets{% endblocktrans %}
-            </h1>
-            <span class="text-muted">
-                {% trans "Only displaying assets bought from markets that you and" %} {{ user_past_bets.first_name }} {% trans "both have access" %}.
-                {% trans "This includes public markets" %}.
-            </span>
+
+    <div class="row top-buffer"> {% comment %}Top buffer adds 20px for top margin{% endcomment %}
+        <div class="col-md-3">
+            <img class="img-fluid img-thumbnail img-header" alt="{{ user_past_bets.first_name }}"
+                 title="{{ user_past_bets.first_name }}"
+                 src="data:image/png;base64,{{ user_past_bets.picture }}" data-holder-rendered="true">
+        </div>
+        <div class="col-md-9 my-auto"> {% comment %}Puts column and text in the center{% endcomment %}
+            <div class="row text-center">
+                <div class="col-md">
+                    <div class="row">
+                        <div class="col">
+                            <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
+                                <h3 class="text-blue" style="overflow-wrap: break-word;">
+                                    {% trans "Betting history of" %} {{ user_past_bets.first_name }} {{ user_past_bets.last_name }}
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-muted text-center">
+                            {% trans "Only displaying assets bought from markets that you and" %} {{ user_past_bets.first_name }} {% trans "both have access" %}.
+                            {% trans "This includes public markets" %}.
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <hr>
@@ -27,35 +45,40 @@
                         <h2 class="text-red">
                             <img src="{% static 'img/icons/communities.png' %}" alt="Communities"
                                  style="max-height: 25px;">
-                            {% trans "Communities in common:" %}
+                            {% trans "Communities in common" %}:
                         </h2>
                     </div>
-                    <div class="album bg-light" style="margin-bottom: 1rem">
-                        <div class="container">
-                            <div class="row">
-                                {% for community in communities %}
-                                    <div class="col-md-12">
-                                        <div class='card mb-4 box-shadow'>
-                                            <a href="/community/?communityId={{ community.id }}">
-                                                <img class='card-img-top img-thumbnail img-related-market'
-                                                     alt="{{ community.title }}"
-                                                     src="data:image/png;base64,{{ community.picture }}"
-                                                     data-holder-rendered="true">
-                                            </a>
-                                            <div class="card-body">
-                                                <p class="card-text">
-                                                    <a href="/community/?communityId={{ community.id }}"
-                                                       class="text-blue">
-                                                        <strong>{{ community.name }}</strong>
-                                                    </a>
-                                                </p>
+                    {% if communities.count == 0 %}
+                        <p class="text-muted">{% blocktrans %}You don't have any community in common with
+                            {{ user_past_bets.first_name }}{% endblocktrans %}</p>
+                    {% else %}
+                        <div class="album bg-light" style="margin-bottom: 1rem">
+                            <div class="container">
+                                <div class="row">
+                                    {% for community in communities %}
+                                        <div class="col-md-12">
+                                            <div class='card mb-4 box-shadow'>
+                                                <a href="/community/{{ community.id }}/{{ community.slug }}">
+                                                    <img class='card-img-top img-thumbnail img-related-market'
+                                                         alt="{{ community.title }}"
+                                                         src="data:image/png;base64,{{ community.picture }}"
+                                                         data-holder-rendered="true">
+                                                </a>
+                                                <div class="card-body">
+                                                    <p class="card-text">
+                                                        <a href="/community/{{ community.id }}/{{ community.slug }}"
+                                                           class="text-blue">
+                                                            <strong>{{ community.name }}</strong>
+                                                        </a>
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                {% endfor %}
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -69,11 +92,11 @@
                 </div>
                 <div class="col">
                     <div class="float-right">
-                        <a href="/user/?userId={{ user_past_bets.pk }}">
-                                <button type="button" class="btn btn-secondary">
-                                    {% blocktrans %}Back to user profile{% endblocktrans %}
-                                </button>
-                            </a>
+                        <a href="/user/{{ user_past_bets.pk }}/{{ user_past_bets.slug }}">
+                            <button type="button" class="btn btn-secondary">
+                                {% blocktrans %}Back to user profile{% endblocktrans %}
+                            </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -84,12 +107,13 @@
                     {% else %}
                         {% for asset in assets %}
                             <div class="block" data-judged="True" data-correct="{{ asset.option.is_correct }}"
-                                 data-binary="{{ asset.market.is_binary }}" data-exclusive="{{ asset.market.is_exclusive }}"
+                                 data-binary="{{ asset.market.is_binary }}"
+                                 data-exclusive="{{ asset.market.is_exclusive }}"
                                  data-yes="{{ asset.is_yes }}">
                                 <div class="row">
                                     <div class="col-md-6 mx-auto my-auto">
                                         <h5 class="text-blue">
-                                            <a href="/market/?marketId={{ asset.market.pk }}"
+                                            <a href="/market/{{ asset.market.pk }}/{{ asset.market.slug }}"
                                                class="text-blue">{{ asset.market.title }}</a>
                                         </h5>
                                     </div>
@@ -113,6 +137,39 @@
                             </div>
                         {% endfor %}
                     {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <nav aria-label="Pagination">
+                        <ul class="pagination">
+                            {% if assets.has_previous %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?page={{ assets.previous_page_number }}">&laquo;</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                            {% endif %}
+
+                            {% for page_num in assets.paginator.page_range %}
+                                {% if assets.number == page_num %}
+                                    <li class="page-item active"><span class="page-link">{{ page_num }} <span
+                                            class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link"
+                                                             href="?page={{ page_num }}">{{ page_num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if assets.has_next %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?page={{ assets.next_page_number }}">&raquo;</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>

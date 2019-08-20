@@ -3,6 +3,7 @@
 {% load static %}
 {% load widget_tweaks %}
 {% load assets_by_option_user %}
+{% load intspace %}
 
 <head>
     <title>{% block title %}{{ market.title }}{% endblock %}</title>
@@ -33,7 +34,20 @@
                     </div>
                     <div class="row">
                         <div class="col text-muted">
-                            {% blocktrans %}Created by{% endblocktrans %} {{ market.creator }}
+                            {% blocktrans %}Created by{% endblocktrans %}
+                            <a href="/user/{{ market.creator.pk }}/{{ market.creator.slug }}">{{ market.creator.alias }}
+                                {% if market.creator.is_verified %}
+                                    <img src="{% static 'img/icons/verified-green.png' %}"
+                                         alt="{% trans "Verified user" %}"
+                                         title="{% trans "Verified user" %}"
+                                         style="max-height: 20px;">
+                                {% elif market.creator.is_staff %}
+                                    <img src="{% static 'img/icons/crown.png' %}"
+                                         alt="{% trans "User is staff" %}"
+                                         title="{% trans "User is staff" %}"
+                                         style="max-height: 20px;">
+                                {% endif %}
+                            </a>
                             {% trans "on" %} {{ market.creation_date |date }}
                             <p>
                                 {{ assets_number }}
@@ -43,16 +57,28 @@
                                     {% trans "assets sold" %}.
                                 {% endif %}
                             </p>
+                            {% if market.community %}
+                                <h4 class="market-not-public">
+                                    <img src="{% static 'img/icons/communities.png' %}"
+                                         title="{% trans "Community" %}"
+                                         alt="{% trans "Community" %}" style="max-height: 40px;">
+                                    <a href="/community/{{ market.community.pk }}/{{ market.community.slug }}"
+                                       style="color:unset;">
+                                        {{ market.community.name }}</a>
+                                </h4>
+                            {% else %}
+                                <h4 class="market-public">
+                                    <img src="{% static 'img/icons/unlock.png' %}"
+                                         title="{% trans "Public" %}"
+                                         alt="{% trans "Public" %}"
+                                         style="max-height: 40px;">{% trans "Public market" %}
+                                </h4>
+                            {% endif %}
                             <h4>
-                                {% if market.has_expired %}
-                                    <img src="{% static 'img/icons/forbidden.png' %}"
-                                             title="{% trans "Market ended" %}"
-                                             alt="{% trans "Market ended" %}" style="max-height: 40px;"> {% trans "This market ended on" %} {{ market.end_date |date }}
-                                {% else %}
-                                    <img src="{% static 'img/icons/finish-flag.png' %}"
-                                             title="{% trans "End date" %}"
-                                             alt="{% trans "End date" %}" style="max-height: 40px;"> {% trans "Ending date" %}: {{ market.end_date |date }}
-                                {% endif %}
+                                <img src="{% static 'img/icons/finish-flag.png' %}"
+                                     title="{% trans "End date" %}"
+                                     alt="{% trans "End date" %}" style="max-height: 40px;">
+                                {% trans "Ending date" %}: {{ market.end_date |date }}
                             </h4>
                         </div>
                     </div>
@@ -67,7 +93,7 @@
                             </h2>
                         </div>
                         <div class="col">
-                            <a href='/market/edit/?marketId={{ market.id }}'
+                            <a href='/market/edit/{{ market.id }}/{{ market.slug }}'
                                class="btn btn-warning btn-block text-left">
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
                                      style="max-height: 25px;"/> {% trans "Edit market" %}</a>
@@ -306,8 +332,69 @@
                          class="col-md-2 mx-auto my-auto text-center padding-top-bottom"></div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col">
+                    <h2 class="text-red" style="margin-bottom: 1rem">
+                        <img src="{% static 'img/icons/markets.png' %}" alt="Contracts" style="max-height: 25px;">
+                        {% trans "Comments" %}:
+                    </h2>
+                </div>
+            </div>
+            {% if user.is_authenticated %}
+                <div class="row">
+                    <div class="col">
+                        <div class="widget-area no-padding blank">
+                            <div class="status-upload">
+                                <form action="/market/{{ market.pk }}/{{ market.slug }}" method="post">
+                                    {% csrf_token %}
+                                    {{ comment_form.body }}
+                                    <button type="submit" class="btn btn-warning text-left"><i
+                                            class="fa fa-comment"></i>{% trans "Share" %}
+                                    </button>
+                                </form>
+                            </div><!-- Status Upload  -->
+                        </div><!-- Widget Area -->
+                    </div>
+                </div>
+                <br/>
+            {% endif %}
+            <div class="row">
+                <div class="col">
+                    {% for comment in market.get_comments.all %}
+                        <div class="block">
+                            <img class="img-fluid img-thumbnail"
+                                 src="data:image/png;base64,{{ comment.author.picture }}"
+                                 alt="">
+                            <div>
+                                <p>
+                                    <a href="/user/{{ comment.author.id }}/{{ comment.author.slug }}">
+                                        {% if comment.author.alias %}
+                                            {{ comment.author.alias }}
+                                        {% else %}
+                                            {{ comment.author.first_name }} {{ comment.author.last_name }}
+                                        {% endif %}
+                                    </a> {% trans "commented on" %} {{ comment.moment }}
+                                    {% if user == comment.author %}
+                                        <a href="/delete-comment/{{ comment.pk }}"
+                                           onclick="return deleteCommentConfirm()">
+                                            <img src="{% static 'img/icons/delete-comment.png' %}"
+                                                 alt="{% trans "Delete comment" %}" title="{% trans "Delete comment" %}"
+                                                 style="max-height: 25px;">
+                                        </a>
+                                    {% endif %}
+                                </p>
+                                <p>
+                                    {{ comment.body }}
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
+
+
     <!-- Modal -->
     <div class="modal fade" id="binaryMarketsModal" tabindex="-1"
          role="dialog" aria-labelledby="binaryMarketsModalLabel"
@@ -331,16 +418,23 @@
                     <p><span id="body-option-benefits"></span></p>
                 </div>
                 <div class="modal-footer">
-                    <p hidden id="body-no-karma" class="text-danger">{% trans "You don't have enough karma" %}.</p>
+                    {% if user.is_authenticated %}
+                        <p hidden id="body-no-karma" class="text-danger">{% trans "You don't have enough karma" %}.</p>
+                    {% else %}
+                        <p hidden id="body-no-karma"
+                           class="text-danger">{% trans "You must be logged in order to buy assets" %}.</p>
+                    {% endif %}
                     <button type="button" class="btn btn-secondary"
                             data-dismiss="modal">{% trans "Close" %}
                     </button>
-                    <button type="submit" class="btn btn-primary"
-                            id="buysubmit">
-                        <img src="{% static 'img/icons/buy.png' %}"
-                             alt="Buy" style="max-height: 25px;"/>
-                        {% trans "Buy" %}
-                    </button>
+                    {% if user.is_authenticated %}
+                        <button type="submit" class="btn btn-primary"
+                                id="buysubmit">
+                            <img src="{% static 'img/icons/buy.png' %}"
+                                 alt="Buy" style="max-height: 25px;"/>
+                            {% trans "Buy" %}
+                        </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -360,6 +454,12 @@
             let asset_price;
             if (binary) {
                 asset_price = button.data('assetprice');
+                {% get_current_language as LANGUAGE %}
+                {% if LANGUAGE == "es" %}
+                    if (option_name === "Yes") {
+                        option_name = "Sí";
+                    }
+                {% endif %}
             } else {
                 let checkbox_id = button.data('checkboxid');
                 const yes_case = $('#' + checkbox_id).is(":checked");
@@ -481,7 +581,7 @@
                     for (var i = 0; i < returnedData.length; i++) {
                         list_html += "<div class='col-md-12'>";
                         list_html += "<div class='card mb-4 box-shadow'>";
-                        list_html += "<a href='/market/?marketId=" + returnedData[i].id + "'>";
+                        list_html += "<a href='/market/" + returnedData[i].id + "/" + returnedData[i].slug + "'>";
                         list_html += "<img class='card-img-top img-thumbnail img-related-market'";
                         list_html += "alt='" + returnedData[i].title + "'";
                         list_html += "src='data:image/png;base64," + returnedData[i].picture + "'";
@@ -489,7 +589,7 @@
                         list_html += "</a>";
                         list_html += "<div class='card-body'>";
                         list_html += "<p class='card-text'>";
-                        list_html += "<a href='/market/?marketId=" + returnedData[i].id + "'";
+                        list_html += "<a href='/market/" + returnedData[i].id + "/" + returnedData[i].slug + "'";
                         list_html += " class='text-blue'><strong>" + returnedData[i].title + "</strong></a>";
                         list_html += "</p></div></div></div>";
                     }
@@ -500,5 +600,32 @@
             });
             return false;
         });
+    </script>
+    <script type="text/javascript">
+        {% if market.community %}
+            $(document).ready(function () {
+                const selector = $('#private-karma-block');
+                let msg = '';
+                {% get_current_language as LANGUAGE %}
+                {% if LANGUAGE == "es" %}
+                    msg = "{% intspace_dot user_karma %} Karma en esta comunidad";
+                {% else %}
+                    msg = "{% intspace_comma user_karma %} Karma in this community";
+                {% endif %}
+                selector.text(msg);
+                selector.removeAttr('hidden');
+            });
+        {% endif %}
+    </script>
+    <script>
+        function deleteCommentConfirm() {
+            {% get_current_language as CURRENT_LANGUAGE %}
+            {% if CURRENT_LANGUAGE == "en" %}
+                var result = confirm("Are you sure you want to delete this comment?");
+            {% else %}
+                var result = confirm("¿Estás seguro de que quieres borrar este comentario?");
+            {% endif %}
+            return result;
+        }
     </script>
 {% endblock %}

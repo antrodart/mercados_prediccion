@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+{% load intspace %}
 
 <head>
     <title>{% block title %}{{ user_profile.first_name }} {{ user_profile.last_name }}{% endblock %}</title>
@@ -21,8 +22,8 @@
                                 <h1 class="text-blue">{{ user_profile.first_name }} {{ user_profile.last_name }}
                                     {% if user_profile.is_verified %}
                                         <img src="{% static 'img/icons/verified-green.png' %}"
-                                             alt="{% trans "User is verified" %}"
-                                             title="{% trans "User is verified" %}"
+                                             alt="{% trans "Verified user" %}"
+                                             title="{% trans "Verified user" %}"
                                              style="max-height: 40px;">
                                     {% elif user_profile.is_staff %}
                                         <img src="{% static 'img/icons/crown.png' %}"
@@ -31,14 +32,19 @@
                                              style="max-height: 40px;">
                                     {% endif %}
                                 </h1>
+                                <h2 class="text-blue">{{ user_profile.alias }}<span
+                                        class="text-red"> {% get_current_language as LANGUAGE %}
+                                    {% if LANGUAGE == "es" %}
+                                        {% intspace_dot user_profile.public_karma %}
+                                    {% else %}
+                                        {% intspace_comma user_profile.public_karma %}
+                                    {% endif %}
+                                    {% trans "public Karma" %}</span></h2>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col text-muted">
-                            <h4 class="text-red">
-                                {{ user_profile.public_karma }} {% trans "public Karma" %}
-                            </h4>
                             {% if user_profile.biography %}
                                 {{ user_profile.biography }}<br/>
                             {% endif %}
@@ -46,7 +52,8 @@
                             {% if user_profile.date_of_birth %}
                                 {% trans "Date of birth" %}: {{ user_profile.date_of_birth }}<br/>
                             {% endif %}
-                            {% blocktrans %}Joined on{% endblocktrans %} {{ user_profile.date_joined|date }}.
+                            {% blocktrans %}Joined on{% endblocktrans %} {{ user_profile.date_joined|date }}.<br/>
+                            <a href="/user/export">{% trans "Export my data" %}</a>
                         </div>
                         {% if user_profile.deletion_date %}
                             <div class="alert alert-danger" role="alert">
@@ -66,19 +73,19 @@
                         </h2>
                     </div>
                     <div class="col">
-                        <a href='/bets/{{ user_profile.pk }}'
+                        <a href='/bets/{{ user_profile.pk }}/{{ user_profile.slug }}'
                            class="btn btn-info btn-block text-left">
                             <img src="{% static 'img/icons/moneybox.png' %}" alt="Bets"
-                                 style="max-height: 25px;"/> {% trans "Past bets" %}</a>
+                                 style="max-height: 20px;"/> {% trans "Bet history" %}</a>
                         {% if user == user_profile %}
                             <a href='/user/edit/'
                                class="btn btn-warning btn-block text-left">
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
                                      style="max-height: 25px;"/> {% trans "Edit profile" %}</a>
-                            <a href='/user/export/'
-                               class="btn btn-info btn-block text-left">
-                                <img src="{% static 'img/icons/export.png' %}" alt="Export"
-                                     style="max-height: 25px;"/> {% trans "Export data" %}</a>
+                            <a href='/user/password/'
+                               class="btn btn-secondary btn-block text-left">
+                                <img src="{% static 'img/icons/password.png' %}" alt="Password"
+                                     style="max-height: 25px;"/> {% trans "Change password" %}</a>
                         {% endif %}
                     </div>
                 </div>
@@ -106,7 +113,7 @@
                                     {% for community in created_communities %}
                                         <div class="col-md-12">
                                             <div class='card mb-4 box-shadow'>
-                                                <a href="/community/?communityId={{ community.id }}">
+                                                <a href="/community/{{ community.id }}/{{ community.slug }}">
                                                     <img class='card-img-top img-thumbnail img-related-market'
                                                          alt="{{ community.title }}"
                                                          src="data:image/png;base64,{{ community.picture }}"
@@ -114,7 +121,7 @@
                                                 </a>
                                                 <div class="card-body">
                                                     <p class="card-text">
-                                                        <a href="/community/?communityId={{ community.id }}"
+                                                        <a href="/community/{{ community.id }}/{{ community.slug }}"
                                                            class="text-blue">
                                                             <strong>{{ community.name }}</strong>
                                                         </a>
@@ -146,7 +153,7 @@
                                         {% if joined_community.community.is_visible or user_profile == user %}
                                             <div class="col-md-12">
                                                 <div class='card mb-4 box-shadow'>
-                                                    <a href="/community/?communityId={{ joined_community.community.id }}">
+                                                    <a href="/community/{{ joined_community.community.id }}/{{ joined_community.community.slug }}">
                                                         <img class='card-img-top img-thumbnail img-related-market'
                                                              alt="{{ joined_community.community.title }}"
                                                              src="data:image/png;base64,{{ joined_community.community.picture }}"
@@ -154,11 +161,14 @@
                                                     </a>
                                                     <div class="card-body">
                                                         <p class="card-text">
-                                                            <a href="/community/?communityId={{ joined_community.community.id }}"
+                                                            <a href="/community/{{ joined_community.community.id }}/{{ joined_community.community.slug }}"
                                                                class="text-blue">
                                                                 <strong>{{ joined_community.community.name }}</strong>
                                                             </a>
                                                         </p>
+                                                        <span class="text-red">
+                                                           {{ joined_community.private_karma }} Karma
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -192,7 +202,7 @@
                                 <div class="row">
                                     <div class="col-md-6 mx-auto my-auto">
                                         <h5 class="text-blue">
-                                            <a href="/market/?marketId={{ asset.market.pk }}"
+                                            <a href="/market/{{ asset.market.pk }}/{{ asset.market.slug }}"
                                                class="text-blue">{{ asset.market.title }}</a>
                                         </h5>
                                     </div>

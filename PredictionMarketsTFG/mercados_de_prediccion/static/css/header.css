@@ -29,9 +29,8 @@
     height: 15px;
     width: 25px;
 }
-.clicked{
-    background: #AC3B61; !important;
-    /*background: #123C69;!important;*/
+.clicked, .private-karma-block{
+    background: #AC3B61 !important;
     border-style: solid;
     border-width: 1px;
     border-color: #EEE2DC;
@@ -47,4 +46,13 @@
     width: 25px;
     border-radius: 25px;
     object-fit: cover;
+}
+
+.public-karma-block, .private-karma-block{
+    color: #FFA31A;
+    margin-right: 10px;
+}
+
+.private-karma-block{
+    padding: 8px;
 }
