@@ -4,6 +4,7 @@ from django import forms
 from django.forms.formsets import BaseFormSet
 from .models import *
 from mercados_de_prediccion_project.validators import validate_file_image_extension, validate_date_is_future
+from mercados_de_prediccion_project import default_pictures
 import os
 import json
 import base64
@@ -57,7 +58,7 @@ class CreateCommunityForm(forms.ModelForm):
 		community.moderator = self.user
 		picture = self.cleaned_data['picture']
 		if not picture:
-			community.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_community_img.json')))["data"]
+			community.picture = default_pictures.DEFAULT_COMMUNITY_PICTURE
 		else:
 			if isinstance(picture, str):
 				community.picture = picture
@@ -122,7 +123,7 @@ class CreateMarketForm(forms.ModelForm):
 		market.community = self.community
 		picture = self.cleaned_data['picture']
 		if not picture:
-			market.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_community_img.json')))["data"]
+			market.picture = default_pictures.DEFAULT_COMMUNITY_PICTURE
 		else:
 			if isinstance(picture, str):
 				market.picture = picture
@@ -154,7 +155,7 @@ class EditMarketForm(forms.ModelForm):
 		market.categories.set(self.cleaned_data['categories'])
 		picture = self.cleaned_data['picture']
 		if not picture:
-			market.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_community_img.json')))["data"]
+			market.picture = default_pictures.DEFAULT_COMMUNITY_PICTURE
 		else:
 			if isinstance(picture, str):
 				market.picture = picture

@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
 from .models import User, VerifyRequest
 from mercados_de_prediccion_project.validators import validate_date_is_past, validate_file_image_extension
+from mercados_de_prediccion_project import default_pictures
 import json
 import base64
 import os
@@ -89,9 +90,7 @@ class SignupForm(UserCreationForm):
 		user.date_of_birth = self.cleaned_data['date_of_birth']
 		picture = self.cleaned_data['picture']
 		if not picture:
-			user.picture = \
-			json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_user_img.json')))[
-				"data"]
+			user.picture = default_pictures.DEFAULT_USER_PICTURE
 		else:
 			if isinstance(picture, str):
 				user.picture = picture

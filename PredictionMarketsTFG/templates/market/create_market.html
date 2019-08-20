@@ -91,8 +91,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.picture.id_for_label }}"
-                                   class="text-info">{{ form.picture.label }}</label>
+                            <label for="{{ form.picture.id_for_label }}" class="text-info">
+                                {{ form.picture.label }}
+                                    <span class="text-muted">{% trans "(Optional)" %}</span>
+                            </label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                 <span class="input-group-text" id="inputGroupFileAddon01">
