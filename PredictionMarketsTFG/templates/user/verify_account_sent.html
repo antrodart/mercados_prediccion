@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-6 mx-auto text-center">
+            <div class="header-title">
+                <h1 class="wv-heading--title">
+                    {% blocktrans %}Request already sent{% endblocktrans %}
+                </h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <p class="text-center">
+                {% trans "You have already sent a verify account request, and must wait for it to be judged by an admin" %}.
+            </p>
+        </div>
+    </div>
+
+{% endblock %}

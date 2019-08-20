@@ -2,6 +2,8 @@
 {% load i18n %}
 {% load static %}
 {% load widget_tweaks %}
+{% load assets_by_option_user %}
+{% load intspace %}
 
 <head>
     <title>{% block title %}{{ market.title }}{% endblock %}</title>
@@ -15,8 +17,7 @@
 {% block content %}
     <div class="row top-buffer"> {% comment %}Top buffer adds 20px for top margin{% endcomment %}
         <div class="col-md-3">
-            <img class="img-fluid img-thumbnail" alt="{{ market.title }}" title="{{ market.title }}"
-                 style="max-height: 255px"
+            <img class="img-fluid img-thumbnail img-header" alt="{{ market.title }}" title="{{ market.title }}"
                  src="data:image/png;base64,{{ market.picture }}" data-holder-rendered="true">
         </div>
         <div class="col-md-9 my-auto"> {% comment %}Puts column and text in the center{% endcomment %}
@@ -25,7 +26,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
-                                <h1 style="overflow-wrap: break-word;">
+                                <h1 class="text-blue" style="overflow-wrap: break-word;">
                                     {{ market.title }}
                                 </h1>
                             </div>
@@ -33,7 +34,20 @@
                     </div>
                     <div class="row">
                         <div class="col text-muted">
-                            {% blocktrans %}Created by{% endblocktrans %} {{ market.creator }}
+                            {% blocktrans %}Created by{% endblocktrans %}
+                            <a href="/user/{{ market.creator.pk }}/{{ market.creator.slug }}">{{ market.creator.alias }}
+                                {% if market.creator.is_verified %}
+                                    <img src="{% static 'img/icons/verified-green.png' %}"
+                                         alt="{% trans "Verified user" %}"
+                                         title="{% trans "Verified user" %}"
+                                         style="max-height: 20px;">
+                                {% elif market.creator.is_staff %}
+                                    <img src="{% static 'img/icons/crown.png' %}"
+                                         alt="{% trans "User is staff" %}"
+                                         title="{% trans "User is staff" %}"
+                                         style="max-height: 20px;">
+                                {% endif %}
+                            </a>
                             {% trans "on" %} {{ market.creation_date |date }}
                             <p>
                                 {{ assets_number }}
@@ -43,22 +57,44 @@
                                     {% trans "assets sold" %}.
                                 {% endif %}
                             </p>
-                            {% blocktrans %}Ending date{% endblocktrans %}: {{ market.end_date |date }}
+                            {% if market.community %}
+                                <h4 class="market-not-public">
+                                    <img src="{% static 'img/icons/communities.png' %}"
+                                         title="{% trans "Community" %}"
+                                         alt="{% trans "Community" %}" style="max-height: 40px;">
+                                    <a href="/community/{{ market.community.pk }}/{{ market.community.slug }}"
+                                       style="color:unset;">
+                                        {{ market.community.name }}</a>
+                                </h4>
+                            {% else %}
+                                <h4 class="market-public">
+                                    <img src="{% static 'img/icons/unlock.png' %}"
+                                         title="{% trans "Public" %}"
+                                         alt="{% trans "Public" %}"
+                                         style="max-height: 40px;">{% trans "Public market" %}
+                                </h4>
+                            {% endif %}
+                            <h4>
+                                <img src="{% static 'img/icons/finish-flag.png' %}"
+                                     title="{% trans "End date" %}"
+                                     alt="{% trans "End date" %}" style="max-height: 40px;">
+                                {% trans "Ending date" %}: {{ market.end_date |date }}
+                            </h4>
                         </div>
                     </div>
                 </div>
                 {% if market.creator == user %}
                     <div class="col-md-3">
                         <div style="margin-bottom: 1rem">
-                            <h2>
+                            <h2 class="text-red">
                                 <img src="{% static 'img/icons/options-3.png' %}" alt="Options"
                                      style="max-height: 25px;">
                                 {% trans "Market options:" %}
                             </h2>
                         </div>
                         <div class="col">
-                            <a href='/market/edit/?marketId={{ market.id }}'
-                               class="btn btn-outline-danger btn-block text-left">
+                            <a href='/market/edit/{{ market.id }}/{{ market.slug }}'
+                               class="btn btn-warning btn-block text-left">
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
                                      style="max-height: 25px;"/> {% trans "Edit market" %}</a>
                         </div>
@@ -74,8 +110,8 @@
             <div class="row">
                 <div class="col">
                     <div style="margin-bottom: 1rem">
-                        <h2>
-                            <img src="{% static 'img/icons/group-rules.png' %}" alt="Description"
+                        <h2 class="text-red">
+                            <img src="{% static 'img/icons/community-rules.png' %}" alt="Description"
                                  style="max-height: 25px;">
                             {% trans "Description:" %}
                         </h2>
@@ -88,7 +124,7 @@
             <div class="row">
                 <div class="col">
                     <div class="header-title">
-                        <h2>
+                        <h2 class="text-red">
                             <img src="{% static 'img/icons/users.png' %}" alt="{% trans "Related markets" %}"
                                  style="max-height: 25px;">
                             {% trans "Related markets" %}:
@@ -96,7 +132,7 @@
                         <div class="album bg-light">
                             <div class="container">
                                 <div class="row" id="relatedMarketsContainerRowId">
-
+                                    <!-- Related markets generated by an AJAX call below -->
                                 </div>
                             </div>
                         </div>
@@ -108,7 +144,7 @@
             <hr>
             <div class="row">
                 <div class="col">
-                    <h2 style="margin-bottom: 1rem">
+                    <h2 class="text-red" style="margin-bottom: 1rem">
                         <img src="{% static 'img/icons/markets.png' %}" alt="Contracts" style="max-height: 25px;">
                         {% trans "Contracts" %}:
                     </h2>
@@ -117,44 +153,19 @@
             <div class="row">
                 <div class="col">
                     {% for option in market.option_set.all %}
-                        {% with YES_PRICE=option.get_todays_price_yes.buy_price NO_PRICE=option.get_todays_price_no.buy_price %}
-                            <script type="text/javascript">
-                                function option_benefits(divId, checkboxId, change, yes_p, no_p) {
-                                    var msg1 = "";
-                                    var msg2 = "";
-                                    var price = 100 - {{ YES_PRICE }};
-                                    if (change) {
-                                        if ($('#'+checkboxId).is(":checked")) {
-                                            price = 100 - yes_p;
-                                        } else {
-                                            price = 100 - no_p;
-                                        }
-                                    }
-                                    {% get_current_language as LANGUAGE %}
-                                    {% if LANGUAGE == "en" %}
-                                        msg1 = "You can earn";
-                                        msg2 = "karma per asset.";
-                                    {% else %}
-                                        msg1 = "Puedes ganar";
-                                        msg2 = "karma por acción.";
-                                    {% endif %}
-
-                                    var result = msg1 + " " + price + " " + msg2;
-                                    document.getElementById(divId).innerHTML = result;
-                                }
-                            </script>
-                            <div class="block">
-                                <div class="row">
-                                    {% if market.is_binary %}
+                        <div class="block">
+                            <div class="row">
+                                {% if market.is_binary %}
+                                    {% with PRICE=option.get_todays_price.buy_price %}
                                         <div class="col-md-2 mx-auto my-auto">
-                                            {% if option.name == "Yes" %}
-                                                <h4>
+                                            {% if option.binary_yes %}
+                                                <h4 class="text-blue">
                                                     <img src="{% static 'img/icons/yes-check.png' %}" alt="Yes"
                                                          style="max-height: 50px;"/>
                                                     {% trans "Yes" %}
                                                 </h4>
                                             {% else %}
-                                                <h4>
+                                                <h4 class="text-blue">
                                                     <img src="{% static 'img/icons/no-cross.png' %}" alt="No"
                                                          style="max-height: 50px;"/>
                                                     {% trans "No" %}
@@ -163,94 +174,153 @@
                                         </div>
                                         <div class="col-md-8">
                                             <form method="post" action="/asset/buy/?marketId={{ market.pk }}"
-                                                  class="form-inline">
+                                                  id="formId{{ forloop.counter }}" class="form-inline">
                                                 <div class="row" style="width:100%;">
                                                     {% csrf_token %}
                                                     <input type="hidden" id="optionId" name="optionId"
                                                            value="{{ option.pk }}">
-                                                    <div class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
-                                                        <h6>{% trans "Price" %}</h6>
-                                                        {% if option.binary_yes %}
-                                                            {{ YES_PRICE }} karma
-                                                        {% else %}
-                                                            {{ NO_PRICE }} karma
-                                                        {% endif %}
+                                                    <div
+                                                            class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                        <h6 class="text-blue">{% trans "Price" %}</h6>
+                                                        {{ PRICE }} karma
                                                     </div>
                                                     <div class="col-md-4 my-auto mx-auto text-center padding-top-bottom">
-                                                        <h6>{% trans "Quantity" %}</h6>
-                                                        {{ asset_form.quantity | add_class:'form-control' | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
+                                                        <h6 class="text-blue">{% trans "Quantity" %}</h6>
+                                                        {{ asset_form.quantity | add_class:'form-control' | attr:"id:quantity" | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
                                                     </div>
-                                                    <div class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
-                                                        <h6>Total: 5813647k</h6>
-                                                        <button type="submit" class=" btn btn-primary">
-                                                            <img src="{% static 'img/icons/buy.png' %}" alt="Buy"
-                                                                 style="max-height: 25px;"/>
+                                                    <div
+                                                            class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                        <h6 class="text-blue">
                                                             {% trans "Buy" %}
+                                                        </h6>
+                                                        <!-- Button trigger modal for binary markets-->
+                                                        <button type="button" class="btn btn-primary"
+                                                                data-toggle="modal"
+                                                                data-target="#binaryMarketsModal"
+                                                                data-binarymarket="true"
+                                                                data-optionname="{{ option.name }}"
+                                                                data-form="formId{{ forloop.counter }}"
+                                                                data-assetprice="{{ PRICE }}">
+                                                            {% trans "Buy assets" %}
                                                         </button>
                                                     </div>
                                                 </div>
                                             </form>
                                         </div>
-                                    {% else %}
-                                        <div class="col-md-2 mx-auto my-auto">
-                                            <h5>{{ option.name }}</h5>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <form method="post" action="/asset/buy/?marketId={{ market.pk }}"
-                                                  class="form-inline">
-                                                <div class="row" style="width:100%;">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" id="optionId" name="optionId"
-                                                           value="{{ option.pk }}">
-                                                    <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
-                                                        <h6>{% trans "'Yes' price" %}</h6>
-                                                        {{ YES_PRICE }} karma
-                                                    </div>
-                                                    <div class="col-md-3 my-auto text-center padding-0 padding-top-bottom">
-                                                        <h6>{% trans "Yes or no" %}</h6>
-                                                        <div class="form-group">
-                                                            <input type="checkbox" checked data-toggle="toggle"
-                                                                   data-on="{% trans "Buy yes" %}"
-                                                                   data-off="{% trans "Buy no" %}"
-                                                                   data-onstyle="success" data-offstyle="danger"
-                                                                   name="is_yes"
-                                                                   data-size="sm" data-style="innerdivtoggle"
-                                                                   onchange="option_benefits('possibleEarnJs{{ forloop.counter }}', 'checkBoxJs{{ forloop.counter }}', true, {{ YES_PRICE }}, {{ NO_PRICE }});"
-                                                                   id="checkBoxJs{{ forloop.counter }}">
+                                    {% endwith %}
+                                {% else %}
+                                    {% if market.is_exclusive %}
+                                        {% with PRICE=option.get_todays_price.buy_price %}
+                                            <div class="col-md-2 mx-auto my-auto">
+                                                <h4 class="text-blue">
+                                                    {{ option.name }}
+                                                </h4>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <form method="post" action="/asset/buy/?marketId={{ market.pk }}"
+                                                      id="formId{{ forloop.counter }}" class="form-inline">
+                                                    <div class="row" style="width:100%;">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" id="optionId" name="optionId"
+                                                               value="{{ option.pk }}">
+                                                        <div
+                                                                class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                            <h6 class="text-blue">{% trans "Price" %}</h6>
+                                                            {{ PRICE }} karma
+                                                        </div>
+                                                        <div class="col-md-4 my-auto mx-auto text-center padding-top-bottom">
+                                                            <h6 class="text-blue">{% trans "Quantity" %}</h6>
+                                                            {{ asset_form.quantity | add_class:'form-control' | attr:"id:quantity" | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
+                                                        </div>
+                                                        <div
+                                                                class="col-md-4 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                            <h6 class="text-blue">
+                                                                {% trans "Buy" %}
+                                                            </h6>
+                                                            <!-- Button trigger modal for binary markets-->
+                                                            <button type="button" class="btn btn-primary"
+                                                                    data-toggle="modal"
+                                                                    data-target="#binaryMarketsModal"
+                                                                    data-binarymarket="true"
+                                                                    data-optionname="{{ option.name }}"
+                                                                    data-form="formId{{ forloop.counter }}"
+                                                                    data-assetprice="{{ PRICE }}">
+                                                                {% trans "Buy assets" %}
+                                                            </button>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
-                                                        <h6>{% trans "'No' price" %}</h6>
-                                                        {{ NO_PRICE }} karma
+                                                </form>
+                                            </div>
+                                        {% endwith %}
+                                    {% else %}
+                                        {% with YES_PRICE=option.get_todays_price_yes.buy_price NO_PRICE=option.get_todays_price_no.buy_price %}
+                                            <div class="col-md-2 mx-auto my-auto">
+                                                <h5 class="text-blue">{{ option.name }}</h5>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <form method="post" action="/asset/buy/?marketId={{ market.pk }}"
+                                                      id="formId{{ forloop.counter }}" class="form-inline">
+                                                    <div class="row" style="width:100%;">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" id="optionId" name="optionId"
+                                                               value="{{ option.pk }}">
+                                                        <div
+                                                                class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                            <h6 class="text-correct">{% trans "'Yes' price" %}</h6>
+                                                            {{ YES_PRICE }} karma
+                                                        </div>
+                                                        <div
+                                                                class="col-md-3 my-auto text-center padding-0 padding-top-bottom">
+                                                            <h6 class="text-blue">{% trans "Yes or no?" %}</h6>
+                                                            <div class="form-group">
+                                                                <input type="checkbox" checked data-toggle="toggle"
+                                                                       data-on="{% trans "Buy yes" %}"
+                                                                       data-off="{% trans "Buy no" %}"
+                                                                       data-onstyle="success" data-offstyle="danger"
+                                                                       name="is_yes"
+                                                                       data-size="sm" data-style="innerdivtoggle"
+                                                                       id="checkBoxId{{ forloop.counter }}">
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                                class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                            <h6 class="text-incorrect">{% trans "'No' price" %}</h6>
+                                                            {{ NO_PRICE }} karma
+                                                        </div>
+                                                        <div
+                                                                class="col-md-3 my-auto mx-auto text-center padding-top-bottom">
+                                                            <h6 class="text-blue">{% trans "Quantity" %}</h6>
+                                                            {{ asset_form.quantity | add_class:'form-control' | attr:"id:quantity" | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
+                                                        </div>
+                                                        <div
+                                                                class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
+                                                            <!-- Button trigger modal for non binary market-->
+                                                            <button type="button" class="btn btn-primary"
+                                                                    data-toggle="modal"
+                                                                    data-target="#binaryMarketsModal"
+                                                                    data-binarymarket="false"
+                                                                    data-optionname="{{ option.name }}"
+                                                                    data-form="formId{{ forloop.counter }}"
+                                                                    data-assetpriceyes="{{ YES_PRICE }}"
+                                                                    data-assetpriceno="{{ NO_PRICE }}"
+                                                                    data-checkboxid="checkBoxId{{ forloop.counter }}">
+                                                                {% trans "Buy assets" %}
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-md-3 my-auto mx-auto text-center padding-top-bottom">
-                                                        <h6>{% trans "Quantity" %}</h6>
-                                                        {{ asset_form.quantity | add_class:'form-control' | attr:"style: width: 60px; display: block; margin : 0 auto; height:30px; padding:1px;" }}
-                                                    </div>
-                                                    <div class="col-md-2 mx-auto my-auto text-center padding-0 padding-top-bottom">
-                                                        <button type="submit" class=" btn btn-primary">
-                                                            {% trans "Buy" %}
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
+                                                </form>
+                                            </div>
+                                        {% endwith %}
                                     {% endif %}
-                                    <div id="possibleEarnJs{{ forloop.counter }}"
-                                         class="col-md-2 mx-auto my-auto text-center padding-top-bottom">
-                                        {% if market.is_binary %}
-                                            {% if option.binary_yes %}
-                                                {% trans "You can earn" %} {{ option.get_todays_benefits_yes }} {% trans "karma per asset." %}
-                                            {% else %}
-                                                {% trans "You can earn" %} {{ option.get_todays_benefits_no }} {% trans "karma per asset." %}
-                                            {% endif %}
-                                        {% else %}
-                                            <script> option_benefits("possibleEarnJs{{ forloop.counter }}", "checkBoxJs{{ forloop.counter }}", false, {{ YES_PRICE }}, {{ NO_PRICE }});</script>
-                                        {% endif %}
-                                    </div>
+                                {% endif %}
+                                <div id="possibleEarnJs{{ forloop.counter }}"
+                                     class="col-md-2 mx-auto my-auto text-center padding-top-bottom">
+                                    {% if user.is_authenticated %}
+                                        {% get_assets_by_option_user option user %}
+                                    {% endif %}
                                 </div>
                             </div>
-                        {% endwith %}
+                        </div>
                     {% endfor %}
                 </div>
             </div>
@@ -262,14 +332,184 @@
                          class="col-md-2 mx-auto my-auto text-center padding-top-bottom"></div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col">
+                    <h2 class="text-red" style="margin-bottom: 1rem">
+                        <img src="{% static 'img/icons/markets.png' %}" alt="Contracts" style="max-height: 25px;">
+                        {% trans "Comments" %}:
+                    </h2>
+                </div>
+            </div>
+            {% if user.is_authenticated %}
+                <div class="row">
+                    <div class="col">
+                        <div class="widget-area no-padding blank">
+                            <div class="status-upload">
+                                <form action="/market/{{ market.pk }}/{{ market.slug }}" method="post">
+                                    {% csrf_token %}
+                                    {{ comment_form.body }}
+                                    <button type="submit" class="btn btn-warning text-left"><i
+                                            class="fa fa-comment"></i>{% trans "Share" %}
+                                    </button>
+                                </form>
+                            </div><!-- Status Upload  -->
+                        </div><!-- Widget Area -->
+                    </div>
+                </div>
+                <br/>
+            {% endif %}
+            <div class="row">
+                <div class="col">
+                    {% for comment in market.get_comments.all %}
+                        <div class="block">
+                            <img class="img-fluid img-thumbnail"
+                                 src="data:image/png;base64,{{ comment.author.picture }}"
+                                 alt="">
+                            <div>
+                                <p>
+                                    <a href="/user/{{ comment.author.id }}/{{ comment.author.slug }}">
+                                        {% if comment.author.alias %}
+                                            {{ comment.author.alias }}
+                                        {% else %}
+                                            {{ comment.author.first_name }} {{ comment.author.last_name }}
+                                        {% endif %}
+                                    </a> {% trans "commented on" %} {{ comment.moment }}
+                                    {% if user == comment.author %}
+                                        <a href="/delete-comment/{{ comment.pk }}"
+                                           onclick="return deleteCommentConfirm()">
+                                            <img src="{% static 'img/icons/delete-comment.png' %}"
+                                                 alt="{% trans "Delete comment" %}" title="{% trans "Delete comment" %}"
+                                                 style="max-height: 25px;">
+                                        </a>
+                                    {% endif %}
+                                </p>
+                                <p>
+                                    {{ comment.body }}
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 
+
+    <!-- Modal -->
+    <div class="modal fade" id="binaryMarketsModal" tabindex="-1"
+         role="dialog" aria-labelledby="binaryMarketsModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"
+                        id="modal-title">
+                        Option</h4>
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>{% trans "Quantity" %}: <strong><span id="body-quantity"></span></strong> {% trans "assets" %}.
+                    </p>
+                    <p>{% trans "Price per asset" %}: <span id="body-asset-price"></span> karma.</p>
+                    <p>{% trans "Total price" %}: <strong><span id="body-total-price"></span> karma.</strong></p>
+                    <p><span id="body-option-benefits"></span></p>
+                </div>
+                <div class="modal-footer">
+                    {% if user.is_authenticated %}
+                        <p hidden id="body-no-karma" class="text-danger">{% trans "You don't have enough karma" %}.</p>
+                    {% else %}
+                        <p hidden id="body-no-karma"
+                           class="text-danger">{% trans "You must be logged in order to buy assets" %}.</p>
+                    {% endif %}
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">{% trans "Close" %}
+                    </button>
+                    {% if user.is_authenticated %}
+                        <button type="submit" class="btn btn-primary"
+                                id="buysubmit">
+                            <img src="{% static 'img/icons/buy.png' %}"
+                                 alt="Buy" style="max-height: 25px;"/>
+                            {% trans "Buy" %}
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascript %}
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        $('#binaryMarketsModal').on('show.bs.modal', function (event) {
+            const button = $(event.relatedTarget);// Button that triggered the modal.
+            let option_name = button.data('optionname'); // Extract info from data-* attributes
+            let form_id = button.data('form');
+            let quantity = $('#' + form_id).find('#quantity').val();
+            let binary = button.data('binarymarket');
+            let asset_price;
+            if (binary) {
+                asset_price = button.data('assetprice');
+                {% get_current_language as LANGUAGE %}
+                {% if LANGUAGE == "es" %}
+                    if (option_name === "Yes") {
+                        option_name = "Sí";
+                    }
+                {% endif %}
+            } else {
+                let checkbox_id = button.data('checkboxid');
+                const yes_case = $('#' + checkbox_id).is(":checked");
+                if (yes_case) {
+                    asset_price = button.data('assetpriceyes');
+                } else {
+                    asset_price = button.data('assetpriceno');
+                }
+            }
+
+            let total_price = quantity * asset_price;
+
+            const modal = $(this);
+            modal.find('#modal-title').text(option_name);
+            modal.find('#buysubmit').attr('form', form_id);
+            modal.find('#body-quantity').text(quantity);
+            modal.find('#body-asset-price').text(asset_price);
+            modal.find('#body-total-price').text(total_price);
+            modal.find('#body-option-benefits').text(option_benefits(asset_price, quantity));
+            console.log("User karma: " + {{ user_karma }});
+            if (total_price >{{ user_karma }}) {
+                modal.find('#body-no-karma').removeAttr('hidden');
+                modal.find('#buysubmit').attr("disabled", "disabled");
+            } else {
+                modal.find('#body-no-karma').attr("hidden", "hidden");
+                modal.find('#buysubmit').removeAttr('disabled');
+            }
+        });
+
+        function option_benefits(asset_price, quantity) {
+            let msg1 = "";
+            let msg2 = "";
+            let msg3 = "";
+            const benefits = 100 - asset_price;
+            const total_benefits = benefits * quantity;
+
+            {% get_current_language as LANGUAGE %}
+            {% if LANGUAGE == "en" %}
+                msg1 = "You can earn ";
+                msg2 = " karma per asset. In other words, ";
+                msg3 = " karma in total!";
+            {% else %}
+                msg1 = "Puedes ganar ";
+                msg2 = " karma por acción. O lo que es lo mismo, ¡";
+                msg3 = " karma en total!";
+            {% endif %}
+
+            return msg1 + benefits + msg2 + total_benefits + msg3;
+        }
+    </script>
     <script type="text/javascript">
         $(document).ready(function () {
             $.ajax({
@@ -341,17 +581,16 @@
                     for (var i = 0; i < returnedData.length; i++) {
                         list_html += "<div class='col-md-12'>";
                         list_html += "<div class='card mb-4 box-shadow'>";
-                        list_html += "<a href='/market/?marketId=" + returnedData[i].id + "'>";
-                        list_html += "<img class='card-img-top img-thumbnail'";
+                        list_html += "<a href='/market/" + returnedData[i].id + "/" + returnedData[i].slug + "'>";
+                        list_html += "<img class='card-img-top img-thumbnail img-related-market'";
                         list_html += "alt='" + returnedData[i].title + "'";
-                        list_html += "style='max-height: 150px;object-fit:scale-down; display: block;'";
                         list_html += "src='data:image/png;base64," + returnedData[i].picture + "'";
                         list_html += "data-holder-rendered='true'>";
                         list_html += "</a>";
                         list_html += "<div class='card-body'>";
                         list_html += "<p class='card-text'>";
-                        list_html += "<a href='/market/?marketId=" + returnedData[i].id + "'";
-                        list_html += " style='color:unset;'><strong>" + returnedData[i].title + "</strong></a>";
+                        list_html += "<a href='/market/" + returnedData[i].id + "/" + returnedData[i].slug + "'";
+                        list_html += " class='text-blue'><strong>" + returnedData[i].title + "</strong></a>";
                         list_html += "</p></div></div></div>";
                     }
                     $("#relatedMarketsContainerRowId").html(list_html);
@@ -362,5 +601,31 @@
             return false;
         });
     </script>
-
+    <script type="text/javascript">
+        {% if market.community %}
+            $(document).ready(function () {
+                const selector = $('#private-karma-block');
+                let msg = '';
+                {% get_current_language as LANGUAGE %}
+                {% if LANGUAGE == "es" %}
+                    msg = "{% intspace_dot user_karma %} Karma en esta comunidad";
+                {% else %}
+                    msg = "{% intspace_comma user_karma %} Karma in this community";
+                {% endif %}
+                selector.text(msg);
+                selector.removeAttr('hidden');
+            });
+        {% endif %}
+    </script>
+    <script>
+        function deleteCommentConfirm() {
+            {% get_current_language as CURRENT_LANGUAGE %}
+            {% if CURRENT_LANGUAGE == "en" %}
+                var result = confirm("Are you sure you want to delete this comment?");
+            {% else %}
+                var result = confirm("¿Estás seguro de que quieres borrar este comentario?");
+            {% endif %}
+            return result;
+        }
+    </script>
 {% endblock %}

@@ -1,4 +1,5 @@
 from django.db import models
+from django.template.defaultfilters import slugify
 from django.core.validators import MinValueValidator
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from mercados_de_prediccion_project.validators import validate_date_is_past
@@ -46,9 +47,10 @@ class User(AbstractUser):
 	first_name = models.CharField(max_length=30, blank=False)
 	last_name = models.CharField(max_length=60, blank=False)
 	email = models.EmailField(unique=True, max_length=150)
+	alias = models.CharField(max_length=30, blank=False)
 	date_of_birth = models.DateField(blank=True, null=True, validators=[validate_date_is_past])
 	biography = models.TextField(blank=True, null=True)
-	public_karma = models.IntegerField(null=False, default=0, validators=[MinValueValidator(0)])
+	public_karma = models.IntegerField(null=False, default=500, validators=[MinValueValidator(0)])
 	picture = models.TextField(default=DEFAULT_USER_IMG)
 	is_verified = models.BooleanField(null=False, default=False)
 	deletion_date = models.DateField(null=True, default=None)
@@ -58,6 +60,15 @@ class User(AbstractUser):
 
 	objects = UserManager()
 
-	def get_joined_group_accepted_set(self):
-		return self.joinedgroup_set.filter(is_accepted=True)
+	def get_joined_community_accepted_set(self):
+		return self.joinedcommunity_set.filter(is_accepted=True)
 
+	def slug(self):
+		return slugify(self.alias)
+
+
+class VerifyRequest(models.Model):
+	institution = models.CharField(max_length=60, blank=False)
+	description = models.TextField(null=False, blank=False)
+	is_accepted = models.BooleanField(default=None, null=True)
+	user = models.OneToOneField(User, on_delete=models.DO_NOTHING, null=False)

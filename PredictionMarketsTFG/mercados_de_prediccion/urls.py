@@ -8,29 +8,36 @@ urlpatterns = [
 	path('contact/', views.ContactView.as_view(), name='contact'),
 
 	#  Users
-	path('user/', views.display_profile_view, name='display_profile'),
+	path('user/<int:user_id>/<slug:slug>', views.display_profile_view, name='display_profile'),
+	path('user/<int:user_id>/', views.display_profile_view, name='display_profile'),
 	path('user/cancel-deletion', views.cancel_deletion_user_view, name='cancel_deletion_user'),
 
 	#  Categories
 	path('categories/', views.list_categories_view, name='categories'),
 	path('category/create/', views.create_category_view, name='create_category'),
-	path('category/edit/', views.edit_category_view, name='edit_category'),
+	path('category/edit/<int:category_id>/<slug:slug>', views.edit_category_view, name='edit_category'),
 
-	#  Groups
-	path('groups/all/', views.list_all_groups_view, name='list_all_groups'),
-	path('groups/created/', views.list_created_groups_view, name='list_created_groups'),
-	path('group/create/', views.create_group_view, name='create_group'),
-	path('group/edit/', views.edit_group_view, name='edit_group'),
-	path('group/', views.display_group_view, name='display_group'),
-	path('group/request-join/', views.request_to_join_group, name='request_to_join_group'),
-	path('group/accept/', views.accept_user_to_group_view, name='accept_user_to_group'),
-	path('group/members/', views.list_members_group_view, name='list_members_group'),
+	#  Communities
+	path('communities/all/', views.list_all_communities_view, name='list_all_communities'),
+	path('communities/created/', views.list_created_communities_view, name='list_created_communities'),
+	path('community/create/', views.create_community_view, name='create_community'),
+	path('community/edit/<int:community_id>/<slug:slug>', views.edit_community_view, name='edit_community'),
+	path('community/<int:community_id>/<slug:slug>', views.display_community_view, name='display_community'),
+	path('community/request-join/<int:community_id>/<slug:slug>', views.request_to_join_community, name='request_to_join_community'),
+	path('community/accept/<int:joined_community_id>', views.accept_user_to_community_view, name='accept_user_to_community'),
+	path('community/reject/<int:joined_community_id>', views.reject_user_to_community_view, name='reject_user_to_community'),
+	path('community/members/<int:community_id>/<slug:slug>', views.list_members_community_view, name='list_members_community'),
 
 	#  Markets
 	path('market/create/', views.create_market_view, name='create_market'),
-	path('market/edit/', views.edit_market_view, name='edit_market'),
-	path('market/', views.display_market_view, name='display_market'),
+	path('market/create/<int:community_id>/<slug:slug>', views.create_market_view, name='create_market'),
+	path('market/edit/<int:market_id>/<slug:slug>', views.edit_market_view, name='edit_market'),
+	path('market/<int:market_id>/<slug:slug>', views.display_market_view, name='display_market'),
 	path('markets/', views.list_markets_view, name='markets'),
+	path('markets/<int:category_id>/<slug:slug>', views.list_markets_view, name='markets'),
+	path('judge-markets/', views.list_judge_public_markets, {'created': False}, name='judge_public_markets'),
+	path('judge-markets/created/', views.list_judge_public_markets, {'created': True}, name='judge_public_markets'),
+	path('judge-markets/judge/<int:market_id>/<slug:slug>', views.judge_market, name='judge_market'),
 
 	#  Assets
 	path('asset/buy/', views.buy_asset_view, name='buy_asset'),
@@ -38,5 +45,11 @@ urlpatterns = [
 	#  AJAX calls
 	path('ajax/related_markets/', views.ajax_related_markets, name='related_markets'),
 	path('ajax/chart/', views.ajax_charts, name='ajax_charts'),
+
+	#  Bets
+	path('bets/<int:user_id>/<slug:slug>', views.past_bets, name='past_bets'),
+
+	#  Comments
+	path('delete-comment/<int:comment_id>', views.delete_comment, name='delete_comment'),
 
 ]

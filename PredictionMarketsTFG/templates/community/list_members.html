@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+<head>
+    <title>{% block title %}{% trans "Members" %}{% endblock %}</title>
+</head>
+
+{% block content %}
+
+    {% if view_name == "member_list" %}
+        <div class="col-md-6 mx-auto text-center">
+            <div class="header-title">
+                <h1 class="wv-heading--title">
+                    {% blocktrans %}Member list{% endblocktrans %}
+                </h1>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col">
+            <nav aria-label="Pagination">
+                <ul class="pagination">
+                    {% if joined_communities.has_previous %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ joined_communities.previous_page_number }}">&laquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                    {% endif %}
+
+                    {% for page_num in joined_communities.paginator.page_range %}
+                        {% if joined_communities.number == page_num %}
+                            <li class="page-item active"><span class="page-link">{{ page_num }} <span
+                                    class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if joined_communities.has_next %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ joined_communities.next_page_number }}">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        <div class="col">
+            <div class="float-right">
+                <a href="/community/{{ community_id|stringformat:"s" }}/{{ community_slug }}">
+                    <button type="button" class="btn btn-secondary">
+                        {% blocktrans %}Back to community{% endblocktrans %}
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-striped table-hover table-sm">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Karma</th>
+            <th scope="col">{% trans "Name (alias)" %}</th>
+            <th scope="col">{% trans "Description" %}</th>
+            <th scope="col">{% trans "Options" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for joined_community in joined_communities %}
+            <tr {% if not joined_community.is_accepted %} class="table-warning" {% elif joined_community.user == user %} class ="table-success" {% endif %}>
+                <th scope="row">{{ joined_community.private_karma }}</th>
+                <td><a href="/user/{{ joined_community.user.pk }}/{{ joined_community.user.slug }}">
+                    {{ joined_community.user.first_name }} {{ joined_community.user.last_name }}
+                    ({{ joined_community.user.alias }})</a></td>
+                <td>{{ joined_community.description }}</td>
+                {% if joined_community.is_accepted %}
+                    {% if not joined_community.user == user %}
+                        <td class="text-center"><a href='/community/reject/{{ joined_community.id }}'
+                                                   class="btn btn-danger">
+                            <img src="{% static 'img/icons/uncheck.png' %}" alt="{% trans "Expel" %}"
+                                 style="max-height: 25px;"/> {% trans "Expel" %}</a></td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                {% else %}
+                    <td class="text-center"><a href='/community/accept/{{ joined_community.id }}'
+                                               class="btn btn-success">
+                        <img src="{% static 'img/icons/check.png' %}" alt="{% trans "Accept" %}"
+                             style="max-height: 25px;"/> {% trans "Accept" %}</a>
+                        <a href='/community/reject/{{ joined_community.id }}'
+                           class="btn btn-danger">
+                            <img src="{% static 'img/icons/uncheck.png' %}" alt="{% trans "Reject" %}"
+                                 style="max-height: 25px;"/> {% trans "Reject" %}</a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col">
+            <nav aria-label="Pagination">
+                <ul class="pagination">
+                    {% if joined_communities.has_previous %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ joined_communities.previous_page_number }}">&laquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                    {% endif %}
+
+                    {% for page_num in joined_communities.paginator.page_range %}
+                        {% if joined_communities.number == page_num %}
+                            <li class="page-item active"><span class="page-link">{{ page_num }} <span
+                                    class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if joined_communities.has_next %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ joined_communities.next_page_number }}">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        <div class="col">
+            <div class="float-right">
+                <a href="/community/{{ community_id|stringformat:"s" }}/{{ community_slug }}">
+                    <button type="button" class="btn btn-secondary">
+                        {% blocktrans %}Back to community{% endblocktrans %}
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

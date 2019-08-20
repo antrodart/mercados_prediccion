@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+{% load intspace %}
 
 <head>
     <title>{% block title %}{{ user_profile.first_name }} {{ user_profile.last_name }}{% endblock %}</title>
@@ -9,7 +10,7 @@
 {% block content %}
     <div class="row top-buffer"> {% comment %}Top buffer adds 20px for top margin{% endcomment %}
         <div class="col-md-3">
-            <img class="img-fluid img-thumbnail" alt="{{ user_profile.first_name }}" style="max-height: 200px"
+            <img class="img-fluid img-thumbnail img-header" alt="{{ user_profile.first_name }}"
                  src="data:image/png;base64,{{ user_profile.picture }}" data-holder-rendered="true">
         </div>
         <div class="col-md-9 my-auto"> {% comment %}Puts column and text in the center{% endcomment %}
@@ -18,11 +19,11 @@
                     <div class="row">
                         <div class="col">
                             <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
-                                <h1>{{ user_profile.first_name }} {{ user_profile.last_name }}
+                                <h1 class="text-blue">{{ user_profile.first_name }} {{ user_profile.last_name }}
                                     {% if user_profile.is_verified %}
                                         <img src="{% static 'img/icons/verified-green.png' %}"
-                                             alt="{% trans "User is verified" %}"
-                                             title="{% trans "User is verified" %}"
+                                             alt="{% trans "Verified user" %}"
+                                             title="{% trans "Verified user" %}"
                                              style="max-height: 40px;">
                                     {% elif user_profile.is_staff %}
                                         <img src="{% static 'img/icons/crown.png' %}"
@@ -31,6 +32,14 @@
                                              style="max-height: 40px;">
                                     {% endif %}
                                 </h1>
+                                <h2 class="text-blue">{{ user_profile.alias }}<span
+                                        class="text-red"> {% get_current_language as LANGUAGE %}
+                                    {% if LANGUAGE == "es" %}
+                                        {% intspace_dot user_profile.public_karma %}
+                                    {% else %}
+                                        {% intspace_comma user_profile.public_karma %}
+                                    {% endif %}
+                                    {% trans "public Karma" %}</span></h2>
                             </div>
                         </div>
                     </div>
@@ -43,40 +52,43 @@
                             {% if user_profile.date_of_birth %}
                                 {% trans "Date of birth" %}: {{ user_profile.date_of_birth }}<br/>
                             {% endif %}
-                            {% blocktrans %}Joined on{% endblocktrans %} {{ user_profile.date_joined|date }}.
-                            <p>
-                                {{ user_profile.public_karma }} {% trans "public Karma" %}.
-                            </p>
+                            {% blocktrans %}Joined on{% endblocktrans %} {{ user_profile.date_joined|date }}.<br/>
+                            <a href="/user/export">{% trans "Export my data" %}</a>
                         </div>
                         {% if user_profile.deletion_date %}
                             <div class="alert alert-danger" role="alert">
                                 {% trans "Your account will be deleted on" %} {{ user_profile.deletion_date }}.
-                                {% trans "You can cancel this by" %} <a href="/user/cancel-deletion">{% trans "clicking here" %}</a>.
+                                {% trans "You can cancel this by" %} <a
+                                    href="/user/cancel-deletion">{% trans "clicking here" %}</a>.
                             </div>
                         {% endif %}
                     </div>
                 </div>
-                {% if user == user_profile %}
-                    <div class="col-md-3">
-                        <div style="margin-bottom: 1rem">
-                            <h2>
-                                <img src="{% static 'img/icons/options-3.png' %}" alt="Options"
-                                     style="max-height: 25px;">
-                                {% trans "User options:" %}
-                            </h2>
-                        </div>
-                        <div class="col">
+                <div class="col-md-3">
+                    <div style="margin-bottom: 1rem">
+                        <h2 class="text-red">
+                            <img src="{% static 'img/icons/options-3.png' %}" alt="Options"
+                                 style="max-height: 25px;">
+                            {% trans "User options:" %}
+                        </h2>
+                    </div>
+                    <div class="col">
+                        <a href='/bets/{{ user_profile.pk }}/{{ user_profile.slug }}'
+                           class="btn btn-info btn-block text-left">
+                            <img src="{% static 'img/icons/moneybox.png' %}" alt="Bets"
+                                 style="max-height: 20px;"/> {% trans "Bet history" %}</a>
+                        {% if user == user_profile %}
                             <a href='/user/edit/'
-                               class="btn btn-outline-info btn-block text-left">
+                               class="btn btn-warning btn-block text-left">
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
                                      style="max-height: 25px;"/> {% trans "Edit profile" %}</a>
-                            <a href='/user/export/'
-                               class="btn btn-outline-danger btn-block text-left">
-                                <img src="{% static 'img/icons/edit.png' %}" alt="Export"
-                                     style="max-height: 25px;"/> {% trans "Export data" %}</a>
-                        </div>
+                            <a href='/user/password/'
+                               class="btn btn-secondary btn-block text-left">
+                                <img src="{% static 'img/icons/password.png' %}" alt="Password"
+                                     style="max-height: 25px;"/> {% trans "Change password" %}</a>
+                        {% endif %}
                     </div>
-                {% endif %}
+                </div>
             </div>
         </div>
     </div>
@@ -84,35 +96,99 @@
         <div class="col-md-3">
             <hr>
             <div class="row">
-                <div class="col">
+                <div class="col-md-12">
                     <div style="margin-bottom: 1rem">
-                        <h2>
-                            <img src="{% static 'img/icons/groups.png' %}" alt="Groups"
+                        <h2 class="text-red">
+                            <img src="{% static 'img/icons/communities.png' %}" alt="Communities"
                                  style="max-height: 25px;">
-                            {% trans "Groups:" %}
+                            {% trans "Created communities:" %}
                         </h2>
                     </div>
-                    <div>
-                        <ul>
-                            {% for joined_group in user_profile.get_joined_group_accepted_set.all %}
-                                {% if joined_group.group.is_visible or user_profile == user %}
-                                    <li>
-                                        <a href="/group/?groupId={{ joined_group.group.id }}">{{ joined_group.group.name }}</a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
-                    </div>
+                    {% if not created_communities.exists %}
+                        <span class="text-muted">{% trans "This user has not created any community" %}</span>
+                    {% else %}
+                        <div class="album bg-light" style="margin-bottom: 1rem">
+                            <div class="container">
+                                <div class="row">
+                                    {% for community in created_communities %}
+                                        <div class="col-md-12">
+                                            <div class='card mb-4 box-shadow'>
+                                                <a href="/community/{{ community.id }}/{{ community.slug }}">
+                                                    <img class='card-img-top img-thumbnail img-related-market'
+                                                         alt="{{ community.title }}"
+                                                         src="data:image/png;base64,{{ community.picture }}"
+                                                         data-holder-rendered="true">
+                                                </a>
+                                                <div class="card-body">
+                                                    <p class="card-text">
+                                                        <a href="/community/{{ community.id }}/{{ community.slug }}"
+                                                           class="text-blue">
+                                                            <strong>{{ community.name }}</strong>
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
+                <div class="col-md-12">
+                    <div style="margin-bottom: 1rem">
+                        <h2 class="text-red">
+                            <img src="{% static 'img/icons/community2.png' %}" alt="Communities"
+                                 style="max-height: 25px;">
+                            {% trans "Joined communities:" %}
+                        </h2>
+                    </div>
+                    {% if not user_profile.get_joined_community_accepted_set.exists %}
+                        <span class="text-muted">{% trans "This user has not joined any community" %}</span>
+                    {% else %}
+                        <div class="album bg-light" style="margin-bottom: 1rem">
+                            <div class="container">
+                                <div class="row">
+                                    {% for joined_community in user_profile.get_joined_community_accepted_set.all %}
+                                        {% if joined_community.community.is_visible or user_profile == user %}
+                                            <div class="col-md-12">
+                                                <div class='card mb-4 box-shadow'>
+                                                    <a href="/community/{{ joined_community.community.id }}/{{ joined_community.community.slug }}">
+                                                        <img class='card-img-top img-thumbnail img-related-market'
+                                                             alt="{{ joined_community.community.title }}"
+                                                             src="data:image/png;base64,{{ joined_community.community.picture }}"
+                                                             data-holder-rendered="true">
+                                                    </a>
+                                                    <div class="card-body">
+                                                        <p class="card-text">
+                                                            <a href="/community/{{ joined_community.community.id }}/{{ joined_community.community.slug }}"
+                                                               class="text-blue">
+                                                                <strong>{{ joined_community.community.name }}</strong>
+                                                            </a>
+                                                        </p>
+                                                        <span class="text-red">
+                                                           {{ joined_community.private_karma }} Karma
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
             </div>
         </div>
         <div class="col-md-9">
             <hr>
             <div class="row">
                 <div class="col">
-                    <h2 style="margin-bottom: 1rem">
+                    <h2 class="text-red" style="margin-bottom: 1rem">
                         <img src="{% static 'img/icons/markets.png' %}" alt="Markets" style="max-height: 25px;">
-                        {% trans "Bets placed:" %}
+                        {% trans "Assets" %}:
                     </h2>
                 </div>
             </div>
@@ -121,32 +197,34 @@
                     {% if user_profile.asset_set.count == 0 %}
                         <p>{% blocktrans %}This user has not placed any bet yet.{% endblocktrans %}</p>
                     {% else %}
-                        <ul class="list-unstyled">
-                            {% for market in user_profile.asset_set.all %}
-                                <li class="media">
-                                    <a href="{% url 'home' %}">
-                                        <img class="mr-3 img-fluid img-thumbnail" style="max-height: 100px;"
-                                             src="data:image/png;base64,{{ market.picture }}" alt="{{ market.title }}">
-                                    </a>
-                                    <div class="media-body">
-                                        <a href="{% url 'home' %}">
-                                            <h5 class="mt-0 mb-1">{{ market.title }}</h5>
-                                        </a>
-                                        {% if market.joinedgroup_set.count == 1 %}
-                                            <p>{{ market.joinedgroup_set.count }} {% trans "participant" %}</p>
+                        {% for asset in assets %}
+                            <div class="block">
+                                <div class="row">
+                                    <div class="col-md-6 mx-auto my-auto">
+                                        <h5 class="text-blue">
+                                            <a href="/market/{{ asset.market.pk }}/{{ asset.market.slug }}"
+                                               class="text-blue">{{ asset.market.title }}</a>
+                                        </h5>
+                                    </div>
+                                    <div class="col-md-3 mx-auto my-auto text-center">
+                                        <h5 class="text-red">{% trans "Option" %}</h5>
+                                        {% if asset.market.is_binary or asset.market.is_exclusive %}
+                                            <h5 class="text-blue">{{ asset.option.name }}</h5>
+                                        {% elif asset.is_yes %}
+                                            <h5 class="text-blue">{{ asset.option.name }}<span
+                                                    class="text-correct"> ({% trans "Yes" %})</span></h5>
                                         {% else %}
-                                            <p>{{ market.joinedgroup_set.count }} {% trans "participants" %}</p>
-                                        {% endif %}
-                                        {% if market.has_expired %}
-                                            {% blocktrans %}The market is over.{% endblocktrans %}
-                                        {% else %}
-                                            {% blocktrans %}You can place bets on this market until{% endblocktrans %}
-                                            {{ market.end_date }}
+                                            <h5 class="text-blue">{{ asset.option.name }}<span
+                                                    class="text-incorrect"> ({% trans "No" %})</span></h5>
                                         {% endif %}
                                     </div>
-                                </li>
-                            {% endfor %}
-                        </ul>
+                                    <div class="col-md-3 mx-auto my-auto text-center">
+                                        <h5 class="text-red">{% trans "Assets" %}</h5>
+                                        <h5 class="text-blue">{{ asset.quantity }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     {% endif %}
                 </div>
             </div>

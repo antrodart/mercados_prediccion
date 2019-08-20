@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load babel %}
+{% load intspace %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{%  static 'img/favicon.ico' %}">
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -29,11 +30,12 @@
 
 </head>
 <body>
-
 <header>
-    <nav class="navbar navbar-expand-md sticky-top">
+    <nav class="navbar navbar-expand-md fixed-top">
         <!-- This denotes at which point the navigation bar expands from vertical or hamburger icon to a full-size horizontal bar. Set to medium-->
-        <a class="navbar-brand" href="{% url 'home' %}">Logo</a>
+        <a class="navbar-brand" href="{% url 'home' %}">
+            {% trans "Home" %}
+        </a>
         <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse"
                 data-target="#main-navigation">
             <span class="navbar-toggler-icon"></span>
@@ -41,48 +43,91 @@
         <div class="collapse navbar-collapse" id="main-navigation">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" id="markets_id" href="{% url 'markets' %}">{% trans "Markets" %}</a>
+                    <a class="nav-link" id="markets_id" href="{% url 'markets' %}">
+                        <img src="{% static "img/icons/stats3.png" %}" alt="{% trans "Markets" %}" class="img-profile"/>
+                        {% trans "Markets" %}</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="groups_id" role="button"
+                    <a class="nav-link dropdown-toggle" href="#" id="communities_id" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {% trans "Groups" %}
+                        <img src="{% static "img/icons/community.png" %}" alt="{% trans "Community" %}"
+                             class="img-profile"/>
+                        {% trans "Communities" %}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{% url 'list_all_groups' %}">
-                            {% blocktrans %}All groups{% endblocktrans %}</a>
-                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'list_all_communities' %}">
+                            <img src="{% static "img/icons/community.png" %}" alt="{% trans "All communities" %}"
+                                 class="img-profile"/>
+                            {% blocktrans %}All communities{% endblocktrans %}</a>
                         {% if user.is_authenticated %}
-                            <a class="dropdown-item" href="{% url 'list_created_groups' %}">
-                                {% blocktrans %}Created groups{% endblocktrans %}</a>
                             <div class="dropdown-divider"></div>
-                            {% for joined_group in user.get_joined_group_accepted_set.all %}
-                                <a class="dropdown-item" href="/group/?groupId={{ joined_group.group.pk }}">
-                                    {{ joined_group.group.name }}</a>
-                            {% endfor %}
+                            <a class="dropdown-item" href="{% url 'list_created_communities' %}">
+                                <img src="{% static "img/icons/community2.png" %}"
+                                     alt="{% trans "Created communities" %}" class="img-profile"/>
+                                {% blocktrans %}Created communities{% endblocktrans %}</a>
+                            {% if user.get_joined_community_accepted_set.exists %}
+                                <div class="dropdown-divider"></div>
+                                {% for joined_community in user.get_joined_community_accepted_set.all %}
+                                    <a class="dropdown-item"
+                                       href="/community/{{ joined_community.community.pk }}/{{ joined_community.community.slug }}">
+                                        <img class="img-profile"
+                                             src="data:image/png;base64,{{ joined_community.community.picture }}"
+                                             alt="{% trans "Community" %}"/>
+                                        {{ joined_community.community.name }}</a>
+                                {% endfor %}
+                            {% endif %}
                         {% endif %}
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="categories_id" href="{% url 'categories' %}">{% trans "Categories" %}</a>
+                    <a class="nav-link" id="categories_id" href="{% url 'categories' %}">
+                        <img src="{% static "img/icons/rubik1.png" %}" alt="{% trans "Categories" %}"
+                             class="img-profile"/>
+                        {% trans "Categories" %}</a>
                 </li>
             </ul>
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}
+                    {% get_current_language as LANGUAGE %}
+                    <span class="navbar-text private-karma-block" id="private-karma-block" hidden>
+                        hola
+                    </span>
+                    <span class="navbar-text public-karma-block" style="margin-right: 10px;">
+                        {% if LANGUAGE == "es" %}
+                            {% intspace_dot user.public_karma %}
+                        {% else %}
+                            {% intspace_comma user.public_karma %}
+                        {% endif %}
+                        {% trans "public Karma" %}
+                    </span>
+
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUser" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="data:image/png;base64,{{ user.picture }}" alt="{{ user.name }}"
+                                 class="img-profile"/>
                             {{ user.first_name }}
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="/user/?userId={{ user.pk }}">
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownUser">
+                            <a class="dropdown-item" href="/user/{{ user.pk }}/{{ user.slug }}">
+                                <img src="{% static "img/icons/profile.png" %}" alt="Profile"
+                                     class="img-profile"/>
                                 {% blocktrans %}My profile{% endblocktrans %}</a>
-                            {% if user.is_staff %}
-                                <a class="dropdown-item" href="{% url 'create_admin' %}">
-                                    {% blocktrans %}Create admin{% endblocktrans %}</a>
+                            <a class="dropdown-item" href="/bets/{{ user.pk }}/{{ user.slug }}">
+                                <img src="{% static "img/icons/moneybox.png" %}" alt="Bets"
+                                     class="img-profile"/>
+                                {% blocktrans %}Betting history{% endblocktrans %}</a>
+                            {% if not user.is_verified %}
+                                <a class="dropdown-item" href="{% url "verify_account" %}">
+                                    <img src="{% static "img/icons/verified2.png" %}" alt="Verify"
+                                         class="img-profile"/>
+                                    {% blocktrans %}Verify my account{% endblocktrans %}</a>
                             {% endif %}
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{% url 'logout' %}">{% trans "Logout" %}</a>
+                            <a class="dropdown-item" href="{% url 'logout' %}">
+                                <img src="{% static "img/icons/logout.png" %}" alt="Logout"
+                                     class="img-profile"/>
+                                {% trans "Logout" %}</a>
                         </div>
                     </li>
                 {% else %}
@@ -97,11 +142,22 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {% blocktrans %}Admin functions{% endblocktrans %}
+                            <img src="{% static "img/icons/admin-options.png" %}" alt="Admin"
+                                 class="img-profile"/>
+                            {% blocktrans %}Admin{% endblocktrans %}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{% url 'create_category' %}">
                                 {% blocktrans %}Create category{% endblocktrans %}</a>
+                            <a class="dropdown-item" href="/market/create/">
+                                {% blocktrans %}Create market{% endblocktrans %}</a>
+                            <a class="dropdown-item" href="{% url 'create_admin' %}">
+                                {% blocktrans %}Create admin{% endblocktrans %}</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/judge-markets">
+                                {% blocktrans %}Judge markets{% endblocktrans %}</a>
+                            <a class="dropdown-item" href="{% url "list_verify_requests" %}">
+                                {% blocktrans %}Judge verify requests{% endblocktrans %}</a>
                         </div>
                     </li>
                 {% endif %}
@@ -109,6 +165,7 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
+                        <img src="{% static "img/icons/globe.jpg" %}" alt="{% trans "Language" %}" class="img-profile"/>
                         {% trans "Language" %}
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -130,14 +187,15 @@
         </div>
     </nav>
 </header>
-<main role="main">
-    <div class="container">
-        {% block content %}
-        {% endblock %}
-    </div>
+<main class="container" role="main">
+    {% block content %}
+    {% endblock %}
+
+    <a id="back-to-top" href="#" class="btn btn-lg back-to-top" role="button"
+       title="Go top" data-toggle="tooltip" data-placement="left">
+        <i class="fas fa-chevron-circle-up"></i> {% trans "Back to top" %}</a>
 </main>
 <br/>
-
 
 <!-- i18n form. Entried by static/js/i18n.js -->
 <form action="{% url 'set_language' %}" method="post" id="form_language">
@@ -157,13 +215,36 @@
 <script>
     $(document).ready(function () {
         var url_str = window.location.pathname;
-        if (url_str.startsWith("/markets/")) {
+        if (url_str.startsWith("/market")) {
             activate_link_navbar("markets_id");
-        } else if (url_str.startsWith("/categories/")) {
+        } else if (url_str.startsWith("/categor")) {
             activate_link_navbar("categories_id");
-        } else if (url_str.startsWith("/group")) {
-            activate_link_navbar("groups_id")
+        } else if (url_str.startsWith("/communit")) {
+            activate_link_navbar("communities_id")
+        } else if (url_str.startsWith("/user")) {
+            activate_link_navbar("navbarDropdownUser")
         }
+    });
+
+    $(document).ready(function () {
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 50) {
+                $('#back-to-top').fadeIn();
+            } else {
+                $('#back-to-top').fadeOut();
+            }
+        });
+        // scroll body to 0px on click
+        $('#back-to-top').click(function () {
+            $('#back-to-top').tooltip('hide');
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+
+        $('#back-to-top').tooltip('show');
+
     });
 
     function activate_link_navbar(nav_link_id) {

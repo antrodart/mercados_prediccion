@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load intspace %}
+
+<head>
+    <title>{% block title %}{{ community.name }}{% endblock %}</title>
+</head>
+
+{% block content %}
+    <div class="row top-buffer"> {% comment %}Top buffer adds 20px for top margin{% endcomment %}
+        <div class="col-md-3">
+            <img class="img-fluid img-thumbnail img-header" alt="{{ community.name }}"
+                 src="data:image/png;base64,{{ community.picture }}" data-holder-rendered="true">
+        </div>
+        <div class="col-md-9 my-auto"> {% comment %}Puts column and text in the center{% endcomment %}
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col">
+                            <div class="header-title"> {% comment %}Adds margin to the column{% endcomment %}
+                                <h1 class="text-blue" style="word-break: break-all;">
+                                    {% if not community.is_visible %}
+                                        <img src="{% static 'img/icons/locked.png' %}"
+                                             alt="{% trans "Private community" %}"
+                                             style="max-height: 40px;">
+                                    {% endif %}
+                                    {{ community.name }}
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-muted">
+                            {% blocktrans %}Created by{% endblocktrans %}
+                            <a href="/user/{{ community.moderator.pk }}/{{ community.moderator.slug }}">
+                                {{ community.moderator.first_name }} {{ community.moderator.last_name }}
+                                ({{ community.moderator.alias }})</a>
+                            {% trans "on" %} {{ community.creation_date |date }}
+                            <p>
+                                {{ community.joinedcommunity_accepted_set.count }}
+                                {% if community.joinedcommunity_accepted_set.count == 1 %}
+                                    {% trans "member" %}.
+                                {% else %}
+                                    {% trans "members" %}.
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% if community.moderator == user %}
+                    <div class="col-md-3">
+                        <div style="margin-bottom: 1rem">
+                            <h2 class="text-red">
+                                <img src="{% static 'img/icons/options-3.png' %}" alt="Options"
+                                     style="max-height: 25px;">
+                                {% trans "Options:" %}
+                            </h2>
+                        </div>
+                        <div class="col">
+                            <a href='/community/members/{{ community.id }}/{{ community.slug }}'
+                               class="btn btn-info btn-block text-left">
+                                <img src="{% static 'img/icons/users.png' %}" alt="Members"
+                                     style="max-height: 25px;"/> {% trans "Members" %}</a>
+                            <a href='/community/edit/{{ community.id }}/{{ community.slug }}'
+                               class="btn btn-warning btn-block text-left">
+                                <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
+                                     style="max-height: 25px;"/> {% trans "Edit" %}</a>
+                            {% if not community.is_visible %}
+                                <a href='/community/edit/{{ community.id }}/{{ community.slug }}'
+                                   class="btn btn-warning btn-block text-left">
+                                    <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
+                                         style="max-height: 25px;"/> {% trans "Get link to join" %}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <div style="margin-bottom: 1rem">
+                        <h2 class="text-red">
+                            <img src="{% static 'img/icons/community-rules.png' %}" alt="Description"
+                                 style="max-height: 25px;">
+                            {% trans "Description:" %}
+                        </h2>
+                    </div>
+                    <div>
+                        <p>{{ community.description }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="header-title">
+                        <h2 class="text-red">
+                            <img src="{% static 'img/icons/users.png' %}" alt="Users" style="max-height: 25px;">
+                            {% trans "Members:" %}
+                        </h2>
+                        <div class="album bg-light" style="margin-bottom: 1rem">
+                            <div class="container">
+                                <div class="row">
+                                    {% for joined_community in community.joinedcommunity_accepted_ordered_set.all %}
+                                        <div class="col-md-12">
+                                            <div class='card mb-4 box-shadow'>
+                                                <a href="/user/{{ joined_community.user.pk }}/{{ joined_community.user.slug }}">
+                                                    <img class='card-img-top img-thumbnail img-related-market'
+                                                         alt="{{ joined_community.user.first_name }} {{ joined_community.user.last_name }}"
+                                                         src="data:image/png;base64,{{ joined_community.user.picture }}"
+                                                         data-holder-rendered="true">
+                                                </a>
+                                                <div class="card-body">
+                                                    <p class="card-text">
+                                                        <a href="/user/{{ joined_community.user.pk }}/{{ joined_community.user.slug }}"
+                                                           class="text-blue">
+                                                            {% if joined_community.user.alias == "" %}
+                                                                <strong>{{ joined_community.user.first_name }}</strong>
+                                                            {% else %}
+                                                                <strong>{{ joined_community.user.alias }}</strong>
+                                                            {% endif %}
+                                                        </a>
+                                                        <span class="text-red">{{ joined_community.private_karma }} Karma</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <h2 class="text-red" style="margin-bottom: 1rem">
+                        <img src="{% static 'img/icons/markets.png' %}" alt="Markets" style="max-height: 25px;">
+                        {% trans "Markets:" %}
+                    </h2>
+                </div>
+                <div class="col">
+                    <div class="float-right">
+                        {% if community.moderator == user %}
+                            <a href="/market/create/{{ community.pk }}/{{ community.slug }}">
+                                <button type="button" class="btn btn-primary">
+                                    {% blocktrans %}Create market{% endblocktrans %}
+                                </button>
+                            </a>
+                        {% elif not user_has_requested %}
+                            <a href="/community/request-join/{{ community.pk }}/{{ community.slug }}">
+                                <button type="button" class="btn btn-primary">
+                                    {% blocktrans %}Join community{% endblocktrans %}
+                                </button>
+                            </a>
+                        {% elif user_has_requested and not user_is_accepted %}
+                            <button type="button" class="btn btn-primary disabled" disabled>
+                                {% blocktrans %}Request sent{% endblocktrans %}
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    {% if community.market_set.count == 0 %}
+                        <p class="text-muted">{% blocktrans %}This community has no markets yet.{% endblocktrans %}</p>
+                    {% else %}
+                        {% for market in community.descending_ordered_market_set.all %}
+                            <div class="block" data-expired="{{ market.has_expired }}">
+                                <img class="img-fluid img-thumbnail" src="data:image/png;base64,{{ market.picture }}"
+                                     alt="">
+                                <div>
+                                    {% if user_is_accepted %}
+                                        <a href="/market/{{ market.id }}/{{ market.slug }}">
+                                            <h2 class="text-blue">{{ market.title }}</h2>
+                                        </a>
+                                    {% else %}
+                                        <h2 class="text-blue">{{ market.title }}</h2>
+                                    {% endif %}
+                                    {% if market.has_expired %}
+                                        <p class="market-expired">
+                                            <img src="{% static 'img/icons/forbidden.png' %}"
+                                                 title="{% trans "Market ended" %}"
+                                                 alt="{% trans "Market ended" %}" style="max-height: 25px;">
+                                            {% blocktrans %}The market ended on{% endblocktrans %} {{ market.end_date }}
+                                        </p>
+                                    {% else %}
+                                        <p>
+                                            {% blocktrans %}You can place bets on this market until{% endblocktrans %}
+                                            {{ market.end_date }}.
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        {% if user_is_accepted %}
+            $(document).ready(function () {
+                const selector = $('#private-karma-block');
+                const private_karma = '{{ private_karma }}';
+                let msg = '';
+                {% get_current_language as LANGUAGE %}
+                {% if LANGUAGE == "es" %}
+                    msg = "{% intspace_dot private_karma %} Karma en esta comunidad";
+                {% else %}
+                    msg = "{% intspace_comma private_karma %} Karma in this community";
+                {% endif %}
+                selector.text(msg);
+                selector.removeAttr('hidden');
+            });
+        {% endif %}
+    </script>
+{% endblock %}

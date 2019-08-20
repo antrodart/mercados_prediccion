@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+<head>
+    <title>{% block title %}
+        {% if editing %}
+            {% trans "Edit community" %}
+        {% else %}
+            {% trans "Create community" %}
+        {% endif %}
+    {% endblock %}</title>
+</head>
+
+{% block css %}
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css"
+          rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-6 mx-auto text-center">
+        <div class="header-title">
+            <h1 class="wv-heading--title">
+                {% if editing %}
+                    {% blocktrans %}Edit community{% endblocktrans %}
+                {% else %}
+                    {% blocktrans %}Create community{% endblocktrans %}
+                {% endif %}
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="myform form ">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="{{ form.name.id_for_label }}" class="text-info">{{ form.name.label }}</label>
+                        {% if form.name.errors %}
+                            {{ form.name | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
+                            <div class="invalid-feedback">
+                                {% for err in form.name.errors %}
+                                    {{ err }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.name | add_class:'form-control my-input' |attr:'autofocus:true' }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.description.id_for_label }}"
+                               class="text-info">{{ form.description.label }}</label>
+                        {% if form.description.errors %}
+                            {{ form.description | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
+                            <div class="invalid-feedback">
+                                {% for err in form.description.errors %}
+                                    {{ err }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.description | add_class:'form-control my-input' |attr:'autofocus:true' }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.is_visible.id_for_label }}"
+                               class="text-info">{{ form.is_visible.label }}</label>
+                        <input type="checkbox" checked data-toggle="toggle"
+                               data-on="{% trans "Visible" %}"
+                               data-off="{% trans "Not visible" %}"
+                               data-onstyle="success" data-offstyle="danger"
+                               id="{{ form.is_visible.id_for_label }}"
+                               name="is_visible"
+                               data-style="innerdivtoggle">
+                        <small class="form-text text-muted">{{ form.is_visible.help_text }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.picture.id_for_label }}" class="text-info">{{ form.picture.label }}
+                            <span class="text-muted">{% trans "(Optional)" %}</span>
+                        </label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroupFileAddon01">
+                                    {% blocktrans %}Upload picture{% endblocktrans %}</span>
+                            </div>
+                            <div class="custom-file">
+                                {{ form.picture |attr:'type:file' | add_class:'custom-file-input' |attr:'aria-describedby:inputPictureHelpTextId' }}
+                                <label class="custom-file-label" for="{{ form.picture.id_for_label }}">
+                                    {% blocktrans %}Choose file{% endblocktrans %}</label>
+                            </div>
+                        </div>
+                        <small id="inputPictureHelpTextId" class="form-text text-muted">
+                            {{ form.picture.help_text }}
+                        </small>
+                        {% for err in form.picture.errors %}
+                            <div class="invalid-feedback">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+                    {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {% if form.errors %}
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            {% endif %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                    <div class="text-center">
+                    {% if editing %}
+                        <button type="submit" class="btn btn-danger" name="delete"
+                           onclick="return deleteConfirm()">
+                            {% trans "Delete" %}
+                        </button>
+                         <a href='/community/{{ form.instance.pk }}/{{ form.instance.slug }}' class="btn btn-secondary" role="button">
+                                    {% trans "Cancel" %}</a>
+                        <button type="submit" class="btn btn-primary">{% trans "Save" %}
+                        </button>
+                    {% else %}
+                        <a href='/communities/all' class="btn btn-secondary" role="button">
+                                    {% trans "Cancel" %}</a>
+                         <button type="submit" class="btn btn-primary">{% blocktrans %}Create community{% endblocktrans %}
+                        </button>
+                    {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
+     <script>
+        // This script makes the name of the file appear on upload input
+        $(".custom-file-input").on("change", function () {
+             var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+        function deleteConfirm() {
+            {% get_current_language as CURRENT_LANGUAGE %}
+            {% if CURRENT_LANGUAGE == "en" %}
+                var result = confirm("Are you sure you want to delete this community?");
+            {% else %}
+                var result = confirm("¿Estás seguro de que quieres borrar esta comunidad?");
+            {% endif %}
+            return result;
+        }
+    </script>
+{% endblock %}

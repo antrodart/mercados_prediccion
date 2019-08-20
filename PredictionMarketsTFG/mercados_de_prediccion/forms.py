@@ -33,40 +33,40 @@ class CreateCategoryForm(forms.ModelForm):
 		return category
 
 
-class CreateGroupForm(forms.ModelForm):
-	name = forms.CharField(label=_('Group name'), required=True, max_length=70)
+class CreateCommunityForm(forms.ModelForm):
+	name = forms.CharField(label=_('Community name'), required=True, max_length=70)
 	description = forms.CharField(max_length=300, required=True,
-	                              widget=forms.Textarea(attrs={'placeholder': _('Describe your group: rules, objectives and general information')}),
+	                              widget=forms.Textarea(attrs={'placeholder': _('Describe your community: rules, objectives and general information')}),
 	                              label=_('Description'))
 	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))
-	is_visible = forms.BooleanField(label=_('Visibility'), help_text=_('Visible groups can be seen by anyone.'), required=False)
+	is_visible = forms.BooleanField(label=_('Visibility'), help_text=_('Visible communities can be seen by anyone.'), required=False)
 
 	class Meta():
-		model = Group
+		model = Community
 		fields = ('name', 'description', 'picture',)
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
-		super(CreateGroupForm, self).__init__(*args, **kwargs)
+		super(CreateCommunityForm, self).__init__(*args, **kwargs)
 
 	def save(self, commit=True):
-		group = super(CreateGroupForm,self).save(commit=False)
-		group.name = self.cleaned_data['name']
-		group.description = self.cleaned_data['description']
-		group.moderator = self.user
+		community = super(CreateCommunityForm,self).save(commit=False)
+		community.name = self.cleaned_data['name']
+		community.description = self.cleaned_data['description']
+		community.moderator = self.user
 		picture = self.cleaned_data['picture']
 		if not picture:
-			group.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_group_img.json')))["data"]
+			community.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_community_img.json')))["data"]
 		else:
 			if isinstance(picture, str):
-				group.picture = picture
+				community.picture = picture
 			else:
 				encoded_picture = force_text(base64.b64encode(picture.file.read()))
-				group.picture = encoded_picture
+				community.picture = encoded_picture
 		if commit:
-			group.save()
-		return group
+			community.save()
+		return community
 
 
 class CategoryChoiceField(forms.ModelMultipleChoiceField):
@@ -92,18 +92,19 @@ class CreateMarketForm(forms.ModelForm):
 	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))
 	categories = CategoryChoiceField(label=_("Categories"), queryset=Category.objects.all(), required=False,)
-	CHOICES = [(1, _('Binary')), (0, _('Multiple'))]
-	is_binary = forms.ChoiceField(label=_("Type of market"), choices=CHOICES,
+	CHOICES = [(1, _('Binary')), (0, _('Multiple: exclusive')), (-1, _('Multiple: non-exclusive'))]
+	market_type = forms.ChoiceField(label=_("Type of market"), choices=CHOICES,
 	                              widget=forms.RadioSelect(attrs={'id': 'value', 'class': 'custom-control-input'}),
-	                              required=True, help_text=_('Binary markets only accept yes/no contract options. Multiple markets accept more than one predefined options.'))
+	                              required=True, initial=1,
+	                              help_text=_('Binary markets only accept yes/no contract options. Multiple markets accept two or more predefined options; in exclusive multiple markets the asset prices are divided between all the options, and in non-exclusive multiple markets each option has its own "binary market" included, where people can vote if that option will take place or not.'))
 
 	class Meta():
 		model = Market
-		fields = ('title', 'description', 'end_date', 'picture', 'categories', 'is_binary')
+		fields = ('title', 'description', 'end_date', 'picture', 'categories', 'market_type')
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
-		self.group = kwargs.pop('group')
+		self.community = kwargs.pop('community')
 		super(CreateMarketForm, self).__init__(*args, **kwargs)
 
 	def save(self, commit=True):
@@ -111,12 +112,17 @@ class CreateMarketForm(forms.ModelForm):
 		market.title = self.cleaned_data['title']
 		market.description = self.cleaned_data['description']
 		market.end_date = self.cleaned_data['end_date']
-		market.is_binary = self.cleaned_data['is_binary']
+		market_type = self.cleaned_data['market_type']
+		if market_type == '1':
+			market.is_binary = True
+		else:
+			market.is_binary = False
+			market.is_exclusive = True if market_type == '0' else False
 		market.creator = self.user
-		market.group = self.group
+		market.community = self.community
 		picture = self.cleaned_data['picture']
 		if not picture:
-			market.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_group_img.json')))["data"]
+			market.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_community_img.json')))["data"]
 		else:
 			if isinstance(picture, str):
 				market.picture = picture
@@ -148,7 +154,7 @@ class EditMarketForm(forms.ModelForm):
 		market.categories.set(self.cleaned_data['categories'])
 		picture = self.cleaned_data['picture']
 		if not picture:
-			market.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_group_img.json')))["data"]
+			market.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_community_img.json')))["data"]
 		else:
 			if isinstance(picture, str):
 				market.picture = picture
@@ -170,32 +176,27 @@ class CreateOptionForm(forms.Form):
 
 
 class BaseOptionFormSet(BaseFormSet):
-    def clean(self):
-        """
-        Adds validation to check that no two options have the same name
-        """
-        if any(self.errors):
-            return
+	def clean(self):
+		"""
+		Adds validation to check that no two options have the same name
+		"""
+		if any(self.errors):
+			return
 
-        names = []
-        duplicates = False
+		names = []
+		duplicates = False
 
-        for form in self.forms:
-            if form.cleaned_data:
-                name = form.cleaned_data['name']
+		for form in self.forms:
+			if form.cleaned_data:
+				name = form.cleaned_data['name']
 
-                # Check that no two options have the same name
-                if name in names:
-                    duplicates = True
-                names.append(name)
+				# Check that no two options have the same name
+				if name in names:
+					duplicates = True
+				names.append(name)
 
-                if duplicates:
-                    raise forms.ValidationError(
-                        'Options must have unique names.',
-                        code='duplicate_names'
-                    )
-
-
+				if duplicates:
+					raise forms.ValidationError('Options must have unique names.', code='duplicate_names')
 
 
 class MakeRequestToJoinForm(forms.ModelForm):
@@ -205,29 +206,29 @@ class MakeRequestToJoinForm(forms.ModelForm):
 	                              label=_('Description'))
 
 	class Meta():
-		model = JoinedGroup
+		model = JoinedCommunity
 		fields = ('description',)
 
 	def __init__(self, *args, **kwargs):
 		self.user = kwargs.pop('user')
-		self.group = kwargs.pop('group')
+		self.community = kwargs.pop('community')
 		super(MakeRequestToJoinForm, self).__init__(*args, **kwargs)
 
 	def save(self, commit=True):
-		joined_group = super(MakeRequestToJoinForm, self).save(commit=False)
-		joined_group.description = self.cleaned_data['description']
-		joined_group.is_accepted = False
-		joined_group.user = self.user
-		joined_group.group = self.group
+		joined_community = super(MakeRequestToJoinForm, self).save(commit=False)
+		joined_community.description = self.cleaned_data['description']
+		joined_community.is_accepted = False
+		joined_community.user = self.user
+		joined_community.community = self.community
 
 		if commit:
-			joined_group.save()
-		return joined_group
+			joined_community.save()
+		return joined_community
 
 
 class CreateAssetForm(forms.ModelForm):
-	#is_yes = forms.BooleanField(label=_("Buy yes or no"))
-	quantity = forms.IntegerField(label=_("Quantity"), help_text=_('The quantity of assets you want to buy.'), required=True)
+	quantity = forms.IntegerField(label=_("Quantity"), help_text=_('The quantity of assets you want to buy.'),
+	                              required=True, min_value=1, initial=1)
 	class Meta():
 		model = Asset
 		fields = ('quantity',)
@@ -248,3 +249,59 @@ class CreateAssetForm(forms.ModelForm):
 		if commit:
 			asset.save()
 		return asset
+
+
+class JudgeBinaryMarketForm(forms.Form):
+	options = forms.ChoiceField(label=_("Winner option"), required=True, help_text=_('Select the winner option for this market.'))
+
+	def __init__(self, *args, **kwargs):
+		self.CHOICES = kwargs.pop('option_choices', None)
+		super(JudgeBinaryMarketForm, self).__init__(*args, **kwargs)
+		if self.CHOICES:
+			self.fields["options"].choices = self.CHOICES
+
+
+class JudgeMultipleNonExclusiveMarketForm(forms.Form):
+	options = forms.MultipleChoiceField(label=_("Winner options"), required=True, help_text=_('Select the winner options for this market. More than one can be selected holding the Control key.'))
+
+	def __init__(self, *args, **kwargs):
+		self.CHOICES = kwargs.pop('option_choices')
+		super(JudgeMultipleNonExclusiveMarketForm, self).__init__(*args, **kwargs)
+		if self.CHOICES:
+			self.fields["options"].choices = self.CHOICES
+
+
+class SearchMarketForm(forms.Form):
+	keyword = forms.CharField(label=_("Search"), required=False,
+	                          widget=forms.TextInput(attrs={'placeholder': _("Market title or description")}))
+
+	def __init__(self, *args, **kwargs):
+		self.keyword = kwargs.pop('keyword', None)
+		super(SearchMarketForm, self).__init__(*args, **kwargs)
+		for visible in self.visible_fields():
+			visible.field.widget.attrs['class'] = 'form-control form-control-list border-0 bg-light'
+		if self.keyword:
+			self.fields["keyword"].initial = self.keyword
+
+
+class CommentMarketForm(forms.ModelForm):
+	body = forms.CharField(required=True, widget=forms.Textarea(attrs={'placeholder': _('Anything to comment?')}))
+
+	class Meta():
+		model = Comment
+		fields = ('body',)
+
+	def __init__(self, *args, **kwargs):
+		self.author = kwargs.pop('author')
+		self.market = kwargs.pop('market')
+		super(CommentMarketForm, self).__init__(*args, **kwargs)
+
+	def save(self, commit=True):
+		comment = super(CommentMarketForm, self).save(commit=False)
+		comment.body = self.cleaned_data['body']
+		comment.moment = datetime.datetime.now()
+		comment.market = self.market
+		comment.author = self.author
+		if commit:
+			comment.save()
+		return comment

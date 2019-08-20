@@ -8,7 +8,7 @@
 </head>
 
 {% block css %}
-     <link rel="stylesheet"
+    <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css"/>
 {% endblock %}
 
@@ -69,7 +69,8 @@
                                     {% if form.end_date.errors %}
                                         {{ form.end_date | add_class:'form-control my-input is-invalid' |attr:'name:end_date' }}
                                         <div class="invalid-feedback">
-                                            {% blocktrans %}The end date is not valid. It must be future.{% endblocktrans %}
+                                            {% blocktrans %}The end date is not valid. It must be
+                                                future.{% endblocktrans %}
                                         </div>
                                         <small class="form-text text-muted">{{ form.end_date.help_text }}</small>
                                     {% else %}
@@ -111,18 +112,18 @@
                             {% endfor %}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.is_binary.id_for_label }}"
-                                   class="text-info">{{ form.is_binary.label }}</label><br>
-                            {% for choice in form.is_binary %}
+                            <label for="{{ form.market_type.id_for_label }}"
+                                   class="text-info">{{ form.market_type.label }}</label><br>
+                            {% for choice in form.market_type %}
                                 <div class="custom-control custom-radio">
                                     {{ choice.tag }}
-                                    {{ form.is_binary.id }}
+                                    {{ form.market_type.id }}
                                     <label for="value_{{ forloop.counter0 }}"
                                            class="custom-control-label">{{ choice.choice_label }}</label>
                                 </div>
                             {% endfor %}
                             <small class="form-text text-muted">
-                                {{ form.is_binary.help_text }}
+                                {{ form.market_type.help_text }}
                             </small>
                         </div>
 
@@ -189,7 +190,14 @@
                         {% endif %}
 
                         <div class="text-center">
-                            <button type="submit" class=" btn btn-primary">
+                            {% if form.community %}
+                                <a href='/community/?communityId={{ form.community.pk }}' class="btn btn-secondary" role="button">
+                                    {% trans "Cancel" %}</a>
+                            {% else %}
+                                <a href='/markets' class="btn btn-secondary" role="button">
+                                    {% trans "Cancel" %}</a>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary">
                                 {% blocktrans %}Create market{% endblocktrans %}
                             </button>
                         </div>
@@ -203,7 +211,7 @@
 {% endblock %}
 
 {% block javascript %}
-     <script type="text/javascript"
+    <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
     <script src="{% static 'js/jquery.formset.js' %}"></script>
     <script>
@@ -220,7 +228,7 @@
         });
 
         $(document).ready(function () {
-            if ($('input[name=is_binary]:checked', '#market_form').val() === "0") {
+            if ($('input[name=market_type]:checked', '#market_form').val() === "0") {
                 $('.editfield').show();
                 showFormsetOptions();
             } else
@@ -234,7 +242,7 @@
         });
 
         $('#market_form input[type="radio"]').on('change', function () {
-            if ($('input[name=is_binary]:checked', '#market_form').val() === "1")
+            if ($('input[name=market_type]:checked', '#market_form').val() === "1")
                 $('.editfield').hide();
             else {
                 $('.editfield').show();
@@ -246,8 +254,14 @@
 
         function showFormsetOptions() {
             $('.option-formset').formset({
-                addText: 'add option',
-                deleteText: 'remove option',
+                {% get_current_language as LANGUAGE %}
+                {% if LANGUAGE == "es" %}
+                    addText: 'Añadir opción',
+                    deleteText: 'Quitar opción',
+                {% else %}
+                    addText: 'Add option',
+                    deleteText: 'Remove option',
+                {% endif %}
             });
         }
 

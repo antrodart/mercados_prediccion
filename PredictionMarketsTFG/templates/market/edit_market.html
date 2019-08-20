@@ -42,11 +42,12 @@
                             <small class="form-text text-muted">{{ form.description.help_text }}</small>
                         {% endif %}
                     </div>
-                     <div class="row">
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="text-info">{% trans "End date" %}</label><br>
-                                    <input type="text" class="form-control my-input" value="{{ form.instance.end_date }}" disabled>
+                                <input type="text" class="form-control my-input" value="{{ form.instance.end_date }}"
+                                       disabled>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -86,11 +87,15 @@
                             {% if form.instance.is_binary %}
                                 {% trans "binary" %}
                             {% else %}
-                                {% trans "multiple" %}
+                                {% if form.instance.is_exclusive %}
+                                    {% trans "exclusive multiple" %}
+                                {% else %}
+                                    {% trans "non-exclusive multiple" %}
+                                {% endif %}
                             {% endif %}
                         </label><br>
                         <small class="form-text text-muted">
-                            {% trans "Binary markets only accept yes/no contract options. Multiple markets accept more than one predefined options." %}
+                            {% trans "Binary markets only accept yes/no contract options. Multiple markets accept two or more predefined options; in exclusive multiple markets the asset prices are divided between all the options, and in non-exclusive multiple markets each option has its own 'binary market' included, where people can vote if that option will take place or not." %}
                         </small>
                     </div>
                     {% if not form.instance.is_binary %}
@@ -119,8 +124,10 @@
                         </div>
                     {% endif %}
                     <div class="text-center">
+                        <a href="/market/{{ form.instance.pk }}/{{ form.instance.slug }}"
+                           class="btn btn-secondary">{% trans "Cancel" %}</a>
                         <button type="submit" class="btn btn-danger" name="delete"
-                           onclick="return deleteConfirm()">
+                                onclick="return deleteConfirm()">
                             {% trans "Delete" %}
                         </button>
                         <button type="submit" class=" btn btn-primary">

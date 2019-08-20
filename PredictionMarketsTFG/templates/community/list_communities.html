@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+<head>
+    <title>{% block title %}{% trans "Communities" %}{% endblock %}</title>
+</head>
+
+{% block content %}
+
+    {% if view_name == "list_created" %}
+        <div class="col-md-6 mx-auto text-center">
+            <div class="header-title">
+                <h1 class="wv-heading--title">
+                    {% blocktrans %}My created communities{% endblocktrans %}
+                </h1>
+            </div>
+        </div>
+    {% else %}
+        <div class="col-md-6 mx-auto text-center">
+            <div class="header-title">
+                <h1 class="wv-heading--title">
+                    {% blocktrans %}All communities{% endblocktrans %}
+                </h1>
+            </div>
+        </div>
+    {% endif %}
+
+
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                {% for community in communities %}
+                    <div class="col-md-3">
+                        <div class="card mb-4 box-shadow">
+                            <a href="/community/{{ community.id }}/{{ community.slug }}">
+                                <img class="card-img-top" alt="{{ community.name }}"
+                                     src="data:image/png;base64,{{ community.picture }}" data-holder-rendered="true">
+                            </a>
+                            <div class="card-body">
+                                {% if not community.is_visible %}
+                                    <img src="{% static 'img/icons/locked.png' %}"
+                                         alt="{% trans "Private community" %}"
+                                         style="max-height: 25px;">
+                                {% endif %}
+                                <a href="/community/{{ community.id }}/{{ community.slug }}"
+                                   style="color:#123C69;">
+                                    <p class="card-text"><strong>{{ community.name }}</strong></p></a>
+
+                                <small class="text-muted">
+                                    {% trans "Created by" %} <a
+                                        href="/user/{{ community.moderator.pk }}/{{ community.moderator.slug }}">
+                                    {{ community.moderator.alias }}</a>
+                                </small>
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted text-blue">{{ community.market_set.count }}
+                                        {% if community.market_set.count == 1 %}
+                                            {% trans "market" %}
+                                        {% else %}
+                                            {% trans "markets" %}
+                                        {% endif %}
+                                    </small>
+                                    <small class="text-muted text-blue">{{ community.joinedcommunity_set.count }}
+                                        {% if community.joinedcommunity_set.count == 1 %}
+                                            {% trans "member" %}
+                                        {% else %}
+                                            {% trans "members" %}
+                                        {% endif %}
+                                    </small>
+                                    {% if view_name == "list_created" %}
+                                        <a href='/community/edit/{{ community.id }}/{{ community.slug }}'
+                                           class="btn btn-outline-secondary"
+                                           role="button">{% trans "Edit" %}</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <br/>
+
+    <div class="row">
+        <div class="col">
+            <nav aria-label="Pagination">
+                <ul class="pagination">
+                    {% if communities.has_previous %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ communities.previous_page_number }}">&laquo;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                    {% endif %}
+
+                    {% for page_num in communities.paginator.page_range %}
+                        {% if communities.number == page_num %}
+                            <li class="page-item active"><span class="page-link">{{ page_num }} <span
+                                    class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if communities.has_next %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ communities.next_page_number }}">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% if user.is_authenticated %}
+            <div class="col">
+                <div class="float-right">
+                    <button type="button" class="btn btn-primary"
+                            data-toggle="modal" data-target="#createCommunityModal">
+                        {% blocktrans %}Create community{% endblocktrans %}
+                    </button>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="createCommunityModal" tabindex="-1"
+         role="dialog" aria-labelledby="createCommunityModal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"
+                        id="modal-title">
+                        {% trans "Create community" %}</h4>
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% trans "Creating a community allows you to bet on private markets with people that share your same interests" %}.
+                    {% trans "By doing so, you must have more than 2000 public Karma or get your account verified" %}.
+                </div>
+                <div class="modal-footer">
+                    {% if not user.public_karma >= 2000 and not user.is_verified %}
+                        <p class="text-danger">{% trans "You must have more than 2000 Karma or be verified" %}</p>
+                    {% endif %}
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">{% trans "Close" %}
+                    </button>
+                    {% if user.public_karma >= 2000 or user.is_verified %}
+                        <a href="{% url 'create_community' %}">
+                            <button type="button" class="btn btn-primary"
+                                    id="buysubmit">
+                                <img src="{% static 'img/icons/buy.png' %}"
+                                     alt="{% trans "Create community" %}" style="max-height: 25px;"/>
+                                {% trans "Create community" %}
+                            </button>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

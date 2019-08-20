@@ -3,7 +3,7 @@ from django.utils.encoding import force_text
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
-from .models import User
+from .models import User, VerifyRequest
 from mercados_de_prediccion_project.validators import validate_date_is_past, validate_file_image_extension
 import json
 import base64
@@ -31,23 +31,54 @@ class LoginForm(forms.Form):
 		return user
 
 
+class VerifyForm(forms.ModelForm):
+	institution = forms.CharField(label=_("Institution"), max_length=60, required=True, )
+	description = forms.CharField(max_length=300, required=True, label=_('Description'),
+	                              widget=forms.Textarea(attrs={'placeholder': _(
+		                              'Describe the institution you represent, and give us proofs that you are who you say you are. You can reference any email sent to predictmarket.us@gmail.com')}), )
+
+	class Meta():
+		model = VerifyRequest
+		fields = ('institution', 'description',)
+
+	def __init__(self, *args, **kwargs):
+		self.user = kwargs.pop('user')
+		self.old_verify_request = kwargs.pop('old_verify_request')
+		super(VerifyForm, self).__init__(*args, **kwargs)
+
+	def save(self, commit=True):
+		if self.old_verify_request:
+			verify_request = self.old_verify_request
+			verify_request.is_accepted = None
+		else:
+			verify_request = super(VerifyForm, self).save(commit=False)
+			verify_request.user = self.user
+		verify_request.institution = self.cleaned_data['institution']
+		verify_request.description = self.cleaned_data['description']
+		if commit:
+			verify_request.save()
+		return verify_request
+
 class SignupForm(UserCreationForm):
 	first_name = forms.CharField(label=_("First name"), max_length=30, required=True, widget=forms.TextInput(attrs={}))
 	last_name = forms.CharField(label=_("Last name"), max_length=60, required=True, widget=forms.TextInput(attrs={}))
+	alias = forms.CharField(label=_("Alias"), help_text=_("The nickname by which they will know you. Must be unique."),
+	                        max_length=30, required=True, widget=forms.TextInput(attrs={}))
 	email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.',
 	                         widget=forms.EmailInput(attrs={'autofocus': None}))
 	biography = forms.CharField(max_length=300, required=False,
-	                              widget=forms.Textarea(attrs={'placeholder': _(
-		                              'Describe yourself: your hobbies, life goals, preferences, interests...')}),
-	                              label=_('Biography'))
+	                            widget=forms.Textarea(attrs={'placeholder': _(
+		                            'Describe yourself: your hobbies, life goals, preferences, interests...')}),
+	                            label=_('Biography'))
 	date_of_birth = forms.DateField(label=_("Date of birth"), widget=forms.DateInput, required=False,
-	                              validators=[validate_date_is_past])
-	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
+	                                validators=[validate_date_is_past])
+	picture = forms.ImageField(label=_('Picture'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))
 
 	class Meta(UserCreationForm.Meta):
 		model = User
-		fields = ('first_name', 'last_name', 'date_of_birth', 'email', 'biography', 'picture', 'password1', 'password2',)
+		fields = (
+		'first_name', 'last_name', 'alias', 'date_of_birth', 'email', 'biography', 'picture', 'password1', 'password2',)
 
 	def save(self, commit=True):
 		user = super(SignupForm, self).save(commit=False)
@@ -58,7 +89,9 @@ class SignupForm(UserCreationForm):
 		user.date_of_birth = self.cleaned_data['date_of_birth']
 		picture = self.cleaned_data['picture']
 		if not picture:
-			user.picture = json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_user_img.json')))["data"]
+			user.picture = \
+			json.load(open(os.path.join(os.getcwd(), 'mercados_de_prediccion\static\img\default_user_img.json')))[
+				"data"]
 		else:
 			if isinstance(picture, str):
 				user.picture = picture
@@ -73,17 +106,19 @@ class SignupForm(UserCreationForm):
 class EditProfileForm(forms.ModelForm):
 	first_name = forms.CharField(label=_("First name"), max_length=30, required=True)
 	last_name = forms.CharField(label=_("Last name"), max_length=60, required=True)
-	date_of_birth = forms.DateField(label=_("Birth date"))
+	alias = forms.CharField(label=_("Alias"), help_text=_("The nickname by which they will know you. Must be unique."),
+	                        max_length=30, required=True)
+	date_of_birth = forms.DateField(label=_("Date of birth"))
 	biography = forms.CharField(max_length=300, required=False,
 	                            widget=forms.Textarea(attrs={'placeholder': _(
 		                            'Describe yourself: your hobbies, life goals, preferences, interests...')}),
 	                            label=_('Biography'))
-	picture = forms.ImageField(label=_('Image'), validators=[validate_file_image_extension], required=False,
+	picture = forms.ImageField(label=_('Picture'), validators=[validate_file_image_extension], required=False,
 	                           help_text=_('Only .png and .jpg images format are accepted.'))
 
 	class Meta:
 		model = User
-		fields = ('first_name', 'last_name', 'biography', 'date_of_birth', 'picture',)
+		fields = ('first_name', 'last_name', 'alias', 'biography', 'date_of_birth', 'picture',)
 
 	def save(self, commit=True):
 		user = super(EditProfileForm, self).save(commit=False)

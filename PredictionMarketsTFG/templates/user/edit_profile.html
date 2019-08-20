@@ -7,7 +7,8 @@
 </head>
 
 {% block css %}
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css"/>
 {% endblock %}
 
 {% block content %}
@@ -31,7 +32,7 @@
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="first_name" class="text-info">First name:</label><br>
+                        <label for="first_name" class="text-info">{% trans "First name" %}:</label><br>
                         {% if form.first_name.errors %}
                             {{ form.first_name | add_class:'form-control my-input is-invalid' |attr:'id:first_name' |attr:'autofocus:true' }}
                             <div class="invalid-feedback">
@@ -40,9 +41,10 @@
                         {% else %}
                             {{ form.first_name | add_class:'form-control my-input' |attr:'id:first_name' |attr:'autofocus:true' }}
                         {% endif %}
+                        <small class="form-text text-muted">{{ form.first_name.help_text }}</small>
                     </div>
-                     <div class="form-group">
-                        <label for="last_name" class="text-info">Last name:</label><br>
+                    <div class="form-group">
+                        <label for="last_name" class="text-info">{% trans "Last name" %}:</label><br>
                         {% if form.last_name.errors %}
                             {{ form.last_name | add_class:'form-control my-input is-invalid' |attr:'id:last_name' |attr:'autofocus:true' }}
                             <div class="invalid-feedback">
@@ -51,9 +53,24 @@
                         {% else %}
                             {{ form.last_name | add_class:'form-control my-input' |attr:'id:last_name' }}
                         {% endif %}
+                        <small class="form-text text-muted">{{ form.last_name.help_text }}</small>
                     </div>
                     <div class="form-group">
-                        <label for="date_of_birth" class="text-info">Date of birth:</label><br>
+                        <label for="{{ form.alias.id_for_label }}" class="text-info">{{ form.alias.label }}:</label><br>
+                        {% if form.alias.errors %}
+                            {{ form.alias | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
+                            <div class="invalid-feedback">
+                                {% for err in form.alias.errors %}
+                                    {{ err }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.alias | add_class:'form-control my-input' }}
+                        {% endif %}
+                        <small class="form-text text-muted">{{ form.alias.help_text }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="date_of_birth" class="text-info">{% trans "Date of birth" %}:</label><br>
                         {% if form.date_of_birth.errors %}
                             {{ form.date_of_birth | add_class:'form-control my-input is-invalid' |attr:'id:date_of_birth'|attr:'name:date_of_birth' }}
                             <div class="invalid-feedback">
@@ -62,10 +79,12 @@
                         {% else %}
                             {{ form.date_of_birth |add_class:'form-control my-input' |attr:'id:date_of_birth'|attr:'name:date_of_birth' }}
                         {% endif %}
+                        <small class="form-text text-muted">{{ form.date_of_birth.help_text }}</small>
                     </div>
-                     <div class="form-group">
+                    <div class="form-group">
                         <label for="{{ form.biography.id_for_label }}"
-                               class="text-info">{{ form.biography.label }}</label>
+                               class="text-info">{{ form.biography.label }} <span
+                                class="text-muted">{% trans "(Optional)" %}</span></label>
                         {% if form.biography.errors %}
                             {{ form.biography | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
                             <div class="invalid-feedback">
@@ -79,7 +98,8 @@
                     </div>
                     <div class="form-group">
                         <label for="{{ form.picture.id_for_label }}"
-                               class="text-info">* {{ form.picture.label }}</label>
+                               class="text-info">{{ form.picture.label }} <span
+                                class="text-muted">{% trans "(Optional)" %}</span></label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="inputGroupFileAddon01">
@@ -105,11 +125,13 @@
                             </a>
                         {% else %}
                             <button type="submit" class="btn btn-danger" name="delete" onclick="return deleteConfirm()">
-                                {% trans "Delete" %}
+                                {% trans "Delete account" %}
                             </button>
                         {% endif %}
+                        <a href='/user/{{ user.pk }}/{{ user.slug }}' class="btn btn-secondary" role="button">
+                                    {% trans "Cancel" %}</a>
                         <button type="submit" class="btn btn-primary">
-                            {% trans "Save" %}
+                            {% trans "Save changes" %}
                         </button>
                     </div>
                     {% if form.non_field_errors %}
@@ -130,7 +152,8 @@
 {% endblock %}
 
 {% block javascript %}
-     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#date_of_birth').datepicker({
@@ -146,7 +169,7 @@
 
         // This script makes the name of the file appear on upload input
         $(".custom-file-input").on("change", function () {
-             var fileName = $(this).val().split("\\").pop();
+            var fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
 

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+
+<head>
+    <title>{% block title %}
+        {% blocktrans %}Join community{% endblocktrans %}
+    {% endblock %}</title>
+</head>
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 mx-auto text-center">
+            <div class="header-title">
+                <h1 class="wv-heading--title">
+                    {% blocktrans %}Join community{% endblocktrans %}
+                </h1>
+            </div>
+            <div class="text-muted" style="margin-bottom: 5px;">
+                {% blocktrans %}Before joining the community, you must write a short request describing your reasons.{% endblocktrans %}
+                {% blocktrans %}It will be evaluated by the moderator/s of the community.{% endblocktrans %}
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="myform form ">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="{{ form.description.id_for_label }}" class="text-info">{{ form.description.label }}</label>
+                        {% if form.description.errors %}
+                            {{ form.description | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
+                            <small>{{ form.description.help_text }}</small>
+                            <div class="invalid-feedback">
+                                {% for err in form.description.errors %}
+                                    {{ err }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.description | add_class:'form-control my-input' |attr:'autofocus:true' }}
+                            <small>{{ form.description.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {% if form.errors %}
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            {% endif %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                    <div class="text-center">
+                        <a href='/community/{{ community.pk }}/{{ community.slug }}' class="btn btn-secondary">
+                            {% trans "Back to community" %}</a>
+                        <button type="submit" class=" btn btn-primary">{% blocktrans %}Send request{% endblocktrans %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -66,11 +66,12 @@
                 {% for category in categories %}
                     <div class="col-md-3">
                         <div class="card mb-4 box-shadow">
-                            <a href="/markets/?categoryId={{ category.id }}">
+                            <a href="/markets/{{ category.id }}/{{ category.slug }}">
                                 <img class="card-img-top" alt="{{ category.title }}"
                                      src="data:image/png;base64,{{ category.picture }}" data-holder-rendered="true">
                             </a>
                             <div class="card-body">
+                            <a href="/markets/{{ category.id }}/{{ category.slug }}" style="color:#123C69;">
                                 <p class="card-text">
                                     {% if LANGUAGE_CODE == "en" %}
                                         <strong>{{ category.title }}</strong>
@@ -78,6 +79,7 @@
                                         <strong>{{ category.title_es }}</strong>
                                     {% endif %}
                                 </p>
+                            </a>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <small class="text-muted">
                                         <img src="{% static 'img/icons/markets.png' %}"
@@ -91,7 +93,7 @@
                                         {% endif %}
                                     </small>
                                     {% if user.is_staff %}
-                                        <a href='/category/edit/?categoryId={{ category.id }}'
+                                        <a href='/category/edit/{{ category.id }}/{{ category.slug }}'
                                            class="btn btn-outline-secondary"
                                            role="button">{% trans "Edit" %}</a>
                                     {% endif %}

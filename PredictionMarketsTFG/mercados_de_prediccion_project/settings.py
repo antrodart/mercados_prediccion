@@ -28,7 +28,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'hq@lu19)14%t^k=*4*rzod)*2gevj15w#!+eyf7xwaeefu*xo7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 if DEBUG == False:
 	sentry_sdk.init(
@@ -51,7 +51,15 @@ INSTALLED_APPS = [
     'users',
     'django_babel',
 	'widget_tweaks',
+	'social_django',
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'predictmarket.us@gmail.com'
+EMAIL_HOST_PASSWORD = '$FC=us23AL8Y'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -80,10 +88,20 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 				'django.template.context_processors.i18n',
+				'social_django.context_processors.backends',
+				'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+	'social_core.backends.open_id.OpenIdAuth',  #  for Google authentication
+	'social_core.backends.google.GoogleOpenId',  #  for Google authentication
+	'social_core.backends.google.GoogleOAuth2',  #  for Google authentication
+
+	'django.contrib.auth.backends.ModelBackend',  #  default authentication
+)
 
 WSGI_APPLICATION = 'mercados_de_prediccion_project.wsgi.application'
 
@@ -91,16 +109,28 @@ WSGI_APPLICATION = 'mercados_de_prediccion_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd5rl33vg868tpb',
-        'USER': 'gzaerkelumcqvo',
-        'PASSWORD': 'c659aaa362c15ee59b23b3f1e7cb11aeab0d71f7500781af1663e056ed78555f',
-        'HOST': 'ec2-54-227-245-146.compute-1.amazonaws.com',
-        'PORT': '5432',
-    }
-}
+if DEBUG:
+	DATABASES = {
+		'default': {
+			'ENGINE': 'django.db.backends.postgresql',
+			'NAME': 'mercados_prediccion',
+			'USER': 'postgres',
+			'PASSWORD': '$FC=us23AL8Y',
+			'HOST': 'localhost',
+			'PORT': '5432',
+		}
+	}
+else:
+	DATABASES = {
+		'default': {
+			'ENGINE': 'django.db.backends.postgresql',
+			'NAME': 'd5rl33vg868tpb',
+			'USER': 'gzaerkelumcqvo',
+			'PASSWORD': 'c659aaa362c15ee59b23b3f1e7cb11aeab0d71f7500781af1663e056ed78555f',
+			'HOST': 'ec2-54-227-245-146.compute-1.amazonaws.com',
+			'PORT': '5432',
+		}
+	}
 
 
 # Password validation
@@ -153,8 +183,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 AUTH_USER_MODEL = 'users.User'
+LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='33590752386-mk7r5mlu18n3gv29q2ulp59sd4dlgpjn.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'mYGYDr_D80enWb3GGaDHVDnK'
 
 LOGGING = {
     'version': 1,

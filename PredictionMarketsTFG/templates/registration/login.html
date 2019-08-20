@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% load i18n %}
+{% load static %}
 
 <head>
     <title>{% block title %}{% trans "Login" %}{% endblock %}</title>
@@ -8,24 +9,44 @@
 
 {% block content %}
 
-    <div class="container login-container">
-        <div class="row">
-            <div class="col-md-6 login-form-1">
-                <h3>Login for Form 1</h3>
+    <div class="col-md-8 mx-auto text-center">
+        <div class="header-title">
+            <h1 class="wv-heading--title">
+                {% trans "Login" %}
+            </h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="myform form ">
                 <form method='post'>
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="email" class="text-info">Email:</label><br>
-                        {{ form.email | add_class:'form-control'|attr:'placeholder:Your email' |attr:'id:email' }}
+                        {{ form.email | add_class:'form-control' |attr:'id:email' }}
                     </div>
                     <div class="form-group">
-                        <label for="password" class="text-info">Password:</label><br>
-                        {{ form.password | add_class:'form-control'|attr:'placeholder:Your password' |attr:'id:password' }}
+                        <label for="password" class="text-info">{% trans "Password" %}:</label><br>
+                        {{ form.password | add_class:'form-control' |attr:'id:password' }}
                     </div>
-                    <div class="form-group">
-                        <input type="submit" class="btnSubmit" value="Login"/>
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary btn-block" value="{% trans "Login" %}"/>
+                    </div>
+                    <div class="col-md-12 ">
+                        <div class="login-or">
+                            <hr class="hr-or">
+                            <span class="span-or">{% trans "or" %}</span>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a class="btn btn-info btn-block" href="{% url 'social:begin' 'google-oauth2' %}">
+                            <img src="{% static "img/icons/google.png" %}" alt="G" style="max-height: 25px;"/>
+                            {% trans "Log in with Google" %}
+                        </a>
                     </div>
                     {% if form.non_field_errors %}
+                        <br/>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             {% for err in form.non_field_errors %}
                                 {{ err }}
@@ -36,25 +57,7 @@
                         </div>
                     {% endif %}
                     <div class="form-group">
-                        <a href="#" class="ForgetPwd">Forget Password?</a>
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-6 login-form-2">
-                <h3>Login for Form 2</h3>
-                <form>
-                    <div class="form-group">
-                        {{ form.email | add_class:'form-control'|attr:'placeholder:Your email' }}
-                    </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Your Password *" value=""/>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" class="btnSubmit" value="Login"/>
-                    </div>
-                    <div class="form-group">
-
-                        <a href="#" class="ForgetPwd" value="Login">Forget Password?</a>
+                        <a href="{% url "password_reset" %}" class="ForgetPwd">{% trans "Forget Password?" %}</a>
                     </div>
                 </form>
             </div>
