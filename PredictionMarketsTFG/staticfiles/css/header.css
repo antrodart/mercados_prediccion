@@ -1,0 +1,58 @@
+/*--- navigation bar ---*/
+.navbar {
+  /*background:#6ab446;*/
+    background: #123C69;
+    /*background: #AC3B61;*/
+}
+.nav-link {
+  color: #EEE2DC;
+  cursor: pointer;
+    margin-right: 1em !important;
+}
+.navbar-brand{
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+    color: #BAB2B5;
+}
+.navbar-brand:hover{
+    color: #AC3B61;
+}
+.nav-link:hover{
+  color: #BAB2B5;
+}
+
+.navbar-collapse {
+  justify-content: flex-end;
+}
+.img-flag {
+    height: 15px;
+    width: 25px;
+}
+.clicked, .private-karma-block{
+    background: #AC3B61 !important;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #EEE2DC;
+}
+
+.img-logo{
+    height: 100px;
+    width: 150px;
+}
+
+.img-profile{
+    height: 25px;
+    width: 25px;
+    border-radius: 25px;
+    object-fit: cover;
+}
+
+.public-karma-block, .private-karma-block{
+    color: #FFA31A;
+    margin-right: 10px;
+}
+
+.private-karma-block{
+    padding: 8px;
+}
