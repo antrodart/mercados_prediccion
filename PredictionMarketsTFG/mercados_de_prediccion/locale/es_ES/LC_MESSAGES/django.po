@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-08-20 21:34+0200\n"
+"POT-Creation-Date: 2019-08-20 22:47+0200\n"
 "PO-Revision-Date: 2019-04-22 13:43+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -154,7 +154,7 @@ msgstr ""
 #: mercados_de_prediccion/forms.py:230 templates/market/display_market.html:188
 #: templates/market/display_market.html:232
 #: templates/market/display_market.html:292
-#: templates/market/display_market.html:407
+#: templates/market/display_market.html:414
 msgid "Quantity"
 msgstr "Cantidad"
 
@@ -667,7 +667,7 @@ msgstr ""
 "verificada"
 
 #: templates/community/list_communities.html:154
-#: templates/market/display_market.html:421
+#: templates/market/display_market.html:428
 msgid "Close"
 msgstr "Cerrar"
 
@@ -799,7 +799,7 @@ msgstr "Precio"
 
 #: templates/market/display_market.html:194
 #: templates/market/display_market.html:238
-#: templates/market/display_market.html:428
+#: templates/market/display_market.html:435
 msgid "Buy"
 msgstr "Comprar"
 
@@ -833,35 +833,35 @@ msgstr "Precio 'no'"
 msgid "Comments"
 msgstr "Comentarios"
 
-#: templates/market/display_market.html:351
+#: templates/market/display_market.html:352
 msgid "Share"
 msgstr "Comentar"
 
-#: templates/market/display_market.html:373
+#: templates/market/display_market.html:376
 msgid "commented on"
 msgstr "comentó el"
 
-#: templates/market/display_market.html:375
+#: templates/market/display_market.html:381
 msgid "Delete comment"
 msgstr "Borrar comentario"
 
-#: templates/market/display_market.html:407
+#: templates/market/display_market.html:414
 msgid "assets"
 msgstr "activos"
 
-#: templates/market/display_market.html:409
+#: templates/market/display_market.html:416
 msgid "Price per asset"
 msgstr "Precio por activo"
 
-#: templates/market/display_market.html:410
+#: templates/market/display_market.html:417
 msgid "Total price"
 msgstr "Precio total"
 
-#: templates/market/display_market.html:415
+#: templates/market/display_market.html:422
 msgid "You don't have enough karma"
 msgstr "No tienes suficiente Karma"
 
-#: templates/market/display_market.html:418
+#: templates/market/display_market.html:425
 msgid "You must be logged in order to buy assets"
 msgstr "Debes iniciar sesión para comprar activos"
 
@@ -1391,8 +1391,8 @@ msgid "Alias"
 msgstr "Alias"
 
 #: users/forms.py:65 users/forms.py:109
-msgid "The nickname by which they will know you. Must be unique."
-msgstr "El apodo por el que te conocerán. Debe ser único."
+msgid "The nickname by which they will know you."
+msgstr "El apodo con el que te conocerán."
 
 #: users/forms.py:70 users/forms.py:113
 msgid "Describe yourself: your hobbies, life goals, preferences, interests..."
@@ -1525,4 +1525,7 @@ msgstr "No debes estar verificado."
 
 #~ msgid "User joined on"
 #~ msgstr "El usuario se unió el"
+
+#~ msgid "The nickname by which they will know you. Must be unique."
+#~ msgstr "El apodo por el que te conocerán. Debe ser único."
 

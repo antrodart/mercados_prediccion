@@ -62,7 +62,7 @@ class VerifyForm(forms.ModelForm):
 class SignupForm(UserCreationForm):
 	first_name = forms.CharField(label=_("First name"), max_length=30, required=True, widget=forms.TextInput(attrs={}))
 	last_name = forms.CharField(label=_("Last name"), max_length=60, required=True, widget=forms.TextInput(attrs={}))
-	alias = forms.CharField(label=_("Alias"), help_text=_("The nickname by which they will know you. Must be unique."),
+	alias = forms.CharField(label=_("Alias"), help_text=_("The nickname by which they will know you."),
 	                        max_length=30, required=True, widget=forms.TextInput(attrs={}))
 	email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.',
 	                         widget=forms.EmailInput(attrs={'autofocus': None}))
@@ -106,7 +106,7 @@ class SignupForm(UserCreationForm):
 class EditProfileForm(forms.ModelForm):
 	first_name = forms.CharField(label=_("First name"), max_length=30, required=True)
 	last_name = forms.CharField(label=_("Last name"), max_length=60, required=True)
-	alias = forms.CharField(label=_("Alias"), help_text=_("The nickname by which they will know you. Must be unique."),
+	alias = forms.CharField(label=_("Alias"), help_text=_("The nickname by which they will know you."),
 	                        max_length=30, required=True)
 	date_of_birth = forms.DateField(label=_("Date of birth"))
 	biography = forms.CharField(max_length=300, required=False,

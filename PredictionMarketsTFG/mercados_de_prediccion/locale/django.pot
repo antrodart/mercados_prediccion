@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-08-20 21:34+0200\n"
+"POT-Creation-Date: 2019-08-20 22:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -141,7 +141,7 @@ msgstr ""
 #: mercados_de_prediccion/forms.py:230 templates/market/display_market.html:188
 #: templates/market/display_market.html:232
 #: templates/market/display_market.html:292
-#: templates/market/display_market.html:407
+#: templates/market/display_market.html:414
 msgid "Quantity"
 msgstr ""
 
@@ -642,7 +642,7 @@ msgid ""
 msgstr ""
 
 #: templates/community/list_communities.html:154
-#: templates/market/display_market.html:421
+#: templates/market/display_market.html:428
 msgid "Close"
 msgstr ""
 
@@ -774,7 +774,7 @@ msgstr ""
 
 #: templates/market/display_market.html:194
 #: templates/market/display_market.html:238
-#: templates/market/display_market.html:428
+#: templates/market/display_market.html:435
 msgid "Buy"
 msgstr ""
 
@@ -808,35 +808,35 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
-#: templates/market/display_market.html:351
+#: templates/market/display_market.html:352
 msgid "Share"
 msgstr ""
 
-#: templates/market/display_market.html:373
+#: templates/market/display_market.html:376
 msgid "commented on"
 msgstr ""
 
-#: templates/market/display_market.html:375
+#: templates/market/display_market.html:381
 msgid "Delete comment"
 msgstr ""
 
-#: templates/market/display_market.html:407
+#: templates/market/display_market.html:414
 msgid "assets"
 msgstr ""
 
-#: templates/market/display_market.html:409
+#: templates/market/display_market.html:416
 msgid "Price per asset"
 msgstr ""
 
-#: templates/market/display_market.html:410
+#: templates/market/display_market.html:417
 msgid "Total price"
 msgstr ""
 
-#: templates/market/display_market.html:415
+#: templates/market/display_market.html:422
 msgid "You don't have enough karma"
 msgstr ""
 
-#: templates/market/display_market.html:418
+#: templates/market/display_market.html:425
 msgid "You must be logged in order to buy assets"
 msgstr ""
 
@@ -1339,7 +1339,7 @@ msgid "Alias"
 msgstr ""
 
 #: users/forms.py:65 users/forms.py:109
-msgid "The nickname by which they will know you. Must be unique."
+msgid "The nickname by which they will know you."
 msgstr ""
 
 #: users/forms.py:70 users/forms.py:113
