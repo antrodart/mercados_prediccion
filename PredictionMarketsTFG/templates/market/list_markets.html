@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+{% load widget_tweaks %}
 
 <head>
     <title>{% block title %}{% trans "Markets" %}{% endblock %}</title>
@@ -33,7 +34,7 @@
     </div>
 
     <div class="row">
-        <div class="col">
+        <div class="col-sm">
             <nav aria-label="Pagination">
                 <ul class="pagination">
                     {% if markets.has_previous %}
@@ -62,8 +63,29 @@
                 </ul>
             </nav>
         </div>
+
+        <div class="col-sm">
+            <form action="{% url 'markets' %}" method="get">
+                <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
+                    <div class="input-group">
+                        {{ search_form.keyword }}
+                        <div class="input-group-append">
+                            <a href="{% url 'markets' %}">
+                                <button type="button" class="btn btn-link text-primary">
+                                    <img src="{% static 'img/icons/uncheck.png' %}" style="max-height: 22px;">
+                                </button>
+                            </a>
+                            <button id="button-addon1" type="submit" class="btn btn-link text-primary">
+                                <img src="{% static 'img/icons/search.png' %}" style="max-height: 25px;">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         {% if user.is_staff or user_verified %}
-            <div class="col">
+            <div class="col-sm">
                 <div class="float-right">
                     <a href="{% url 'create_market' %}">
                         <button type="button" class="btn btn-primary">
@@ -133,7 +155,8 @@
                                            role="button">
                                             <img src="{% static 'img/icons/edit.png' %}"
                                                  title="{% trans "Edit" %}"
-                                                 alt="{% trans "Edit" %}" style="max-height: 25px;"> {% trans "Edit" %}</a>
+                                                 alt="{% trans "Edit" %}" style="max-height: 25px;"> {% trans "Edit" %}
+                                        </a>
                                     {% endif %}
                                 </div>
                             </div>

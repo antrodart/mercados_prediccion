@@ -47,7 +47,7 @@ class User(AbstractUser):
 	first_name = models.CharField(max_length=30, blank=False)
 	last_name = models.CharField(max_length=60, blank=False)
 	email = models.EmailField(unique=True, max_length=150)
-	alias = models.CharField(max_length=30, blank=False, unique=True)
+	alias = models.CharField(max_length=30, blank=False)
 	date_of_birth = models.DateField(blank=True, null=True, validators=[validate_date_is_past])
 	biography = models.TextField(blank=True, null=True)
 	public_karma = models.IntegerField(null=False, default=500, validators=[MinValueValidator(0)])

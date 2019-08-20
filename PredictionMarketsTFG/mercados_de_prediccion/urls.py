@@ -49,4 +49,7 @@ urlpatterns = [
 	#  Bets
 	path('bets/<int:user_id>/<slug:slug>', views.past_bets, name='past_bets'),
 
+	#  Comments
+	path('delete-comment/<int:comment_id>', views.delete_comment, name='delete_comment'),
+
 ]

@@ -269,3 +269,39 @@ class JudgeMultipleNonExclusiveMarketForm(forms.Form):
 		super(JudgeMultipleNonExclusiveMarketForm, self).__init__(*args, **kwargs)
 		if self.CHOICES:
 			self.fields["options"].choices = self.CHOICES
+
+
+class SearchMarketForm(forms.Form):
+	keyword = forms.CharField(label=_("Search"), required=False,
+	                          widget=forms.TextInput(attrs={'placeholder': _("Market title or description")}))
+
+	def __init__(self, *args, **kwargs):
+		self.keyword = kwargs.pop('keyword', None)
+		super(SearchMarketForm, self).__init__(*args, **kwargs)
+		for visible in self.visible_fields():
+			visible.field.widget.attrs['class'] = 'form-control form-control-list border-0 bg-light'
+		if self.keyword:
+			self.fields["keyword"].initial = self.keyword
+
+
+class CommentMarketForm(forms.ModelForm):
+	body = forms.CharField(required=True, widget=forms.Textarea(attrs={'placeholder': _('Anything to comment?')}))
+
+	class Meta():
+		model = Comment
+		fields = ('body',)
+
+	def __init__(self, *args, **kwargs):
+		self.author = kwargs.pop('author')
+		self.market = kwargs.pop('market')
+		super(CommentMarketForm, self).__init__(*args, **kwargs)
+
+	def save(self, commit=True):
+		comment = super(CommentMarketForm, self).save(commit=False)
+		comment.body = self.cleaned_data['body']
+		comment.moment = datetime.datetime.now()
+		comment.market = self.market
+		comment.author = self.author
+		if commit:
+			comment.save()
+		return comment

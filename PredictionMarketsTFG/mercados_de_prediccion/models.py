@@ -42,6 +42,9 @@ class Market(models.Model):
 		print(participants)
 		return participants
 
+	def get_comments(self):
+		return Comment.objects.filter(market_id=self.pk).order_by('-moment')
+
 	def __str__(self):
 		return self.title
 
@@ -91,7 +94,6 @@ class Price(models.Model):
 
 class Comment(models.Model):
 	body = models.TextField(blank=False)
-	rating = models.IntegerField(null=False, default=0)
 	moment = models.DateTimeField(auto_now_add=True)
 	market = models.ForeignKey(Market, on_delete=models.CASCADE, null=False)
 	author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
@@ -113,6 +115,9 @@ class Community(models.Model):
 
 	def joinedcommunity_accepted_set(self):
 		return self.joinedcommunity_set.filter(is_accepted=True)
+
+	def joinedcommunity_accepted_ordered_set(self):
+		return self.joinedcommunity_set.filter(is_accepted=True).order_by('-private_karma')
 
 	def user_accepted_set(self):
 		return self.joinedcommunity_accepted_set().values_list('user', flat=True)

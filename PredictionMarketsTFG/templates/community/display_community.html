@@ -102,14 +102,36 @@
                             <img src="{% static 'img/icons/users.png' %}" alt="Users" style="max-height: 25px;">
                             {% trans "Members:" %}
                         </h2>
-                        <div>
-                            <ul>
-                                {% for joined_community in community.joinedcommunity_accepted_set.all %}
-                                    <li><a href="/user/{{ joined_community.user.pk }}/{{ joined_community.user.slug }}">
-                                        {{ joined_community.user.alias }}</a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
+                        <div class="album bg-light" style="margin-bottom: 1rem">
+                            <div class="container">
+                                <div class="row">
+                                    {% for joined_community in community.joinedcommunity_accepted_ordered_set.all %}
+                                        <div class="col-md-12">
+                                            <div class='card mb-4 box-shadow'>
+                                                <a href="/user/{{ joined_community.user.pk }}/{{ joined_community.user.slug }}">
+                                                    <img class='card-img-top img-thumbnail img-related-market'
+                                                         alt="{{ joined_community.user.first_name }} {{ joined_community.user.last_name }}"
+                                                         src="data:image/png;base64,{{ joined_community.user.picture }}"
+                                                         data-holder-rendered="true">
+                                                </a>
+                                                <div class="card-body">
+                                                    <p class="card-text">
+                                                        <a href="/user/{{ joined_community.user.pk }}/{{ joined_community.user.slug }}"
+                                                           class="text-blue">
+                                                            {% if joined_community.user.alias == "" %}
+                                                                <strong>{{ joined_community.user.first_name }}</strong>
+                                                            {% else %}
+                                                                <strong>{{ joined_community.user.alias }}</strong>
+                                                            {% endif %}
+                                                        </a>
+                                                        <span class="text-red">{{ joined_community.private_karma }} Karma</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
