@@ -297,8 +297,7 @@
                                 <form action="/market/{{ market.pk }}/{{ market.slug }}" method="post">
                                     {% csrf_token %}
                                     {{ comment_form.body }}
-                                    <button type="submit" class="btn btn-warning text-left"><i
-                                            class="fa fa-comment"></i>{% trans "Share" %}
+                                    <button type="submit" class="btn btn-warning text-left">{% trans "Share" %}
                                     </button>
                                 </form>
                             </div><!-- Status Upload  -->

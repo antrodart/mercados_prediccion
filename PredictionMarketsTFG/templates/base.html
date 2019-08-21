@@ -20,13 +20,8 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static "css/header.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "css/footer.css" %}">
     {% block css %}
     {% endblock %}
-
-    <!-- Fontawesome icons-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
 </head>
 <body>
@@ -37,7 +32,7 @@
             {% trans "Home" %}
         </a>
         <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse"
-                data-target="#main-navigation">
+                data-target="#main-navigation" name="toggle">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="main-navigation">
@@ -165,7 +160,7 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
-                        <img src="{% static "img/icons/globe.jpg" %}" alt="{% trans "Language" %}" class="img-profile"/>
+                        <img src="{% static "img/icons/globe.webp" %}" alt="{% trans "Language" %}" class="img-profile"/>
                         {% trans "Language" %}
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -174,7 +169,7 @@
                             <a class="dropdown-item" href="javascript:void(0)"
                                onclick="changeLanguage('{{ lang.0 }}');">
                                 {% if lang.0 == "es" %}
-                                    <img class="img-flag" src="{% static 'img/flag-ES.png' %}" alt="es"/>
+                                    <img class="img-flag" src="{% static 'img/flag-ES.webp' %}" alt="es"/>
                                 {% else %}
                                     <img class="img-flag" src="{% static 'img/flag-EN.png' %}" alt="en"/>
                                 {% endif %}

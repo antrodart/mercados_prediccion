@@ -4,6 +4,7 @@
 {% load widget_tweaks %}
 
 <head>
+    <meta name="{% trans "Markets" %}" content="Markets list">
     <title>{% block title %}{% trans "Markets" %}{% endblock %}</title>
 </head>
 
@@ -71,12 +72,12 @@
                         {{ search_form.keyword }}
                         <div class="input-group-append">
                             <a href="{% url 'markets' %}">
-                                <button type="button" class="btn btn-link text-primary">
-                                    <img src="{% static 'img/icons/uncheck.png' %}" style="max-height: 22px;">
+                                <button type="button" class="btn btn-link text-primary" name="cancel">
+                                    <img alt="Cancel" src="{% static 'img/icons/uncheck.png' %}" style="max-height: 22px;">
                                 </button>
                             </a>
-                            <button id="button-addon1" type="submit" class="btn btn-link text-primary">
-                                <img src="{% static 'img/icons/search.png' %}" style="max-height: 25px;">
+                            <button id="button-addon1" type="submit" class="btn btn-link text-primary" name="search">
+                                <img alt="Search" src="{% static 'img/icons/search.png' %}" style="max-height: 25px;">
                             </button>
                         </div>
                     </div>
