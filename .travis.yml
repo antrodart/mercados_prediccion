@@ -2,7 +2,7 @@ language: python
 python: 
 - "3.7"
 env: 
-- DJANGO=2.1.7 DB=postgres
+- DJANGO=2.1.7 DB=postgres TRAVIS=true
 before_install: 
 - cd PredictionMarketsTFG
 install: 
@@ -13,7 +13,8 @@ services:
   - postgresql
 
 before_script:
- - cp local_settings.travis.py local_settings.py
  - psql -c "create user predictmarket with password 'predictmarket'" 
  - psql -c "create database predictmarket owner predictmarket"
+ - psql -c "create database test_predictmarket owner predictmarket"
+ - psql -c "alter role predictmarket superuser"
  - python manage.py migrate
