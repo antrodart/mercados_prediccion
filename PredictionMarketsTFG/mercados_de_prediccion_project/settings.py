@@ -109,7 +109,18 @@ WSGI_APPLICATION = 'mercados_de_prediccion_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-if DEBUG:
+if os.getenv('TRAVIS', None):
+	DATABASES = {
+		'default': {
+			'ENGINE': 'django.db.backends.postgresql',
+			'NAME': 'predictmarket',
+			'USER': 'predictmarket',
+			'PASSWORD': 'predictmarket',
+			'HOST': 'localhost',
+			'PORT': '5432',
+		}
+	}
+elif DEBUG:
 	DATABASES = {
 		'default': {
 			'ENGINE': 'django.db.backends.postgresql',
@@ -121,28 +132,16 @@ if DEBUG:
 		}
 	}
 else:
-	if os.getenv('TRAVIS', None):
-		DATABASES = {
-			'default': {
-				'ENGINE': 'django.db.backends.postgresql',
-				'NAME': 'predictmarket',
-				'USER': 'predictmarket',
-				'PASSWORD': 'predictmarket',
-				'HOST': 'localhost',
-				'PORT': '5432',
-			}
+	DATABASES = {
+		'default': {
+			'ENGINE': 'django.db.backends.postgresql',
+			'NAME': 'd5rl33vg868tpb',
+			'USER': 'gzaerkelumcqvo',
+			'PASSWORD': 'c659aaa362c15ee59b23b3f1e7cb11aeab0d71f7500781af1663e056ed78555f',
+			'HOST': 'ec2-54-227-245-146.compute-1.amazonaws.com',
+			'PORT': '5432',
 		}
-	else:
-		DATABASES = {
-			'default': {
-				'ENGINE': 'django.db.backends.postgresql',
-				'NAME': 'd5rl33vg868tpb',
-				'USER': 'gzaerkelumcqvo',
-				'PASSWORD': 'c659aaa362c15ee59b23b3f1e7cb11aeab0d71f7500781af1663e056ed78555f',
-				'HOST': 'ec2-54-227-245-146.compute-1.amazonaws.com',
-				'PORT': '5432',
-			}
-		}
+	}
 
 
 # Password validation
