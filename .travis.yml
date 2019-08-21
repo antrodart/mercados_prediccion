@@ -16,4 +16,5 @@ before_script:
  - psql -c "create user predictmarket with password 'predictmarket'" 
  - psql -c "create database predictmarket owner predictmarket"
  - psql -c "create database test_predictmarket owner predictmarket"
+ - psql -c "alter role predictmarket superuser"
  - python manage.py migrate
