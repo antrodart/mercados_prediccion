@@ -1,0 +1,19 @@
+language: python 
+python: 
+- "3.7"
+env: 
+- DJANGO=2.1.7 DB=postgres
+before_install: 
+- cd PredictionMarketsTFG
+install: 
+- pip install -r ../requirements.txt
+script: 
+- python manage.py test
+services:
+  - postgresql
+
+before_script:
+ - cp local_settings.travis.py local_settings.py
+ - psql -c "create user predictmarket with password 'predictmarket'" 
+ - psql -c "create database predictmarket owner predictmarket"
+ - python manage.py migrate
