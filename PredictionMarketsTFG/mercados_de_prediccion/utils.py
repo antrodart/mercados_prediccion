@@ -75,7 +75,7 @@ def recalculate_price_binary_options(option, asset):
 		total_assets_betting_option = Asset.objects.filter(option=option).aggregate(Sum('quantity'))['quantity__sum']
 		total_assets_other_option = Asset.objects.filter(option=other_option).aggregate(Sum('quantity'))['quantity__sum']
 		user_option_assets = Asset.objects.filter(user=asset.user, option=option)
-	else:
+	else:  #  Market is multiple non exclusive
 		total_assets_betting_option = Asset.objects.filter(option=option, is_yes=asset.is_yes).aggregate(Sum('quantity'))['quantity__sum']
 		total_assets_other_option = Asset.objects.filter(option=option, is_yes=not asset.is_yes).aggregate(Sum('quantity'))['quantity__sum']
 		if asset.is_yes:
