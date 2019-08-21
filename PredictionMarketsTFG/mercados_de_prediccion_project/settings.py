@@ -109,7 +109,21 @@ WSGI_APPLICATION = 'mercados_de_prediccion_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-if DEBUG:
+if os.getenv('TRAVIS', None):
+	DATABASES = {
+		'default': {
+			'ENGINE': 'django.db.backends.postgresql',
+			'NAME': 'predictmarket',
+			'USER': 'predictmarket',
+			'PASSWORD': 'predictmarket',
+			'HOST': 'localhost',
+			'PORT': '5432',
+			'TEST': {
+				'NAME': 'test_predictmarket',
+			}
+		}
+	}
+elif DEBUG:
 	DATABASES = {
 		'default': {
 			'ENGINE': 'django.db.backends.postgresql',

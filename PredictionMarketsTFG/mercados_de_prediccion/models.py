@@ -143,4 +143,3 @@ class Asset(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
 	option = models.ForeignKey(Option, on_delete=models.CASCADE, null=False)
 	market = models.ForeignKey(Market, on_delete=models.CASCADE, null=False)
-
