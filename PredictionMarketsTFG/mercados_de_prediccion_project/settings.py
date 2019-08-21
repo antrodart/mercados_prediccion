@@ -118,6 +118,9 @@ if os.getenv('TRAVIS', None):
 			'PASSWORD': 'predictmarket',
 			'HOST': 'localhost',
 			'PORT': '5432',
+			'TEST': {
+				'NAME': 'test_predictmarket',
+			}
 		}
 	}
 elif DEBUG:

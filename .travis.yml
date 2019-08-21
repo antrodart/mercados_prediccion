@@ -15,4 +15,5 @@ services:
 before_script:
  - psql -c "create user predictmarket with password 'predictmarket'" 
  - psql -c "create database predictmarket owner predictmarket"
+ - psql -c "create database test_predictmarket owner predictmarket"
  - python manage.py migrate
