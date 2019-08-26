@@ -4,6 +4,9 @@ body {
     background: #EEE2DC;
 }
 
+body > .container {
+  padding: 60px 15px 0;
+}
 
 .send-button {
     background: #54C7C3;
