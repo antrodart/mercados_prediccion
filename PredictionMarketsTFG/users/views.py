@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import IntegrityError, transaction
 from django.contrib.auth import login, authenticate, update_session_auth_hash
@@ -10,6 +11,7 @@ from users.forms import SignupForm, EditProfileForm, LoginForm, VerifyForm
 from users.models import User, VerifyRequest
 from mercados_de_prediccion.utils import add_months
 import datetime
+import csv
 
 def login_view(request):
 	if not request.user.is_anonymous:
@@ -195,3 +197,17 @@ def reject_verify_request(request, verify_request_id):
 			return redirect('/verify/list-requests/')
 	except IntegrityError:
 		return redirect('/verify/list-requests/')
+
+
+@login_required()
+def export_user_csv(request):
+	response = HttpResponse(content_type='text/csv')
+	response['Content-Disposition'] = 'attachment; filename="user_data.csv"'
+
+	writer = csv.writer(response)
+	user = request.user
+	response.write(u'\ufeff'.encode('utf8'))
+	writer.writerow([_('First name'), _('Last name'), _('Email'), _('Alias'), _('Date of birth'), _('Biography'),])
+	writer.writerow([user.first_name, user.last_name, user.email, user.alias, user.date_of_birth, user.biography,])
+
+	return response

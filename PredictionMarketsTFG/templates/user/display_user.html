@@ -53,9 +53,11 @@
                                 {% trans "Date of birth" %}: {{ user_profile.date_of_birth }}<br/>
                             {% endif %}
                             {% blocktrans %}Joined on{% endblocktrans %} {{ user_profile.date_joined|date }}.<br/>
-                            <a href="/user/export">{% trans "Export my data" %}</a>
+                            {% if user.is_authenticated  and user == user_profile %}
+                                <a href="/user/export">{% trans "Export my data" %}</a>
+                            {% endif %}
                         </div>
-                        {% if user_profile.deletion_date %}
+                        {% if user.is_authenticated  and user == user_profile and user_profile.deletion_date %}
                             <div class="alert alert-danger" role="alert">
                                 {% trans "Your account will be deleted on" %} {{ user_profile.deletion_date }}.
                                 {% trans "You can cancel this by" %} <a
