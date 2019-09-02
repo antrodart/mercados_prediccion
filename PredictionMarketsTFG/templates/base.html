@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load babel %}
 {% load intspace %}
+{% load cookielaw_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,9 +21,9 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static "css/header.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "cookielaw/css/cookielaw.css" %}">
     {% block css %}
     {% endblock %}
-
 </head>
 <body>
 <header>
@@ -183,6 +184,7 @@
     </nav>
 </header>
 <main class="container" role="main">
+    {% cookielaw_banner %}
     {% block content %}
     {% endblock %}
 
@@ -207,6 +209,7 @@
 
 <script src="{% static 'js/main.js' %}"></script>
 <script src="{% static 'js/i18n.js' %}"></script>
+<script src="{% static 'cookielaw/js/cookielaw.js' %}"></script>
 <script>
     $(document).ready(function () {
         var url_str = window.location.pathname;

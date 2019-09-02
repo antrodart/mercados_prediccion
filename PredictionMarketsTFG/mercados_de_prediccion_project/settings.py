@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_babel',
 	'widget_tweaks',
 	'social_django',
+	'cookielaw',
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
