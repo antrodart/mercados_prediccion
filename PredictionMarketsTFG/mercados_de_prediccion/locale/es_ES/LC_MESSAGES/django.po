@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-08-26 17:29+0200\n"
+"POT-Creation-Date: 2019-09-02 19:31+0200\n"
 "PO-Revision-Date: 2019-04-22 13:43+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -93,8 +93,8 @@ msgstr ""
 "La fecha en la que el mercado finalizará y los usuarios no podrán "
 "apostar. Debe estar en formato dd/mm/yyyy."
 
-#: mercados_de_prediccion/forms.py:95 templates/base.html:79
-#: templates/base.html:81 templates/category/list_categories.html:6
+#: mercados_de_prediccion/forms.py:95 templates/base.html:80
+#: templates/base.html:82 templates/category/list_categories.html:6
 #: templates/category/list_categories.html:15
 msgid "Categories"
 msgstr "Categorías"
@@ -135,7 +135,7 @@ msgid "Category"
 msgstr "Categoría"
 
 #: mercados_de_prediccion/forms.py:174 templates/market/edit_market.html:106
-#: templates/statistics/past_bets.html:122 templates/user/display_user.html:210
+#: templates/statistics/past_bets.html:122 templates/user/display_user.html:212
 msgid "Option"
 msgstr "Opción"
 
@@ -213,32 +213,32 @@ msgstr "El mercado ha finalizado y ya no acepta apuestas."
 msgid "The market is part of a private community in which you do not have access."
 msgstr "El mercado es parte de una comunidad privada a la que no tienes acceso."
 
-#: mercados_de_prediccion/views.py:54 mercados_de_prediccion/views.py:71
-#: mercados_de_prediccion/views.py:621 mercados_de_prediccion/views.py:656
-#: users/views.py:55 users/views.py:148 users/views.py:169 users/views.py:187
+#: mercados_de_prediccion/views.py:57 mercados_de_prediccion/views.py:74
+#: mercados_de_prediccion/views.py:624 mercados_de_prediccion/views.py:659
+#: users/views.py:57 users/views.py:150 users/views.py:171 users/views.py:189
 msgid "Must be logged as Admin."
 msgstr "Debe estar logueado como Admin."
 
-#: mercados_de_prediccion/views.py:127
+#: mercados_de_prediccion/views.py:130
 #: templates/community/list_communities.html:151
 msgid "You must have more than 2000 Karma or be verified"
 msgstr "Debes tener más de 2000 Karma o ser verificado"
 
-#: mercados_de_prediccion/views.py:155
+#: mercados_de_prediccion/views.py:158
 msgid "You cannot edit this community."
 msgstr "No puedes editar esta comunidad."
 
-#: mercados_de_prediccion/views.py:190
+#: mercados_de_prediccion/views.py:193
 #: templates/community/display_community.html:25
 #: templates/community/list_communities.html:43
 msgid "Private community"
 msgstr "Comunidad privada"
 
-#: mercados_de_prediccion/views.py:214
+#: mercados_de_prediccion/views.py:217
 msgid "You can't create a market in this community."
 msgstr "No puedes crear un mercado en esta comunidad."
 
-#: mercados_de_prediccion/views.py:216
+#: mercados_de_prediccion/views.py:219
 msgid ""
 "You can't create a public market. Please contact us if you want to verify"
 " your account and create public markets."
@@ -246,37 +246,37 @@ msgstr ""
 "No puedes crear un mercado público. Por favor contáctanos si quieres "
 "verificar tu cuenta y crear mercados públicos."
 
-#: mercados_de_prediccion/views.py:285
+#: mercados_de_prediccion/views.py:288
 msgid "You can't edit this market."
 msgstr "No puedes editar este mercado."
 
-#: mercados_de_prediccion/views.py:319
+#: mercados_de_prediccion/views.py:322
 msgid "You are already member of this community."
 msgstr "Ya eres miembro de esta comunidad."
 
-#: mercados_de_prediccion/views.py:338 mercados_de_prediccion/views.py:347
-#: mercados_de_prediccion/views.py:354 mercados_de_prediccion/views.py:362
-#: mercados_de_prediccion/views.py:369
+#: mercados_de_prediccion/views.py:341 mercados_de_prediccion/views.py:350
+#: mercados_de_prediccion/views.py:357 mercados_de_prediccion/views.py:365
+#: mercados_de_prediccion/views.py:372
 msgid "Only moderators can access this page."
 msgstr "Sólo los moderadores pueden acceder a esta página."
 
-#: mercados_de_prediccion/views.py:650
+#: mercados_de_prediccion/views.py:653
 msgid "The market does not exist or it has not expired"
 msgstr "El mercado no existe o ha expirado"
 
-#: mercados_de_prediccion/views.py:654
+#: mercados_de_prediccion/views.py:657
 msgid "Must be the market creator."
 msgstr "Debes ser el creador del mercado."
 
-#: mercados_de_prediccion/views.py:659
+#: mercados_de_prediccion/views.py:662
 msgid "Must be the creator of the Market"
 msgstr "Debes ser el creador del mercado"
 
-#: mercados_de_prediccion/views.py:674 mercados_de_prediccion/views.py:693
+#: mercados_de_prediccion/views.py:677 mercados_de_prediccion/views.py:696
 msgid "The option is not from this market."
 msgstr "La opción no es de este mercado."
 
-#: mercados_de_prediccion/views.py:794
+#: mercados_de_prediccion/views.py:797
 msgid "You cannot delete this comment"
 msgstr "No puedes borrar este comentario"
 
@@ -309,11 +309,11 @@ msgstr "Compraste "
 msgid " assets"
 msgstr " activos"
 
-#: mercados_de_prediccion_project/settings.py:172
+#: mercados_de_prediccion_project/settings.py:173
 msgid "English"
 msgstr "Inglés"
 
-#: mercados_de_prediccion_project/settings.py:173
+#: mercados_de_prediccion_project/settings.py:174
 msgid "Spanish"
 msgstr "Español"
 
@@ -353,15 +353,15 @@ msgstr "Sobre nosotros"
 msgid "About."
 msgstr "Sobre nosotros."
 
-#: templates/base.html:9
+#: templates/base.html:10
 msgid "Prediction Markets"
 msgstr "Mercados de predicción"
 
-#: templates/base.html:32
+#: templates/base.html:33
 msgid "Home"
 msgstr "Inicio"
 
-#: templates/base.html:42 templates/base.html:43
+#: templates/base.html:43 templates/base.html:44
 #: templates/category/list_categories.html:86
 #: templates/category/list_categories.html:87
 #: templates/market/list_judge_markets.html:6
@@ -370,7 +370,7 @@ msgstr "Inicio"
 msgid "Markets"
 msgstr "Mercados"
 
-#: templates/base.html:48 templates/base.html:70
+#: templates/base.html:49 templates/base.html:71
 #: templates/market/display_market.html:65
 #: templates/market/display_market.html:66
 #: templates/market/display_market_ended.html:64
@@ -380,84 +380,84 @@ msgstr "Mercados"
 msgid "Community"
 msgstr "Comunidad"
 
-#: templates/base.html:50 templates/community/list_communities.html:6
+#: templates/base.html:51 templates/community/list_communities.html:6
 msgid "Communities"
 msgstr "Comunidades"
 
-#: templates/base.html:54 templates/base.html:56
+#: templates/base.html:55 templates/base.html:57
 #: templates/community/list_communities.html:23
 msgid "All communities"
 msgstr "Todas las comunidades"
 
-#: templates/base.html:61 templates/base.html:62
+#: templates/base.html:62 templates/base.html:63
 msgid "Created communities"
 msgstr "Comunidades creadas"
 
-#: templates/base.html:96 templates/user/display_user.html:42
+#: templates/base.html:97 templates/user/display_user.html:42
 msgid "public Karma"
 msgstr "Karma público"
 
-#: templates/base.html:110
+#: templates/base.html:111
 msgid "My profile"
 msgstr "Mi perfil"
 
-#: templates/base.html:114
+#: templates/base.html:115
 msgid "Betting history"
 msgstr "Historial de apuestas"
 
-#: templates/base.html:119
+#: templates/base.html:120
 msgid "Verify my account"
 msgstr "Verificar mi cuenta"
 
-#: templates/base.html:125
+#: templates/base.html:126
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: templates/base.html:130 templates/registration/login.html:7
+#: templates/base.html:131 templates/registration/login.html:7
 #: templates/registration/login.html:15 templates/registration/login.html:34
 msgid "Login"
 msgstr "Iniciar sesión"
 
-#: templates/base.html:133 templates/registration/signup.html:9
+#: templates/base.html:134 templates/registration/signup.html:9
 #: templates/registration/signup.html:27 templates/registration/signup.html:171
 msgid "Sign up"
 msgstr "Registrarse"
 
-#: templates/base.html:142
+#: templates/base.html:143
 msgid "Admin"
 msgstr "Admin"
 
-#: templates/base.html:146 templates/category/create_category.html:6
+#: templates/base.html:147 templates/category/create_category.html:6
 #: templates/category/create_category.html:14
 #: templates/category/list_categories.html:55
 msgid "Create category"
 msgstr "Crear categoría"
 
-#: templates/base.html:148 templates/community/display_community.html:154
+#: templates/base.html:149 templates/community/display_community.html:154
 #: templates/market/create_market.html:7
 #: templates/market/create_market.html:203
 #: templates/market/list_markets.html:93 templates/market/list_markets.html:207
 msgid "Create market"
 msgstr "Crear mercado"
 
-#: templates/base.html:150 templates/registration/signup.html:11
+#: templates/base.html:151 templates/registration/signup.html:11
 #: templates/registration/signup.html:175
 msgid "Create admin"
 msgstr "Crear admin"
 
-#: templates/base.html:153
+#: templates/base.html:154
 msgid "Judge markets"
 msgstr "Juzgar mercados"
 
-#: templates/base.html:155
+#: templates/base.html:156
 msgid "Judge verify requests"
 msgstr "Juzgar peticiones de verificación"
 
-#: templates/base.html:163 templates/base.html:164
+#: templates/base.html:164 templates/base.html:165
 msgid "Language"
 msgstr "Idioma"
 
-#: templates/base.html:191
+#: templates/base.html:193
 msgid "Back to top"
 msgstr "Volver arriba"
 
@@ -468,6 +468,276 @@ msgstr "Contacto"
 #: templates/home.html:7
 msgid "Homepage."
 msgstr "Página de inicio"
+
+#: templates/terms_conditions.html:6 templates/terms_conditions.html:15
+msgid "Terms and conditions"
+msgstr "Términos y condiciones"
+
+#: templates/terms_conditions.html:22
+msgid "Company name: Predictmarket S.A."
+msgstr "Nombre de la empresa: Predictmarket S.A."
+
+#: templates/terms_conditions.html:23
+msgid "Headquarters: Av. Reina Mercedes s/n, 41012 Seville"
+msgstr "Sede: Av. Reina Mercedes s/n, 41012 Sevilla"
+
+#: templates/terms_conditions.html:24
+msgid "Phone number: 999 76 54 32"
+msgstr "Número de teléfono: 999 76 54 32"
+
+#: templates/terms_conditions.html:27
+msgid "1. Introduction"
+msgstr "1. Introducción"
+
+#: templates/terms_conditions.html:28
+msgid ""
+"The present general conditions of use of the website, regulate the terms "
+"and conditions of access and use of predictmarket, property of "
+"Predictmarket S.A., domiciled in Seville and with Tax Identification "
+"Number A86224532, hereinafter Predictmarket, That the user of the Portal "
+"must read and accept to use all the services and information that are "
+"provided from the portal. The mere access and/or use of the portal, all "
+"or part of its contents and/or services means the full acceptance of "
+"these general conditions of use."
+msgstr ""
+"Las presentes condiciones de uso del sitio web regulan los términos y "
+"condiciones de acceso y uso de predictmarket, propiedad de Predictmarket S.A., "
+"domiciliado en Sevilla, con CIF A86224532, de ahora en adelante Predictmarket, "
+"que el usuario del portal debe leer y aceptar el uso de todos los "
+"servicios e información que se proveen desde el portal. El mero acceso "
+"y/o uso del portal, en su totalidad o en parte de sus contenidos y/o "
+"servicios significa la completa aceptación de estas condiciones generales"
+" de uso."
+
+#: templates/terms_conditions.html:29
+msgid "2. Use conditions"
+msgstr "2. Condiciones de uso"
+
+#: templates/terms_conditions.html:30
+msgid ""
+"The present general conditions of use of the portal regulate the access "
+"and the use of the portal, including the contents and the services made "
+"available to the users in and/or through the portal, either by the "
+"portal, by its users, or by third parties. However, access to and use of "
+"certain content and/or services may be subject to certain specific "
+"conditions."
+msgstr ""
+"Las actuales condiciones generales de uso del portal regulan el acceso y "
+"uso del mismo, incluyendo los contenidos y servicios que están "
+"disponibles para los usuarios del portal, ya sea de parte del mismo, de "
+"sus usuarios o por terceras personas. Sin embargo, el acceso y uso de "
+"cierto contenido y/o servicios pueden estar sujetos a condiciones "
+"específicas."
+
+#: templates/terms_conditions.html:31
+msgid "3. Modifications"
+msgstr "3. Modificaciones"
+
+#: templates/terms_conditions.html:32
+msgid ""
+"The company reserves the right to modify at any time the general "
+"conditions of use of the portal. In that case, the users will receive an "
+"email with the modifications."
+msgstr ""
+"La empresa se reserva el derecho a modificar en cualquier momento las "
+"condiciones de uso del sitio. En ese caso, los usuarios recibirán un correo electrónico "
+"con las modificaciones."
+
+#: templates/terms_conditions.html:33
+msgid "4. User obligations"
+msgstr "4. Obligaciones de los usuarios"
+
+#: templates/terms_conditions.html:34
+msgid ""
+"The user must at all times respect the terms and conditions established "
+"in these general conditions of use of the portal. The user expressly "
+"states that he will diligently use the portal and assume any "
+"responsibility that may arise from breach of the rules. Likewise, the "
+"user may not use the portal to transmit, store, disseminate promote or "
+"distribute data or contents that are carriers of viruses or any other "
+"computer code, files or programs designed to interrupt, destroy or impair"
+" the operation of any program or equipment Computer or telecommunication."
+msgstr ""
+"El usuario debe respetar los términos y condiciones establecidos en esta "
+"sección en todo momento. El usuario afirma expresamente que usará el "
+"sitio web y asumirá cualquier responsabilidad que pueda surgir de romper "
+"las reglas. De igual modo, el usuario no podrá usar el portal para "
+"transmitir, vender, diseminar, promover o distribuir datos o contenido "
+"que contengan virus u otro código fuente, archivos o programas destinados"
+" a interrumpir, destruir o perjudicar la operación de cualquier programa "
+"o equipo informático o de telecomunicaciones."
+
+#: templates/terms_conditions.html:35
+msgid "5. Portal responsibilities"
+msgstr "5. Responsabilidades del sitio"
+
+#: templates/terms_conditions.html:36
+msgid ""
+"The user knows and accepts that the portal does not grant any guarantee "
+"of any kind, either express or implied, about the data, contents, "
+"information and services that are incorporated and offered from the "
+"Portal. Except in cases where the Law expressly imposes otherwise, and "
+"exclusively with the extent and extent to which it imposes, Portal does "
+"not guarantee or assume any responsibility for any damages and losses "
+"caused by the use and use of information, data and Services of the "
+"Portal. In any case, the Portal excludes any liability for damages that "
+"may be due to information and/or services provided or supplied by third "
+"parties other than the Company. All responsibility will be from the third"
+" party, either supplier or collaborator."
+msgstr ""
+"El usuario conoce y acepta que el sitio no asegura garantía de ningún "
+"tipo, ya sea explícita o implícita, sobre los datos, contenidos, "
+"información y servicios que son incorporados y ofrecidos por el sitio. "
+"Excepto los casos en los que la ley lo impone expresamente, y "
+"exclusivamente con el alcance que se impone, el sitio no garantiza o "
+"asume ninguna responsabilidad por ningún daño ni pérdida causada por el "
+"uso de la información, datos y servicios del mismo. En cualquier caso, el"
+" sitio se excluye de cualquier responsabilidad de daños que puedan ser "
+"debidos a la información y/o servicios proporcionados o administrados por"
+" terceras personas. Toda responsabilidad se adjudicará a ésta tercera "
+"persona, proveedor o colaborador."
+
+#: templates/terms_conditions.html:37
+msgid "6. Intellectual and industrial property"
+msgstr "6. Propiedad intelectual e industrial"
+
+#: templates/terms_conditions.html:38
+msgid ""
+"All contents, trademarks, logos, drawings, documentation, computer "
+"programs or any other element susceptible of protection by the "
+"intellectual or industrial property laws, that are accessible in the "
+"portal correspond exclusively to the company or its legitimate owners and"
+" are expressly reserved all The rights over them. It is expressly "
+"prohibited to create hypertext links (links) to any element of the "
+"Portal's web pages without the authorization of the company, provided "
+"they are not to a web page of the Portal that does not require "
+"identification or authentication for access, or It is restricted. In any "
+"case, the portal reserves all rights over the contents, information data "
+"and services that it has on them. The portal does not grant any license "
+"or authorization to use the user on its contents, data or services, other"
+" than that expressly detailed in these general conditions of use of the "
+"portal."
+msgstr ""
+"Todos los contenidos, marcas, logos, diseños, documentación, código "
+"fuente o cualquier otro elemento susceptible de protección por la ley de "
+"propiedad intelectual o industrial que sean accesibles desde el sitio se "
+"corresponden exclusivamente con la empresa o con su dueño legítimo, y se "
+"reservan todos los derechos sobre ellos. Está expresamente prohibido "
+"crear hipervínculos a cualquier elemento de las páginas del sitio sin la "
+"autorización de la empresa, siempre que no sean a páginas que no requiera"
+" autentificación o identificación para su acceso. En cualquier caso, el "
+"sitio se reserva todos los derechos sobre los contenidos, información, "
+"datos y servicios que tenga sobre ellos. El sitio no aporta ninguna "
+"licencia o autorización para que el usuario use sus contenidos, datos o "
+"servicios fuera del uso expresamente detallado en estas condiciones "
+"generales."
+
+#: templates/terms_conditions.html:39
+msgid "7. Applicable legislation, jurisdiction and notifications"
+msgstr "7. Legislación, jurisdicción y notificaciones aplicables"
+
+#: templates/terms_conditions.html:40
+msgid ""
+"The present conditions are governed and interpreted according to the Laws"
+" of Spain. For any claim, the courts and tribunals of Seville will be "
+"competent. All notifications, requests, requests and other communications"
+" that the User wishes to make to the Company that holds the Portal must "
+"be made in writing and it will be understood that they have been "
+"correctly executed when they have been received at the following address:"
+" predictmarket.us@gmail.com."
+msgstr ""
+"Las condiciones actuales están gobernadas e interpretadas de acuerdo a "
+"las leyes españolas. Para cualquier reclamación, deberá acudir a las "
+"cortes y tribunales de la ciudad de Sevilla. Todas las notificaciones, "
+"peticiones y otras comunicaciones que el usuario desee realizar a la "
+"empresa que soporta el sitio web deben ser realizadas por escrito y se "
+"entenderá que han sido correctamente ejecutadas cuando se hayan recibido "
+"a la siguiente dirección de correo electrónico: predictmarket.us@gmail.com."
+
+#: templates/terms_conditions.html:41
+msgid "8. Data protection"
+msgstr "8. Protección de datos"
+
+#: templates/terms_conditions.html:42
+msgid ""
+"Predictmarket is deeply committed to complying with Spanish personal data"
+" protection regulations, and guarantees full compliance with the disposed"
+" obligations, as well as the implementation of the security measures "
+"provided for in art. 9 of the Law A-2018-16673, of Protection of Data of "
+"Personal Character (LOPD) and in the Regulation of Development of the "
+"LOPD. In accordance with this Law, we inform that the use of our website "
+"requires that we request certain personal data through registration forms"
+" or contact, or by sending emails, and that these will be treated and "
+"incorporated into the files of Predictmarket, owner and responsible for "
+"them. The sending of this personal data constitutes the express consent "
+"to the treatment of the same, although this consent is of a revocable "
+"nature and without retroactive effects."
+msgstr ""
+"Predictmarket está profundamente comprometidos con el cumplimiento de las "
+"regulaciones de protección de datos personales españolas, y garantiza el "
+"pleno cumplimiento de las obligaciones dispuestas, así como la "
+"implementación de las medidas de seguridad previstas en el art. 9 de la "
+"Ley A-2018-16673, de la Ley Orgánica de Protección de Datos (LOPD) y en "
+"el desarrollo regulador de la LOPD. De acuerdo con esta ley, informamos "
+"que el uso de nuestro sitio web requiere que recolectemos ciertos datos "
+"personales a través de formularios de registro o de contacto, o enviando "
+"correos electrónicos, y que estos datos serán tratados e incorporados a "
+"los archivos de Predictmarket, dueño y responsable de ellos. El envío de estos "
+"datos personales constituyen el consentimiento expreso para el "
+"tratamiento de los mismos, aunque este consentimiento es de naturaleza "
+"revocable y sin efectos retroactivos."
+
+#: templates/terms_conditions.html:43
+msgid "8.1. Rights that Predictmarket provide to customers"
+msgstr "8.1. Derechos que Predictmarket proporciona a sus clientes"
+
+#: templates/terms_conditions.html:44
+msgid ""
+"Users are notified of every breach if they result in a risk for the "
+"rights and freedoms of individuals"
+msgstr ""
+"Los usuarios son notificados de toda brecha de seguridad si resulta un "
+"riesgo para sus derechos y libertades"
+
+#: templates/terms_conditions.html:45
+msgid ""
+"Users have the right to ask Predictmarket to delete their data, cease "
+"further dissemination of them, and have third parties halt processing "
+"them."
+msgstr ""
+"Los usuarios tienen el derecho de pedir a Predictmarket que elimine sus datos, "
+"deje de difundirlos y que terceros detengan su procesamiento."
+
+#: templates/terms_conditions.html:46
+msgid ""
+"Users have the right to request the data that Predictmarket has about "
+"them in an electronic format that facilitates porting those data to other"
+" companies."
+msgstr ""
+"Los usuarios tienen el derecho de solicitar los datos que Predictmarket tiene "
+"sobre ellos en un formato electrónico que facilite la transferencia de "
+"esos datos a otras compañías."
+
+#: templates/terms_conditions.html:48
+msgid "9. Published data responsibilities"
+msgstr "9. Responsabilidad sobre los datos publicados"
+
+#: templates/terms_conditions.html:49
+msgid ""
+"Data published by final user of the system are bound to change if any of "
+"these conditions are satisfied: glorification of terrorism, hate, racism,"
+" xenophobia, violence, data whose main objective is any illicit or "
+"illegal activity as indicated in Spanish Organic Law A-2018-16673 Adult "
+"content must be properly tagged or it will be bound to the same "
+"conditions abovementioned."
+msgstr ""
+"Los datos publicados por el usuario final del sistema están obligados a "
+"cambiar si se cumple alguna de estas condiciones: glorificación del "
+"terrorismo, odio, racismo, xenofobia, violencia, datos cuyo objetivo "
+"principal es cualquier actividad ilícita o ilegal como se indica en la "
+"Ley Orgánica Española A- 2018-16673 El contenido para adultos debe estar "
+"correctamente etiquetado o estará vinculado a las mismas condiciones "
+"mencionadas anteriormente."
 
 #: templates/category/create_category.html:56
 #: templates/community/create_community.html:83
@@ -724,6 +994,18 @@ msgstr "Aceptar"
 msgid "Reject"
 msgstr "Rechazar"
 
+#: templates/cookielaw/banner.html:6
+msgid "COOKIE_INFO_HEADER"
+msgstr ""
+
+#: templates/cookielaw/banner.html:8
+msgid "COOKIE_INFO_PARA"
+msgstr ""
+
+#: templates/cookielaw/banner.html:10
+msgid "COOKIE_INFO_OK"
+msgstr ""
+
 #: templates/market/create_market.html:21
 msgid "Create prediction market"
 msgstr "Crear mercado de predicción"
@@ -806,13 +1088,13 @@ msgstr "Opciones"
 
 #: templates/market/display_market.html:167
 #: templates/market/display_market_ended.html:172
-#: templates/statistics/past_bets.html:127 templates/user/display_user.html:215
+#: templates/statistics/past_bets.html:127 templates/user/display_user.html:217
 msgid "Yes"
 msgstr "Sí"
 
 #: templates/market/display_market.html:173
 #: templates/market/display_market_ended.html:178
-#: templates/statistics/past_bets.html:130 templates/user/display_user.html:218
+#: templates/statistics/past_bets.html:130 templates/user/display_user.html:220
 msgid "No"
 msgstr "No"
 
@@ -1038,7 +1320,7 @@ msgstr "ahora"
 #: templates/registration/password_reset_confirm.html:11
 #: templates/registration/password_reset_confirm.html:69
 #: templates/user/change_password.html:6 templates/user/change_password.html:15
-#: templates/user/display_user.html:88
+#: templates/user/display_user.html:90
 msgid "Change password"
 msgstr "Cambiar contraseña"
 
@@ -1204,8 +1486,8 @@ msgid "You don't have any community in common with"
 msgstr "No tienes ninguna comunidad en común con"
 
 #: templates/statistics/past_bets.html:91
-#: templates/statistics/past_bets.html:134 templates/user/display_user.html:191
-#: templates/user/display_user.html:222
+#: templates/statistics/past_bets.html:134 templates/user/display_user.html:193
+#: templates/user/display_user.html:224
 msgid "Assets"
 msgstr "Activos"
 
@@ -1213,7 +1495,7 @@ msgstr "Activos"
 msgid "Back to user profile"
 msgstr "Volver al perfil de usuario"
 
-#: templates/statistics/past_bets.html:107 templates/user/display_user.html:198
+#: templates/statistics/past_bets.html:107 templates/user/display_user.html:200
 msgid "This user has not placed any bet yet."
 msgstr "Este usuario no ha realizado ninguna apuesta todavía."
 
@@ -1221,12 +1503,12 @@ msgstr "Este usuario no ha realizado ninguna apuesta todavía."
 msgid "Save changes"
 msgstr "Guardar cambios"
 
-#: templates/user/display_user.html:51
+#: templates/user/display_user.html:51 users/views.py:210
 msgid "Email"
 msgstr "Email"
 
 #: templates/user/display_user.html:53 templates/user/edit_profile.html:73
-#: users/forms.py:74 users/forms.py:110
+#: users/forms.py:74 users/forms.py:110 users/views.py:210
 msgid "Date of birth"
 msgstr "Fecha de nacimiento"
 
@@ -1234,56 +1516,58 @@ msgstr "Fecha de nacimiento"
 msgid "Joined on"
 msgstr "Se unió el"
 
-#: templates/user/display_user.html:56
+#: templates/user/display_user.html:57
 msgid "Export my data"
 msgstr "Exportar mis datos"
 
-#: templates/user/display_user.html:60 templates/user/edit_profile.html:24
+#: templates/user/display_user.html:62 templates/user/edit_profile.html:24
 msgid "Your account will be deleted on"
 msgstr "Tu cuenta será borrada el"
 
-#: templates/user/display_user.html:61
+#: templates/user/display_user.html:63
 msgid "You can cancel this by"
 msgstr "Puedes cancelar esto "
 
-#: templates/user/display_user.html:62
+#: templates/user/display_user.html:64
 msgid "clicking here"
 msgstr "haciendo clic aquí"
 
-#: templates/user/display_user.html:72
+#: templates/user/display_user.html:74
 msgid "User options:"
 msgstr "Opciones de usuario"
 
-#: templates/user/display_user.html:79
+#: templates/user/display_user.html:81
 msgid "Bet history"
 msgstr "Historial de apuestas"
 
-#: templates/user/display_user.html:84 templates/user/edit_profile.html:6
+#: templates/user/display_user.html:86 templates/user/edit_profile.html:6
 #: templates/user/edit_profile.html:19
 msgid "Edit profile"
 msgstr "Editar perfil"
 
-#: templates/user/display_user.html:104
+#: templates/user/display_user.html:106
 msgid "Created communities:"
 msgstr "Comunidades creadas:"
 
-#: templates/user/display_user.html:108
+#: templates/user/display_user.html:110
 msgid "This user has not created any community"
 msgstr "Este usuario no ha creado ninguna comunidad"
 
-#: templates/user/display_user.html:143
+#: templates/user/display_user.html:145
 msgid "Joined communities:"
 msgstr "Comunidades unidas:"
 
-#: templates/user/display_user.html:147
+#: templates/user/display_user.html:149
 msgid "This user has not joined any community"
 msgstr "Este usuario no se ha unido a ninguna comunidad"
 
 #: templates/user/edit_profile.html:35 users/forms.py:64 users/forms.py:106
+#: users/views.py:210
 msgid "First name"
 msgstr "Nombre"
 
 #: templates/user/edit_profile.html:47 users/forms.py:65 users/forms.py:107
+#: users/views.py:210
 msgid "Last name"
 msgstr "Apellidos"
 
@@ -1412,7 +1696,7 @@ msgstr ""
 "demostrando que eres quién dices ser. Puedes referenciar cualquier email "
 "enviado a predictmarket.us@gmail.com"
 
-#: users/forms.py:66 users/forms.py:108
+#: users/forms.py:66 users/forms.py:108 users/views.py:210
 msgid "Alias"
 msgstr "Alias"
 
@@ -1426,23 +1710,23 @@ msgstr ""
 "Descríbete a ti mismo: tus hobbies, objetivos en la vida, preferencias, "
 "intereses..."
 
-#: users/forms.py:73 users/forms.py:114
+#: users/forms.py:73 users/forms.py:114 users/views.py:210
 msgid "Biography"
 msgstr "Biografía"
 
-#: users/views.py:77
+#: users/views.py:79
 msgid "You cannot edit other user's profile."
 msgstr "No puedes editar el perfil de otro usuario."
 
-#: users/views.py:105
+#: users/views.py:107
 msgid "Your password was successfully updated"
 msgstr "Tu contraseña fue actualizada correctamente"
 
-#: users/views.py:109
+#: users/views.py:111
 msgid "Please correct the error below."
 msgstr "Por favor corrige los errores de abajo"
 
-#: users/views.py:122
+#: users/views.py:124
 msgid "You must not be verified."
 msgstr "No debes estar verificado."
 

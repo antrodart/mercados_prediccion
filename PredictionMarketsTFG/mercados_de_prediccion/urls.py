@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.HomePageView.as_view(), name='home'),
     path('about/', views.AboutView.as_view(), name='about'),
 	path('contact/', views.ContactView.as_view(), name='contact'),
+	path('legal-terms', views.TermsAndConditions.as_view(), name='legal_terms'),
 
 	#  Users
 	path('user/<int:user_id>/<slug:slug>', views.display_profile_view, name='display_profile'),

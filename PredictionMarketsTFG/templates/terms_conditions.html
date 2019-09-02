@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+<head>
+    <title>{% block title %}{% trans "Terms and conditions" %}{% endblock %}</title>
+</head>
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-6 mx-auto text-center">
+            <div class="header-title">
+                <h1 class="wv-heading--title">
+                    {% blocktrans %}Terms and conditions{% endblocktrans %}
+                </h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <p>{% blocktrans %}Company name: Predictmarket S.A.{% endblocktrans %}</p>
+            <p>{% blocktrans %}Headquarters: Av. Reina Mercedes s/n, 41012 Seville{% endblocktrans %}</p>
+            <p>{% blocktrans %}Phone number: 999 76 54 32{% endblocktrans %}</p>
+            <p>Email: predictmarket.us@gmail.com</p>
+
+            <h3>{% blocktrans %}1. Introduction{% endblocktrans %}</h3>
+            <p>{% blocktrans %}The present general conditions of use of the website, regulate the terms and conditions of access and use of predictmarket, property of Predictmarket S.A., domiciled in Seville and with Tax Identification Number A86224532, hereinafter Predictmarket, That the user of the Portal must read and accept to use all the services and information that are provided from the portal. The mere access and/or use of the portal, all or part of its contents and/or services means the full acceptance of these general conditions of use.{% endblocktrans %}</p>
+            <h3>{% blocktrans %}2. Use conditions{% endblocktrans %}</h3>
+            <p>{% blocktrans %}The present general conditions of use of the portal regulate the access and the use of the portal, including the contents and the services made available to the users in and/or through the portal, either by the portal, by its users, or by third parties. However, access to and use of certain content and/or services may be subject to certain specific conditions.{% endblocktrans %}</p>
+            <h3>{% blocktrans %}3. Modifications{% endblocktrans %}</h3>
+            <p>{% blocktrans %}The company reserves the right to modify at any time the general conditions of use of the portal. In that case, the users will receive an email with the modifications.{% endblocktrans %}</p>
+            <h3>{% blocktrans %}4. User obligations{% endblocktrans %}</h3>
+            <p>{% blocktrans %}The user must at all times respect the terms and conditions established in these general conditions of use of the portal. The user expressly states that he will diligently use the portal and assume any responsibility that may arise from breach of the rules. Likewise, the user may not use the portal to transmit, store, disseminate promote or distribute data or contents that are carriers of viruses or any other computer code, files or programs designed to interrupt, destroy or impair the operation of any program or equipment Computer or telecommunication.{% endblocktrans %}</p>
+            <h3>{% blocktrans %}5. Portal responsibilities{% endblocktrans %}</h3>
+            <p>{% blocktrans %}The user knows and accepts that the portal does not grant any guarantee of any kind, either express or implied, about the data, contents, information and services that are incorporated and offered from the Portal. Except in cases where the Law expressly imposes otherwise, and exclusively with the extent and extent to which it imposes, Portal does not guarantee or assume any responsibility for any damages and losses caused by the use and use of information, data and Services of the Portal. In any case, the Portal excludes any liability for damages that may be due to information and/or services provided or supplied by third parties other than the Company. All responsibility will be from the third party, either supplier or collaborator.{% endblocktrans %}</p>
+            <h3>{% blocktrans %}6. Intellectual and industrial property{% endblocktrans %}</h3>
+            <p>{% blocktrans %}All contents, trademarks, logos, drawings, documentation, computer programs or any other element susceptible of protection by the intellectual or industrial property laws, that are accessible in the portal correspond exclusively to the company or its legitimate owners and are expressly reserved all The rights over them. It is expressly prohibited to create hypertext links (links) to any element of the Portal's web pages without the authorization of the company, provided they are not to a web page of the Portal that does not require identification or authentication for access, or It is restricted. In any case, the portal reserves all rights over the contents, information data and services that it has on them. The portal does not grant any license or authorization to use the user on its contents, data or services, other than that expressly detailed in these general conditions of use of the portal.{% endblocktrans %}</p>
+            <h3>{% blocktrans %}7. Applicable legislation, jurisdiction and notifications{% endblocktrans %}</h3>
+            <p>{% blocktrans %}The present conditions are governed and interpreted according to the Laws of Spain. For any claim, the courts and tribunals of Seville will be competent. All notifications, requests, requests and other communications that the User wishes to make to the Company that holds the Portal must be made in writing and it will be understood that they have been correctly executed when they have been received at the following address: predictmarket.us@gmail.com.{% endblocktrans %}</p>
+            <h3>{% blocktrans %}8. Data protection{% endblocktrans %}</h3>
+            <p>{% blocktrans %}Predictmarket is deeply committed to complying with Spanish personal data protection regulations, and guarantees full compliance with the disposed obligations, as well as the implementation of the security measures provided for in art. 9 of the Law A-2018-16673, of Protection of Data of Personal Character (LOPD) and in the Regulation of Development of the LOPD. In accordance with this Law, we inform that the use of our website requires that we request certain personal data through registration forms or contact, or by sending emails, and that these will be treated and incorporated into the files of Predictmarket, owner and responsible for them. The sending of this personal data constitutes the express consent to the treatment of the same, although this consent is of a revocable nature and without retroactive effects.{% endblocktrans %}</p>
+            <h4>{% blocktrans %}8.1. Rights that Predictmarket provide to customers{% endblocktrans %}</h4>
+            <p>{% blocktrans %}Users are notified of every breach if they result in a risk for the rights and freedoms of individuals{% endblocktrans %}.</p>
+            <p>{% blocktrans %}Users have the right to ask Predictmarket to delete their data, cease further dissemination of them, and have third parties halt processing them.{% endblocktrans %}</p>
+            <p>{% blocktrans %}Users have the right to request the data that Predictmarket has about them in an electronic format that facilitates porting those data to other companies.{% endblocktrans %}</p>
+            <p></p>
+            <h3>{% blocktrans %}9. Published data responsibilities{% endblocktrans %}</h3>
+            <p>{% blocktrans %}Data published by final user of the system are bound to change if any of these conditions are satisfied: glorification of terrorism, hate, racism, xenophobia, violence, data whose main objective is any illicit or illegal activity as indicated in Spanish Organic Law A-2018-16673 Adult content must be properly tagged or it will be bound to the same conditions abovementioned.{% endblocktrans %}</p>
+        </div>
+    </div>
+
+{% endblock %}

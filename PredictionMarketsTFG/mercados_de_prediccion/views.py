@@ -26,6 +26,9 @@ class ContactView(TemplateView):
 	template_name = 'contact.html'
 
 
+class TermsAndConditions(TemplateView):
+	template_name = 'terms_conditions.html'
+
 def list_categories_view(request):
 	if get_language() == "en":
 		order = "title"
