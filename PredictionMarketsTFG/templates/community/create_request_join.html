@@ -18,7 +18,8 @@
                 </h1>
             </div>
             <div class="text-muted" style="margin-bottom: 5px;">
-                {% blocktrans %}Before joining the community, you must write a short request describing your reasons.{% endblocktrans %}
+                {% blocktrans %}Before joining the community, you must write a short request describing your
+                    reasons.{% endblocktrans %}
                 {% blocktrans %}It will be evaluated by the moderator/s of the community.{% endblocktrans %}
             </div>
         </div>
@@ -30,7 +31,8 @@
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="{{ form.description.id_for_label }}" class="text-info">{{ form.description.label }}</label>
+                        <label for="{{ form.description.id_for_label }}"
+                               class="text-info">{{ form.description.label }}</label>
                         {% if form.description.errors %}
                             {{ form.description | add_class:'form-control my-input is-invalid' |attr:'autofocus:true' }}
                             <small>{{ form.description.help_text }}</small>
@@ -62,8 +64,10 @@
                         </div>
                     {% endif %}
                     <div class="text-center">
-                        <a href='/community/{{ community.pk }}/{{ community.slug }}' class="btn btn-secondary">
-                            {% trans "Back to community" %}</a>
+                        {% if community.is_visible %}
+                            <a href='/community/{{ community.pk }}/{{ community.slug }}' class="btn btn-secondary">
+                                {% trans "Back to community" %}</a>
+                        {% endif %}
                         <button type="submit" class=" btn btn-primary">{% blocktrans %}Send request{% endblocktrans %}
                         </button>
                     </div>

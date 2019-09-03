@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-09-03 19:50+0200\n"
+"POT-Creation-Date: 2019-09-03 20:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -198,7 +198,7 @@ msgid "The market is part of a private community in which you do not have access
 msgstr ""
 
 #: mercados_de_prediccion/views.py:57 mercados_de_prediccion/views.py:74
-#: mercados_de_prediccion/views.py:624 mercados_de_prediccion/views.py:659
+#: mercados_de_prediccion/views.py:627 mercados_de_prediccion/views.py:662
 #: users/views.py:57 users/views.py:150 users/views.py:171 users/views.py:189
 msgid "Must be logged as Admin."
 msgstr ""
@@ -236,29 +236,33 @@ msgstr ""
 msgid "You are already member of this community."
 msgstr ""
 
-#: mercados_de_prediccion/views.py:341 mercados_de_prediccion/views.py:350
-#: mercados_de_prediccion/views.py:357 mercados_de_prediccion/views.py:365
-#: mercados_de_prediccion/views.py:372
+#: mercados_de_prediccion/views.py:325
+msgid "You can't join this community"
+msgstr ""
+
+#: mercados_de_prediccion/views.py:344 mercados_de_prediccion/views.py:353
+#: mercados_de_prediccion/views.py:360 mercados_de_prediccion/views.py:368
+#: mercados_de_prediccion/views.py:375
 msgid "Only moderators can access this page."
 msgstr ""
 
-#: mercados_de_prediccion/views.py:653
+#: mercados_de_prediccion/views.py:656
 msgid "The market does not exist or it has not expired"
 msgstr ""
 
-#: mercados_de_prediccion/views.py:657
+#: mercados_de_prediccion/views.py:660
 msgid "Must be the market creator."
 msgstr ""
 
-#: mercados_de_prediccion/views.py:662
+#: mercados_de_prediccion/views.py:665
 msgid "Must be the creator of the Market"
 msgstr ""
 
-#: mercados_de_prediccion/views.py:677 mercados_de_prediccion/views.py:696
+#: mercados_de_prediccion/views.py:680 mercados_de_prediccion/views.py:699
 msgid "The option is not from this market."
 msgstr ""
 
-#: mercados_de_prediccion/views.py:797
+#: mercados_de_prediccion/views.py:800
 msgid "You cannot delete this comment"
 msgstr ""
 
@@ -843,23 +847,24 @@ msgstr ""
 msgid "Join community"
 msgstr ""
 
-#: templates/community/create_request_join.html:21
+#: templates/community/create_request_join.html:22
 msgid ""
 "Before joining the community, you must write a short request describing "
-"your reasons."
+"your\r\n"
+"                    reasons."
 msgstr ""
 
-#: templates/community/create_request_join.html:22
+#: templates/community/create_request_join.html:23
 msgid "It will be evaluated by the moderator/s of the community."
 msgstr ""
 
-#: templates/community/create_request_join.html:66
+#: templates/community/create_request_join.html:69
 #: templates/community/list_members.html:56
 #: templates/community/list_members.html:140
 msgid "Back to community"
 msgstr ""
 
-#: templates/community/create_request_join.html:67
+#: templates/community/create_request_join.html:71
 #: templates/user/verify_account.html:91
 msgid "Send request"
 msgstr ""
@@ -899,6 +904,7 @@ msgid "Members"
 msgstr ""
 
 #: templates/community/display_community.html:73
+#: templates/community/display_community.html:218
 msgid "Get link to join"
 msgstr ""
 
@@ -939,6 +945,10 @@ msgstr ""
 
 #: templates/community/display_community.html:198
 msgid "You can place bets on this market until"
+msgstr ""
+
+#: templates/community/display_community.html:225
+msgid "Share the following link to anyone you want to join your community"
 msgstr ""
 
 #: templates/community/list_communities.html:15
@@ -993,11 +1003,11 @@ msgstr ""
 msgid "Reject"
 msgstr ""
 
-#: templates/cookielaw/banner.html:6
+#: templates/cookielaw/banner.html:7
 msgid "Cookies disclaimer"
 msgstr ""
 
-#: templates/cookielaw/banner.html:8
+#: templates/cookielaw/banner.html:9
 msgid ""
 "Our site saves small pieces of text information (cookies) on your device "
 "in order to deliver better content and for statistical purposes. You can "
@@ -1006,7 +1016,7 @@ msgid ""
 "permission to store that information on your device."
 msgstr ""
 
-#: templates/cookielaw/banner.html:10
+#: templates/cookielaw/banner.html:12
 msgid "I agree"
 msgstr ""
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-09-03 19:50+0200\n"
+"POT-Creation-Date: 2019-09-03 20:56+0200\n"
 "PO-Revision-Date: 2019-04-22 13:43+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -215,7 +215,7 @@ msgid "The market is part of a private community in which you do not have access
 msgstr "El mercado es parte de una comunidad privada a la que no tienes acceso."
 
 #: mercados_de_prediccion/views.py:57 mercados_de_prediccion/views.py:74
-#: mercados_de_prediccion/views.py:624 mercados_de_prediccion/views.py:659
+#: mercados_de_prediccion/views.py:627 mercados_de_prediccion/views.py:662
 #: users/views.py:57 users/views.py:150 users/views.py:171 users/views.py:189
 msgid "Must be logged as Admin."
 msgstr "Debe estar logueado como Admin."
@@ -255,29 +255,33 @@ msgstr "No puedes editar este mercado."
 msgid "You are already member of this community."
 msgstr "Ya eres miembro de esta comunidad."
 
-#: mercados_de_prediccion/views.py:341 mercados_de_prediccion/views.py:350
-#: mercados_de_prediccion/views.py:357 mercados_de_prediccion/views.py:365
-#: mercados_de_prediccion/views.py:372
+#: mercados_de_prediccion/views.py:325
+msgid "You can't join this community"
+msgstr "No puedes unirte a esta comunidad"
+
+#: mercados_de_prediccion/views.py:344 mercados_de_prediccion/views.py:353
+#: mercados_de_prediccion/views.py:360 mercados_de_prediccion/views.py:368
+#: mercados_de_prediccion/views.py:375
 msgid "Only moderators can access this page."
 msgstr "Sólo los moderadores pueden acceder a esta página."
 
-#: mercados_de_prediccion/views.py:653
+#: mercados_de_prediccion/views.py:656
 msgid "The market does not exist or it has not expired"
 msgstr "El mercado no existe o ha expirado"
 
-#: mercados_de_prediccion/views.py:657
+#: mercados_de_prediccion/views.py:660
 msgid "Must be the market creator."
 msgstr "Debes ser el creador del mercado."
 
-#: mercados_de_prediccion/views.py:662
+#: mercados_de_prediccion/views.py:665
 msgid "Must be the creator of the Market"
 msgstr "Debes ser el creador del mercado"
 
-#: mercados_de_prediccion/views.py:677 mercados_de_prediccion/views.py:696
+#: mercados_de_prediccion/views.py:680 mercados_de_prediccion/views.py:699
 msgid "The option is not from this market."
 msgstr "La opción no es de este mercado."
 
-#: mercados_de_prediccion/views.py:797
+#: mercados_de_prediccion/views.py:800
 msgid "You cannot delete this comment"
 msgstr "No puedes borrar este comentario"
 
@@ -482,7 +486,7 @@ msgstr ""
 
 #: templates/home.html:206
 msgid "Start betting on prediction markets now!"
-msgstr "¡Empieza a apostar en mercados de predicción ahora!"
+msgstr "¡Empieza a apostar en mercados de predicción!"
 
 #: templates/home.html:228
 msgid "3 Market types"
@@ -967,25 +971,24 @@ msgstr "(Opcional)"
 msgid "Join community"
 msgstr "Unirse a comunidad"
 
-#: templates/community/create_request_join.html:21
+#: templates/community/create_request_join.html:22
 msgid ""
 "Before joining the community, you must write a short request describing "
-"your reasons."
+"your\r\n"
+"                    reasons."
 msgstr ""
-"Antes de unirte a la comunidad, debes escribir un pequeño texto "
-"describiendo tus motivos."
 
-#: templates/community/create_request_join.html:22
+#: templates/community/create_request_join.html:23
 msgid "It will be evaluated by the moderator/s of the community."
 msgstr "Será evaluado por el moderador de la comunidad."
 
-#: templates/community/create_request_join.html:66
+#: templates/community/create_request_join.html:69
 #: templates/community/list_members.html:56
 #: templates/community/list_members.html:140
 msgid "Back to community"
 msgstr "Volver a la comunidad"
 
-#: templates/community/create_request_join.html:67
+#: templates/community/create_request_join.html:71
 #: templates/user/verify_account.html:91
 msgid "Send request"
 msgstr "Enviar petición"
@@ -1025,6 +1028,7 @@ msgid "Members"
 msgstr "Miembros"
 
 #: templates/community/display_community.html:73
+#: templates/community/display_community.html:218
 msgid "Get link to join"
 msgstr "Obtener enlace de unión"
 
@@ -1066,6 +1070,10 @@ msgstr "El mercado finalizó el"
 #: templates/community/display_community.html:198
 msgid "You can place bets on this market until"
 msgstr "Puedes apostar en este mercado hasta el"
+
+#: templates/community/display_community.html:225
+msgid "Share the following link to anyone you want to join your community"
+msgstr "Comparte el siguiente enlace con las personas que desees que se unan a tu comunidad"
 
 #: templates/community/list_communities.html:15
 msgid "My created communities"
@@ -1123,11 +1131,11 @@ msgstr "Aceptar"
 msgid "Reject"
 msgstr "Rechazar"
 
-#: templates/cookielaw/banner.html:6
+#: templates/cookielaw/banner.html:7
 msgid "Cookies disclaimer"
 msgstr "Aviso de cookies"
 
-#: templates/cookielaw/banner.html:8
+#: templates/cookielaw/banner.html:9
 msgid ""
 "Our site saves small pieces of text information (cookies) on your device "
 "in order to deliver better content and for statistical purposes. You can "
@@ -1135,12 +1143,14 @@ msgid ""
 " browsing our website without changing the browser settings you grant us "
 "permission to store that information on your device."
 msgstr ""
-"Este sitio web guarda pequeños fragmentos de información (cookies) en su dispositivo con la finalidad de ofrecer "
-"un mejor contenido y para finalidades estadísticas. Usted puede desactivar el uso de cookies modificando la "
-"configuración de su navegador. Navegar por nuestro sitio web sin cambiar la configuración del navegador hace que "
-"usted nos esté autorizando a guardar esta información en su dispositivo."
+"Este sitio web guarda pequeños fragmentos de información (cookies) en su "
+"dispositivo con la finalidad de ofrecer un mejor contenido y para "
+"finalidades estadísticas. Usted puede desactivar el uso de cookies "
+"modificando la configuración de su navegador. Navegar por nuestro sitio "
+"web sin cambiar la configuración del navegador hace que usted nos esté "
+"autorizando a guardar esta información en su dispositivo."
 
-#: templates/cookielaw/banner.html:10
+#: templates/cookielaw/banner.html:12
 msgid "I agree"
 msgstr "Estoy de acuerdo"
 
@@ -1992,4 +2002,13 @@ msgstr "No debes estar verificado."
 
 #~ msgid "COOKIE_INFO_OK"
 #~ msgstr ""
+
+#~ msgid ""
+#~ "Before joining the community, you must"
+#~ " write a short request describing "
+#~ "your reasons."
+#~ msgstr ""
+#~ "Antes de unirte a la comunidad, "
+#~ "debes escribir un pequeño texto "
+#~ "describiendo tus motivos."
 

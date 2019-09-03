@@ -67,9 +67,9 @@
                                 <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
                                      style="max-height: 25px;"/> {% trans "Edit" %}</a>
                             {% if not community.is_visible %}
-                                <a href='/community/edit/{{ community.id }}/{{ community.slug }}'
-                                   class="btn btn-warning btn-block text-left">
-                                    <img src="{% static 'img/icons/edit.png' %}" alt="Edit"
+                                <a href='#' class="btn btn-warning btn-block text-left"
+                                   data-toggle="modal" data-target="#getLinkModal">
+                                    <img src="{% static 'img/icons/get-link.png' %}" alt="Link"
                                          style="max-height: 25px;"/> {% trans "Get link to join" %}</a>
                             {% endif %}
                         </div>
@@ -208,7 +208,26 @@
         </div>
     </div>
 
-
+    <!-- About Modal -->
+    <div class="modal fade" id="getLinkModal" tabindex="-1"
+         role="dialog" aria-labelledby="getLinkModal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-title">{% trans "Get link to join" %}</h4>
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>{% trans "Share the following link to anyone you want to join your community" %}:</p>
+                    <p><a href="https://mercados-de-prediccion.herokuapp.com{% url 'request_to_join_community' community.pk community.slug %}" >https://mercados-de-prediccion.herokuapp.com{% url 'request_to_join_community' community.pk community.slug %}</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascript %}

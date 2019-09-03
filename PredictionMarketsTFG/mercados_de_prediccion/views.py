@@ -312,7 +312,7 @@ def edit_market_view(request, market_id, slug):
 @login_required()
 def request_to_join_community(request, community_id, slug):
 	user = request.user
-	community = Community.objects.get(pk=community_id)
+	community = get_object_or_404(Community, pk=community_id)
 	try:
 		joined_community = JoinedCommunity.objects.get(user=user, community=community)
 	except:
@@ -320,6 +320,9 @@ def request_to_join_community(request, community_id, slug):
 
 	if joined_community:
 		raise PermissionDenied(_("You are already member of this community."))
+
+	if not community.is_visible and community.slug() != slug:
+		raise PermissionDenied(_("You can't join this community"))
 
 	if request.method == "POST":
 		form = MakeRequestToJoinForm(request.POST, user=user, community=community)
