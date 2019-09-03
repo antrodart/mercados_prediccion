@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-09-02 19:31+0200\n"
+"POT-Creation-Date: 2019-09-03 19:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,7 +90,8 @@ msgstr ""
 
 #: mercados_de_prediccion/forms.py:95 templates/base.html:80
 #: templates/base.html:82 templates/category/list_categories.html:6
-#: templates/category/list_categories.html:15
+#: templates/category/list_categories.html:15 templates/home.html:83
+#: templates/home.html:85
 msgid "Categories"
 msgstr ""
 
@@ -167,7 +168,7 @@ msgid ""
 "holding the Control key."
 msgstr ""
 
-#: mercados_de_prediccion/forms.py:276
+#: mercados_de_prediccion/forms.py:276 templates/home.html:210
 msgid "Search"
 msgstr ""
 
@@ -326,7 +327,7 @@ msgstr ""
 msgid "Error 404 - Page not found"
 msgstr ""
 
-#: templates/about.html:5
+#: templates/about.html:5 templates/home.html:310 templates/home.html:336
 msgid "About"
 msgstr ""
 
@@ -334,25 +335,25 @@ msgstr ""
 msgid "About."
 msgstr ""
 
-#: templates/base.html:10
+#: templates/base.html:10 templates/home.html:10
 msgid "Prediction Markets"
 msgstr ""
 
-#: templates/base.html:33
+#: templates/base.html:33 templates/home.html:36
 msgid "Home"
 msgstr ""
 
 #: templates/base.html:43 templates/base.html:44
 #: templates/category/list_categories.html:86
-#: templates/category/list_categories.html:87
-#: templates/market/list_judge_markets.html:6
+#: templates/category/list_categories.html:87 templates/home.html:46
+#: templates/home.html:47 templates/market/list_judge_markets.html:6
 #: templates/market/list_markets.html:7 templates/market/list_markets.html:8
 #: templates/market/list_markets.html:16
 msgid "Markets"
 msgstr ""
 
-#: templates/base.html:49 templates/base.html:71
-#: templates/market/display_market.html:65
+#: templates/base.html:49 templates/base.html:71 templates/home.html:52
+#: templates/home.html:74 templates/market/display_market.html:65
 #: templates/market/display_market.html:66
 #: templates/market/display_market_ended.html:64
 #: templates/market/display_market_ended.html:65
@@ -362,79 +363,86 @@ msgid "Community"
 msgstr ""
 
 #: templates/base.html:51 templates/community/list_communities.html:6
+#: templates/home.html:54 templates/home.html:237
 msgid "Communities"
 msgstr ""
 
 #: templates/base.html:55 templates/base.html:57
-#: templates/community/list_communities.html:23
+#: templates/community/list_communities.html:23 templates/home.html:58
+#: templates/home.html:60
 msgid "All communities"
 msgstr ""
 
-#: templates/base.html:62 templates/base.html:63
+#: templates/base.html:62 templates/base.html:63 templates/home.html:65
+#: templates/home.html:66
 msgid "Created communities"
 msgstr ""
 
-#: templates/base.html:97 templates/user/display_user.html:42
+#: templates/base.html:97 templates/home.html:100
+#: templates/user/display_user.html:42
 msgid "public Karma"
 msgstr ""
 
-#: templates/base.html:111
+#: templates/base.html:111 templates/home.html:114
 msgid "My profile"
 msgstr ""
 
-#: templates/base.html:115
+#: templates/base.html:115 templates/home.html:118
 msgid "Betting history"
 msgstr ""
 
-#: templates/base.html:120
+#: templates/base.html:120 templates/home.html:123
 msgid "Verify my account"
 msgstr ""
 
-#: templates/base.html:126
+#: templates/base.html:126 templates/home.html:129
 msgid "Logout"
 msgstr ""
 
-#: templates/base.html:131 templates/registration/login.html:7
-#: templates/registration/login.html:15 templates/registration/login.html:34
+#: templates/base.html:131 templates/home.html:134
+#: templates/registration/login.html:7 templates/registration/login.html:15
+#: templates/registration/login.html:34
 msgid "Login"
 msgstr ""
 
-#: templates/base.html:134 templates/registration/signup.html:9
-#: templates/registration/signup.html:27 templates/registration/signup.html:171
+#: templates/base.html:134 templates/home.html:137
+#: templates/registration/signup.html:9 templates/registration/signup.html:27
+#: templates/registration/signup.html:171
 msgid "Sign up"
 msgstr ""
 
-#: templates/base.html:143
+#: templates/base.html:143 templates/home.html:146
 msgid "Admin"
 msgstr ""
 
 #: templates/base.html:147 templates/category/create_category.html:6
 #: templates/category/create_category.html:14
-#: templates/category/list_categories.html:55
+#: templates/category/list_categories.html:55 templates/home.html:150
 msgid "Create category"
 msgstr ""
 
 #: templates/base.html:149 templates/community/display_community.html:154
-#: templates/market/create_market.html:7
+#: templates/home.html:152 templates/market/create_market.html:7
 #: templates/market/create_market.html:203
 #: templates/market/list_markets.html:93 templates/market/list_markets.html:207
 msgid "Create market"
 msgstr ""
 
-#: templates/base.html:151 templates/registration/signup.html:11
-#: templates/registration/signup.html:175
+#: templates/base.html:151 templates/home.html:154
+#: templates/registration/signup.html:11 templates/registration/signup.html:175
 msgid "Create admin"
 msgstr ""
 
-#: templates/base.html:154
+#: templates/base.html:154 templates/home.html:157
 msgid "Judge markets"
 msgstr ""
 
-#: templates/base.html:156
+#: templates/base.html:156 templates/home.html:159
 msgid "Judge verify requests"
 msgstr ""
 
-#: templates/base.html:164 templates/base.html:165
+#: templates/base.html:164 templates/base.html:165 templates/home.html:167
+#: templates/home.html:168
 msgid "Language"
 msgstr ""
 
@@ -442,12 +450,111 @@ msgstr ""
 msgid "Back to top"
 msgstr ""
 
-#: templates/contact.html:5 templates/contact.html:10
+#: templates/contact.html:5 templates/contact.html:10 templates/home.html:314
+#: templates/home.html:360
 msgid "Contact"
 msgstr ""
 
-#: templates/home.html:7
-msgid "Homepage."
+#: templates/home.html:199
+msgid "May the wisdom of the crowds be your perfect tool to make predictions"
+msgstr ""
+
+#: templates/home.html:206
+msgid "Start betting on prediction markets now!"
+msgstr ""
+
+#: templates/home.html:228
+msgid "3 Market types"
+msgstr ""
+
+#: templates/home.html:229
+msgid "You will be able to create and bet on any kind of event"
+msgstr ""
+
+#: templates/home.html:238
+msgid "Be part of groups according to your interests"
+msgstr ""
+
+#: templates/home.html:246
+msgid "Available for everyone"
+msgstr ""
+
+#: templates/home.html:247
+msgid "No matter your nationality, money or favourite device"
+msgstr ""
+
+#: templates/home.html:262
+msgid "3 different types of markets"
+msgstr ""
+
+#: templates/home.html:263
+msgid ""
+"Either through our binary markets, exclusive markets or non-exclusive "
+"markets, everyone can create and bet on 3 different kind of prediction "
+"markets that cover all possible events"
+msgstr ""
+
+#: templates/home.html:270
+msgid "Create and join private communities"
+msgstr ""
+
+#: templates/home.html:271
+msgid ""
+"Communities are a very important part of our system, in which people who "
+"share the same interests, cities or jobs can bet on prediction markets "
+"located in a private environment. Equally, corporations can use them for "
+"their internal forecasts"
+msgstr ""
+
+#: templates/home.html:278
+msgid "Everyone has something to say"
+msgstr ""
+
+#: templates/home.html:279
+msgid ""
+"In order to have faithful predictions, it is necesary that the "
+"participants are as diverse as possible. That's why everyone from any "
+"country and device can bet, no matter the money they have, thanks to our "
+"own reputation points called Karma"
+msgstr ""
+
+#: templates/home.html:292
+msgid "Ready to get started? Sign up now!"
+msgstr ""
+
+#: templates/home.html:296
+msgid "Sign up!"
+msgstr ""
+
+#: templates/home.html:318 templates/registration/signup.html:203
+msgid "Terms of Use and Privacy Policy"
+msgstr ""
+
+#: templates/home.html:322
+msgid "All Rights Reserved"
+msgstr ""
+
+#: templates/home.html:343
+msgid ""
+"Web application created by the student Antonio Rodríguez Artacho "
+"(antrodart@alum.us.es) as part of his final undergraduate project"
+msgstr ""
+
+#: templates/home.html:344
+msgid ""
+"This project was done under the supervision of José Antonio Troyano "
+"Jiménez (troyano@us.es), professor of the department of Languages and "
+"Operating Systems"
+msgstr ""
+
+#: templates/home.html:346
+msgid "University of Seville"
+msgstr ""
+
+#: templates/home.html:367
+msgid ""
+"If you want to inform about a bug, suggestion or any other matter, please"
+" feel free to contact us"
 msgstr ""
 
 #: templates/terms_conditions.html:6 templates/terms_conditions.html:15
@@ -463,7 +570,7 @@ msgid "Headquarters: Av. Reina Mercedes s/n, 41012 Seville"
 msgstr ""
 
 #: templates/terms_conditions.html:24
-msgid "Phone number: 999 76 54 32"
+msgid "Phone number: 625 15 19 20"
 msgstr ""
 
 #: templates/terms_conditions.html:27
@@ -887,15 +994,20 @@ msgid "Reject"
 msgstr ""
 
 #: templates/cookielaw/banner.html:6
-msgid "COOKIE_INFO_HEADER"
+msgid "Cookies disclaimer"
 msgstr ""
 
 #: templates/cookielaw/banner.html:8
-msgid "COOKIE_INFO_PARA"
+msgid ""
+"Our site saves small pieces of text information (cookies) on your device "
+"in order to deliver better content and for statistical purposes. You can "
+"disable the usage of cookies by changing the settings of your browser. By"
+" browsing our website without changing the browser settings you grant us "
+"permission to store that information on your device."
 msgstr ""
 
 #: templates/cookielaw/banner.html:10
-msgid "COOKIE_INFO_OK"
+msgid "I agree"
 msgstr ""
 
 #: templates/market/create_market.html:21
@@ -1331,10 +1443,6 @@ msgstr ""
 
 #: templates/registration/signup.html:202
 msgid "By signing up, you are indicating that you have read and agree to the"
-msgstr ""
-
-#: templates/registration/signup.html:203
-msgid "Terms of Use and Privacy Policy"
 msgstr ""
 
 #: templates/statistics/past_bets.html:6

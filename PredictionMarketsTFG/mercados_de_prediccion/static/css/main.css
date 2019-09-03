@@ -5,7 +5,11 @@ body {
 }
 
 body > .container {
-  padding: 60px 15px 0;
+    padding: 60px 15px 0;
+}
+
+.container-landing{
+    padding: 60px 0 0;
 }
 
 .send-button {
@@ -194,6 +198,10 @@ h2 {
 
 .text-red {
     color: #AC3B61 !important;
+}
+
+.text-white {
+    color: #EEE2DC !important;
 }
 
 .text-correct {

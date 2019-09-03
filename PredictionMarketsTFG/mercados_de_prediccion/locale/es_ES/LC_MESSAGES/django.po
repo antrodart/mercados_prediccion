@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-09-02 19:31+0200\n"
+"POT-Creation-Date: 2019-09-03 19:50+0200\n"
 "PO-Revision-Date: 2019-04-22 13:43+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -95,7 +95,8 @@ msgstr ""
 
 #: mercados_de_prediccion/forms.py:95 templates/base.html:80
 #: templates/base.html:82 templates/category/list_categories.html:6
-#: templates/category/list_categories.html:15
+#: templates/category/list_categories.html:15 templates/home.html:83
+#: templates/home.html:85
 msgid "Categories"
 msgstr "Categorías"
 
@@ -182,7 +183,7 @@ msgstr ""
 "Selecciona las opciones ganadoras para este mercado. Se puede seleccionar"
 " más de una manteniendo pulsada la tecla Control."
 
-#: mercados_de_prediccion/forms.py:276
+#: mercados_de_prediccion/forms.py:276 templates/home.html:210
 msgid "Search"
 msgstr "Buscar"
 
@@ -345,7 +346,7 @@ msgstr "Página no encontrada"
 msgid "Error 404 - Page not found"
 msgstr "Error 404 - Página no encontrada"
 
-#: templates/about.html:5
+#: templates/about.html:5 templates/home.html:310 templates/home.html:336
 msgid "About"
 msgstr "Sobre nosotros"
 
@@ -353,25 +354,25 @@ msgstr "Sobre nosotros"
 msgid "About."
 msgstr "Sobre nosotros."
 
-#: templates/base.html:10
+#: templates/base.html:10 templates/home.html:10
 msgid "Prediction Markets"
 msgstr "Mercados de predicción"
 
-#: templates/base.html:33
+#: templates/base.html:33 templates/home.html:36
 msgid "Home"
 msgstr "Inicio"
 
 #: templates/base.html:43 templates/base.html:44
 #: templates/category/list_categories.html:86
-#: templates/category/list_categories.html:87
-#: templates/market/list_judge_markets.html:6
+#: templates/category/list_categories.html:87 templates/home.html:46
+#: templates/home.html:47 templates/market/list_judge_markets.html:6
 #: templates/market/list_markets.html:7 templates/market/list_markets.html:8
 #: templates/market/list_markets.html:16
 msgid "Markets"
 msgstr "Mercados"
 
-#: templates/base.html:49 templates/base.html:71
-#: templates/market/display_market.html:65
+#: templates/base.html:49 templates/base.html:71 templates/home.html:52
+#: templates/home.html:74 templates/market/display_market.html:65
 #: templates/market/display_market.html:66
 #: templates/market/display_market_ended.html:64
 #: templates/market/display_market_ended.html:65
@@ -381,79 +382,86 @@ msgid "Community"
 msgstr "Comunidad"
 
 #: templates/base.html:51 templates/community/list_communities.html:6
+#: templates/home.html:54 templates/home.html:237
 msgid "Communities"
 msgstr "Comunidades"
 
 #: templates/base.html:55 templates/base.html:57
-#: templates/community/list_communities.html:23
+#: templates/community/list_communities.html:23 templates/home.html:58
+#: templates/home.html:60
 msgid "All communities"
 msgstr "Todas las comunidades"
 
-#: templates/base.html:62 templates/base.html:63
+#: templates/base.html:62 templates/base.html:63 templates/home.html:65
+#: templates/home.html:66
 msgid "Created communities"
 msgstr "Comunidades creadas"
 
-#: templates/base.html:97 templates/user/display_user.html:42
+#: templates/base.html:97 templates/home.html:100
+#: templates/user/display_user.html:42
 msgid "public Karma"
 msgstr "Karma público"
 
-#: templates/base.html:111
+#: templates/base.html:111 templates/home.html:114
 msgid "My profile"
 msgstr "Mi perfil"
 
-#: templates/base.html:115
+#: templates/base.html:115 templates/home.html:118
 msgid "Betting history"
 msgstr "Historial de apuestas"
 
-#: templates/base.html:120
+#: templates/base.html:120 templates/home.html:123
 msgid "Verify my account"
 msgstr "Verificar mi cuenta"
 
-#: templates/base.html:126
+#: templates/base.html:126 templates/home.html:129
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: templates/base.html:131 templates/registration/login.html:7
-#: templates/registration/login.html:15 templates/registration/login.html:34
+#: templates/base.html:131 templates/home.html:134
+#: templates/registration/login.html:7 templates/registration/login.html:15
+#: templates/registration/login.html:34
 msgid "Login"
 msgstr "Iniciar sesión"
 
-#: templates/base.html:134 templates/registration/signup.html:9
-#: templates/registration/signup.html:27 templates/registration/signup.html:171
+#: templates/base.html:134 templates/home.html:137
+#: templates/registration/signup.html:9 templates/registration/signup.html:27
+#: templates/registration/signup.html:171
 msgid "Sign up"
 msgstr "Registrarse"
 
-#: templates/base.html:143
+#: templates/base.html:143 templates/home.html:146
 msgid "Admin"
 msgstr "Admin"
 
 #: templates/base.html:147 templates/category/create_category.html:6
 #: templates/category/create_category.html:14
-#: templates/category/list_categories.html:55
+#: templates/category/list_categories.html:55 templates/home.html:150
 msgid "Create category"
 msgstr "Crear categoría"
 
 #: templates/base.html:149 templates/community/display_community.html:154
-#: templates/market/create_market.html:7
+#: templates/home.html:152 templates/market/create_market.html:7
 #: templates/market/create_market.html:203
 #: templates/market/list_markets.html:93 templates/market/list_markets.html:207
 msgid "Create market"
 msgstr "Crear mercado"
 
-#: templates/base.html:151 templates/registration/signup.html:11
-#: templates/registration/signup.html:175
+#: templates/base.html:151 templates/home.html:154
+#: templates/registration/signup.html:11 templates/registration/signup.html:175
 msgid "Create admin"
 msgstr "Crear admin"
 
-#: templates/base.html:154
+#: templates/base.html:154 templates/home.html:157
 msgid "Judge markets"
 msgstr "Juzgar mercados"
 
-#: templates/base.html:156
+#: templates/base.html:156 templates/home.html:159
 msgid "Judge verify requests"
 msgstr "Juzgar peticiones de verificación"
 
-#: templates/base.html:164 templates/base.html:165
+#: templates/base.html:164 templates/base.html:165 templates/home.html:167
+#: templates/home.html:168
 msgid "Language"
 msgstr "Idioma"
 
@@ -461,13 +469,133 @@ msgstr "Idioma"
 msgid "Back to top"
 msgstr "Volver arriba"
 
-#: templates/contact.html:5 templates/contact.html:10
+#: templates/contact.html:5 templates/contact.html:10 templates/home.html:314
+#: templates/home.html:360
 msgid "Contact"
 msgstr "Contacto"
 
-#: templates/home.html:7
-msgid "Homepage."
-msgstr "Página de inicio"
+#: templates/home.html:199
+msgid "May the wisdom of the crowds be your perfect tool to make predictions"
+msgstr ""
+"Que la sabiduría colectiva sea tu herramienta perfecta para hacer "
+"predicciones"
+
+#: templates/home.html:206
+msgid "Start betting on prediction markets now!"
+msgstr "¡Empieza a apostar en mercados de predicción ahora!"
+
+#: templates/home.html:228
+msgid "3 Market types"
+msgstr "3 tipos de mercados"
+
+#: templates/home.html:229
+msgid "You will be able to create and bet on any kind of event"
+msgstr "Serás capaz de crear y apostar en cualquier tipo de evento"
+
+#: templates/home.html:238
+msgid "Be part of groups according to your interests"
+msgstr "Sé parte de grupos de acuerdo a tus intereses"
+
+#: templates/home.html:246
+msgid "Available for everyone"
+msgstr "Para todo el mundo"
+
+#: templates/home.html:247
+msgid "No matter your nationality, money or favourite device"
+msgstr "Sin importar tu nacionalidad, dinero o dispositivo favorito"
+
+#: templates/home.html:262
+msgid "3 different types of markets"
+msgstr "3 tipos diferentes de mercados"
+
+#: templates/home.html:263
+msgid ""
+"Either through our binary markets, exclusive markets or non-exclusive "
+"markets, everyone can create and bet on 3 different kind of prediction "
+"markets that cover all possible events"
+msgstr ""
+"Ya sea a través de los mercados binarios, exclusivos, o los no "
+"exclusivos, todo el mundo puede crear y apostar en 3 tipos distintos de "
+"mercados de predicción que cubren todos los eventos posibles"
+
+#: templates/home.html:270
+msgid "Create and join private communities"
+msgstr "Crea y únete a comunidades privadas"
+
+#: templates/home.html:271
+msgid ""
+"Communities are a very important part of our system, in which people who "
+"share the same interests, cities or jobs can bet on prediction markets "
+"located in a private environment. Equally, corporations can use them for "
+"their internal forecasts"
+msgstr ""
+"Las comunidades son una parte muy importante de nuestro sistema, en la "
+"cual las personas que comparten los mismos intereses, ciudades o trabajos"
+" pueden apostar en mercados de predicción alojados en entornos privados. "
+"Igualmente, las corporaciones pueden usarlaas para sus predicciones "
+"internas"
+
+#: templates/home.html:278
+msgid "Everyone has something to say"
+msgstr "Todo el mundo tiene algo que decir"
+
+#: templates/home.html:279
+msgid ""
+"In order to have faithful predictions, it is necesary that the "
+"participants are as diverse as possible. That's why everyone from any "
+"country and device can bet, no matter the money they have, thanks to our "
+"own reputation points called Karma"
+msgstr ""
+"Para tener predicciones fiables, es necesario que los participantes sean "
+"lo más diversos posible. Este es el motivo por el que cualquiera puede "
+"apostar desde cualquier país y dispositivo, sin importar el dinero que "
+"tenga, gracias a nuestros propios puntos de reputación llamados Karma"
+
+#: templates/home.html:292
+msgid "Ready to get started? Sign up now!"
+msgstr "¿Preparado para empezar? ¡Regístrate ahora!"
+
+#: templates/home.html:296
+msgid "Sign up!"
+msgstr "¡Regístrate!"
+
+#: templates/home.html:318 templates/registration/signup.html:203
+msgid "Terms of Use and Privacy Policy"
+msgstr "Términos de uso y Política de Privacidad"
+
+#: templates/home.html:322
+msgid "All Rights Reserved"
+msgstr "Todos los derechos reservados"
+
+#: templates/home.html:343
+msgid ""
+"Web application created by the student Antonio Rodríguez Artacho "
+"(antrodart@alum.us.es) as part of his final undergraduate project"
+msgstr ""
+"Aplicación web creada por el estudiante Antonio Rodríguez Artacho "
+"(antrodart@alum.us.es) como parte de su trabajo final de grado"
+
+#: templates/home.html:344
+msgid ""
+"This project was done under the supervision of José Antonio Troyano "
+"Jiménez (troyano@us.es), professor of the department of Languages and "
+"Operating Systems"
+msgstr ""
+"Este proyecto fue realizado bajo la supervisión de José Antonio Troyano "
+"Jiménez (troyano@us.es), profesor del departamento de Lenguajes y "
+"SIstemas Operativos."
+
+#: templates/home.html:346
+msgid "University of Seville"
+msgstr "Universidad de Sevilla"
+
+#: templates/home.html:367
+msgid ""
+"If you want to inform about a bug, suggestion or any other matter, please"
+" feel free to contact us"
+msgstr ""
+"Si quieres informar sobre un bug, sugerencia o tienes algún otro asunto "
+"que comunicar, siéntete libre de contactarnos"
 
 #: templates/terms_conditions.html:6 templates/terms_conditions.html:15
 msgid "Terms and conditions"
@@ -482,8 +610,8 @@ msgid "Headquarters: Av. Reina Mercedes s/n, 41012 Seville"
 msgstr "Sede: Av. Reina Mercedes s/n, 41012 Sevilla"
 
 #: templates/terms_conditions.html:24
-msgid "Phone number: 999 76 54 32"
-msgstr "Número de teléfono: 999 76 54 32"
+msgid "Phone number: 625 15 19 20"
+msgstr "Número de teléfono: 625 15 19 20"
 
 #: templates/terms_conditions.html:27
 msgid "1. Introduction"
@@ -501,13 +629,13 @@ msgid ""
 "these general conditions of use."
 msgstr ""
 "Las presentes condiciones de uso del sitio web regulan los términos y "
-"condiciones de acceso y uso de predictmarket, propiedad de Predictmarket S.A., "
-"domiciliado en Sevilla, con CIF A86224532, de ahora en adelante Predictmarket, "
-"que el usuario del portal debe leer y aceptar el uso de todos los "
-"servicios e información que se proveen desde el portal. El mero acceso "
-"y/o uso del portal, en su totalidad o en parte de sus contenidos y/o "
-"servicios significa la completa aceptación de estas condiciones generales"
-" de uso."
+"condiciones de acceso y uso de predictmarket, propiedad de Predictmarket "
+"S.A., domiciliado en Sevilla, con CIF A86224532, de ahora en adelante "
+"Predictmarket, que el usuario del portal debe leer y aceptar el uso de "
+"todos los servicios e información que se proveen desde el portal. El mero"
+" acceso y/o uso del portal, en su totalidad o en parte de sus contenidos "
+"y/o servicios significa la completa aceptación de estas condiciones "
+"generales de uso."
 
 #: templates/terms_conditions.html:29
 msgid "2. Use conditions"
@@ -540,8 +668,8 @@ msgid ""
 "email with the modifications."
 msgstr ""
 "La empresa se reserva el derecho a modificar en cualquier momento las "
-"condiciones de uso del sitio. En ese caso, los usuarios recibirán un correo electrónico "
-"con las modificaciones."
+"condiciones de uso del sitio. En ese caso, los usuarios recibirán un "
+"correo electrónico con las modificaciones."
 
 #: templates/terms_conditions.html:33
 msgid "4. User obligations"
@@ -652,7 +780,8 @@ msgstr ""
 "peticiones y otras comunicaciones que el usuario desee realizar a la "
 "empresa que soporta el sitio web deben ser realizadas por escrito y se "
 "entenderá que han sido correctamente ejecutadas cuando se hayan recibido "
-"a la siguiente dirección de correo electrónico: predictmarket.us@gmail.com."
+"a la siguiente dirección de correo electrónico: "
+"predictmarket.us@gmail.com."
 
 #: templates/terms_conditions.html:41
 msgid "8. Data protection"
@@ -673,17 +802,17 @@ msgid ""
 "to the treatment of the same, although this consent is of a revocable "
 "nature and without retroactive effects."
 msgstr ""
-"Predictmarket está profundamente comprometidos con el cumplimiento de las "
-"regulaciones de protección de datos personales españolas, y garantiza el "
-"pleno cumplimiento de las obligaciones dispuestas, así como la "
+"Predictmarket está profundamente comprometidos con el cumplimiento de las"
+" regulaciones de protección de datos personales españolas, y garantiza el"
+" pleno cumplimiento de las obligaciones dispuestas, así como la "
 "implementación de las medidas de seguridad previstas en el art. 9 de la "
 "Ley A-2018-16673, de la Ley Orgánica de Protección de Datos (LOPD) y en "
 "el desarrollo regulador de la LOPD. De acuerdo con esta ley, informamos "
 "que el uso de nuestro sitio web requiere que recolectemos ciertos datos "
 "personales a través de formularios de registro o de contacto, o enviando "
 "correos electrónicos, y que estos datos serán tratados e incorporados a "
-"los archivos de Predictmarket, dueño y responsable de ellos. El envío de estos "
-"datos personales constituyen el consentimiento expreso para el "
+"los archivos de Predictmarket, dueño y responsable de ellos. El envío de "
+"estos datos personales constituyen el consentimiento expreso para el "
 "tratamiento de los mismos, aunque este consentimiento es de naturaleza "
 "revocable y sin efectos retroactivos."
 
@@ -705,8 +834,8 @@ msgid ""
 "further dissemination of them, and have third parties halt processing "
 "them."
 msgstr ""
-"Los usuarios tienen el derecho de pedir a Predictmarket que elimine sus datos, "
-"deje de difundirlos y que terceros detengan su procesamiento."
+"Los usuarios tienen el derecho de pedir a Predictmarket que elimine sus "
+"datos, deje de difundirlos y que terceros detengan su procesamiento."
 
 #: templates/terms_conditions.html:46
 msgid ""
@@ -714,9 +843,9 @@ msgid ""
 "them in an electronic format that facilitates porting those data to other"
 " companies."
 msgstr ""
-"Los usuarios tienen el derecho de solicitar los datos que Predictmarket tiene "
-"sobre ellos en un formato electrónico que facilite la transferencia de "
-"esos datos a otras compañías."
+"Los usuarios tienen el derecho de solicitar los datos que Predictmarket "
+"tiene sobre ellos en un formato electrónico que facilite la transferencia"
+" de esos datos a otras compañías."
 
 #: templates/terms_conditions.html:48
 msgid "9. Published data responsibilities"
@@ -995,16 +1124,25 @@ msgid "Reject"
 msgstr "Rechazar"
 
 #: templates/cookielaw/banner.html:6
-msgid "COOKIE_INFO_HEADER"
-msgstr ""
+msgid "Cookies disclaimer"
+msgstr "Aviso de cookies"
 
 #: templates/cookielaw/banner.html:8
-msgid "COOKIE_INFO_PARA"
+msgid ""
+"Our site saves small pieces of text information (cookies) on your device "
+"in order to deliver better content and for statistical purposes. You can "
+"disable the usage of cookies by changing the settings of your browser. By"
+" browsing our website without changing the browser settings you grant us "
+"permission to store that information on your device."
 msgstr ""
+"Este sitio web guarda pequeños fragmentos de información (cookies) en su dispositivo con la finalidad de ofrecer "
+"un mejor contenido y para finalidades estadísticas. Usted puede desactivar el uso de cookies modificando la "
+"configuración de su navegador. Navegar por nuestro sitio web sin cambiar la configuración del navegador hace que "
+"usted nos esté autorizando a guardar esta información en su dispositivo."
 
 #: templates/cookielaw/banner.html:10
-msgid "COOKIE_INFO_OK"
-msgstr ""
+msgid "I agree"
+msgstr "Estoy de acuerdo"
 
 #: templates/market/create_market.html:21
 msgid "Create prediction market"
@@ -1453,10 +1591,6 @@ msgstr "La contraseña no es válida"
 msgid "By signing up, you are indicating that you have read and agree to the"
 msgstr "Registrándote indica que aceptas que has leído y estás de acuerdo con los "
 
-#: templates/registration/signup.html:203
-msgid "Terms of Use and Privacy Policy"
-msgstr "Términos de uso y Política de Privacidad"
-
 #: templates/statistics/past_bets.html:6
 msgid "Past bets of"
 msgstr "Apuestas pasadas de"
@@ -1843,4 +1977,19 @@ msgstr "No debes estar verificado."
 #~ "You don't have any community in common with\r\n"
 #~ "                            %(user_past_bets.first_name)s"
 #~ msgstr "No tienes ninguna comunidad en común con %(user_past_bets.first_name)s"
+
+#~ msgid "Homepage."
+#~ msgstr "Página de inicio"
+
+#~ msgid "Phone number: 999 76 54 32"
+#~ msgstr "Número de teléfono: 999 76 54 32"
+
+#~ msgid "COOKIE_INFO_HEADER"
+#~ msgstr ""
+
+#~ msgid "COOKIE_INFO_PARA"
+#~ msgstr ""
+
+#~ msgid "COOKIE_INFO_OK"
+#~ msgstr ""
 

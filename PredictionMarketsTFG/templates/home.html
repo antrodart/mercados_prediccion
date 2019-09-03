@@ -1,9 +1,415 @@
-{% extends 'base.html' %}
 {% load i18n %}
+{% load babel %}
+{% load static %}
+{% load intspace %}
+{% load cookielaw_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% blocktrans %}Prediction Markets{% endblocktrans %}</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static "css/header.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "cookielaw/css/cookielaw.css" %}">
+    <link rel="stylesheet" href="{% static "css/fontawesome-free/css/fontawesome.min.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/simple-line-icons/css/simple-line-icons.css" %}">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet"
+          type="text/css">
+    <link href="{% static "css/landing-page.css" %}" rel="stylesheet">
 
 
-{% block content %}
+</head>
+<body>
+<nav class="navbar navbar-expand-md fixed-top">
+    <!-- This denotes at which point the navigation bar expands from vertical or hamburger icon to a full-size horizontal bar. Set to medium-->
+    <a class="navbar-brand" href="{% url 'home' %}">
+        {% trans "Home" %}
+    </a>
+    <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse"
+            data-target="#main-navigation" name="toggle">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="main-navigation">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" id="markets_id" href="{% url 'markets' %}">
+                    <img src="{% static "img/icons/stats3.png" %}" alt="{% trans "Markets" %}" class="img-profile"/>
+                    {% trans "Markets" %}</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="communities_id" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img src="{% static "img/icons/community.png" %}" alt="{% trans "Community" %}"
+                         class="img-profile"/>
+                    {% trans "Communities" %}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'list_all_communities' %}">
+                        <img src="{% static "img/icons/community.png" %}" alt="{% trans "All communities" %}"
+                             class="img-profile"/>
+                        {% blocktrans %}All communities{% endblocktrans %}</a>
+                    {% if user.is_authenticated %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'list_created_communities' %}">
+                            <img src="{% static "img/icons/community2.png" %}"
+                                 alt="{% trans "Created communities" %}" class="img-profile"/>
+                            {% blocktrans %}Created communities{% endblocktrans %}</a>
+                        {% if user.get_joined_community_accepted_set.exists %}
+                            <div class="dropdown-divider"></div>
+                            {% for joined_community in user.get_joined_community_accepted_set.all %}
+                                <a class="dropdown-item"
+                                   href="/community/{{ joined_community.community.pk }}/{{ joined_community.community.slug }}">
+                                    <img class="img-profile"
+                                         src="data:image/png;base64,{{ joined_community.community.picture }}"
+                                         alt="{% trans "Community" %}"/>
+                                    {{ joined_community.community.name }}</a>
+                            {% endfor %}
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="categories_id" href="{% url 'categories' %}">
+                    <img src="{% static "img/icons/rubik1.png" %}" alt="{% trans "Categories" %}"
+                         class="img-profile"/>
+                    {% trans "Categories" %}</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+                {% get_current_language as LANGUAGE %}
+                <span class="navbar-text private-karma-block" id="private-karma-block" hidden>
 
-<h1>{% trans "Homepage." %}</h1>
+                    </span>
+                <span class="navbar-text public-karma-block" style="margin-right: 10px;">
+                        {% if LANGUAGE == "es" %}
+                            {% intspace_dot user.public_karma %}
+                        {% else %}
+                            {% intspace_comma user.public_karma %}
+                        {% endif %}
+                    {% trans "public Karma" %}
+                    </span>
 
-{% endblock %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUser" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="data:image/png;base64,{{ user.picture }}" alt="{{ user.name }}"
+                             class="img-profile"/>
+                        {{ user.first_name }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownUser">
+                        <a class="dropdown-item" href="/user/{{ user.pk }}/{{ user.slug }}">
+                            <img src="{% static "img/icons/profile.png" %}" alt="Profile"
+                                 class="img-profile"/>
+                            {% blocktrans %}My profile{% endblocktrans %}</a>
+                        <a class="dropdown-item" href="/bets/{{ user.pk }}/{{ user.slug }}">
+                            <img src="{% static "img/icons/moneybox.png" %}" alt="Bets"
+                                 class="img-profile"/>
+                            {% blocktrans %}Betting history{% endblocktrans %}</a>
+                        {% if not user.is_verified %}
+                            <a class="dropdown-item" href="{% url "verify_account" %}">
+                                <img src="{% static "img/icons/verified2.png" %}" alt="Verify"
+                                     class="img-profile"/>
+                                {% blocktrans %}Verify my account{% endblocktrans %}</a>
+                        {% endif %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'logout' %}">
+                            <img src="{% static "img/icons/logout.png" %}" alt="Logout"
+                                 class="img-profile"/>
+                            {% trans "Logout" %}</a>
+                    </div>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">{% trans "Login" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'signup' %}">{% blocktrans %}Sign up{% endblocktrans %}</a>
+                </li>
+            {% endif %}
+            {% if user.is_authenticated and user.is_staff %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{% static "img/icons/admin-options.png" %}" alt="Admin"
+                             class="img-profile"/>
+                        {% blocktrans %}Admin{% endblocktrans %}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'create_category' %}">
+                            {% blocktrans %}Create category{% endblocktrans %}</a>
+                        <a class="dropdown-item" href="/market/create/">
+                            {% blocktrans %}Create market{% endblocktrans %}</a>
+                        <a class="dropdown-item" href="{% url 'create_admin' %}">
+                            {% blocktrans %}Create admin{% endblocktrans %}</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/judge-markets">
+                            {% blocktrans %}Judge markets{% endblocktrans %}</a>
+                        <a class="dropdown-item" href="{% url "list_verify_requests" %}">
+                            {% blocktrans %}Judge verify requests{% endblocktrans %}</a>
+                    </div>
+                </li>
+            {% endif %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                   data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    <img src="{% static "img/icons/globe.webp" %}" alt="{% trans "Language" %}" class="img-profile"/>
+                    {% trans "Language" %}
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    {% get_available_languages as LANGUAGES %}
+                    {% for lang in LANGUAGES %}
+                        <a class="dropdown-item" href="javascript:void(0)"
+                           onclick="changeLanguage('{{ lang.0 }}');">
+                            {% if lang.0 == "es" %}
+                                <img class="img-flag" src="{% static 'img/flag-ES.webp' %}" alt="es"/>
+                            {% else %}
+                                <img class="img-flag" src="{% static 'img/flag-EN.png' %}" alt="en"/>
+                            {% endif %}
+                            {{ lang.1 }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+<main class="container-landing">
+    {% cookielaw_banner %}
+    <!-- Masthead -->
+    <header class="masthead text-white text-center"
+            style="background: url({% static 'img/landingpage/crowd3.png' %})no-repeat center center;">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-9 mx-auto">
+                    <h1 class="mb-5 text-white">{% trans "May the wisdom of the crowds be your perfect tool to make predictions" %}</h1>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+                    <form action="{% url 'markets' %}" method="get">
+                        <div class="form-row">
+                            <div class="col-12 col-md-9 mb-2 mb-md-0">
+                                <input type="text" class="form-control form-control-lg" name="keyword"
+                                       placeholder="{% trans "Start betting on prediction markets now!" %}">
+                            </div>
+                            <div class="col-12 col-md-3">
+                                <button type="submit"
+                                        class="btn btn-block btn-lg btn-primary">{% trans "Search" %}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Icons Grid -->
+    <section class="features-icons bg-light text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex">
+                            <i class="icon-chart m-auto text-red"></i>
+                        </div>
+                        <h3 class="text-blue">{% trans "3 Market types" %}</h3>
+                        <p class="lead mb-0">{% trans "You will be able to create and bet on any kind of event" %}.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex">
+                            <i class="icon-people m-auto text-red"></i>
+                        </div>
+                        <h3 class="text-blue">{% trans "Communities" %}</h3>
+                        <p class="lead mb-0">{% trans "Be part of groups according to your interests" %}.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex">
+                            <i class="icon-like m-auto text-red"></i>
+                        </div>
+                        <h3 class="text-blue">{% trans "Available for everyone" %}</h3>
+                        <p class="lead mb-0">{% trans "No matter your nationality, money or favourite device" %}.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Showcases -->
+    <section class="showcase">
+        <div class="container-fluid p-0">
+            <div class="row no-gutters">
+
+                <div class="col-lg-6 order-lg-2 text-white showcase-img"
+                     style="background-image: url({% static 'img/landingpage/graph1.jpg' %});"></div>
+                <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+                    <h2 class="text-red">{% trans "3 different types of markets" %}</h2>
+                    <p class="lead mb-0">{% trans "Either through our binary markets, exclusive markets or non-exclusive markets, everyone can create and bet on 3 different kind of prediction markets that cover all possible events" %}.</p>
+                </div>
+            </div>
+            <div class="row no-gutters">
+                <div class="col-lg-6 text-white showcase-img"
+                     style="background-image: url({% static 'img/landingpage/community1.jpg' %});"></div>
+                <div class="col-lg-6 my-auto showcase-text">
+                    <h2 class="text-red">{% trans "Create and join private communities" %}</h2>
+                    <p class="lead mb-0">{% trans "Communities are a very important part of our system, in which people who share the same interests, cities or jobs can bet on prediction markets located in a private environment. Equally, corporations can use them for their internal forecasts" %}.</p>
+                </div>
+            </div>
+            <div class="row no-gutters">
+                <div class="col-lg-6 order-lg-2 text-white showcase-img"
+                     style="background-image: url({% static 'img/landingpage/umbrella.jpg' %});"></div>
+                <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+                    <h2 class="text-red">{% trans "Everyone has something to say" %}</h2>
+                    <p class="lead mb-0">{% trans "In order to have faithful predictions, it is necesary that the participants are as diverse as possible. That's why everyone from any country and device can bet, no matter the money they have, thanks to our own reputation points called Karma" %}.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="call-to-action text-white text-center"
+             style="background: url({% static 'img/landingpage/crowd2.jpg' %})no-repeat center center;">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-9 mx-auto">
+                    <h2 class="mb-4 text-blue">{% trans "Ready to get started? Sign up now!" %}</h2>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+                    <a href="{% url 'signup' %}">
+                        <button type="button" class="btn btn-primary btn-lg">{% trans "Sign up!" %}</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
+                    <ul class="list-inline mb-2">
+                        <li class="list-inline-item">
+                            <a href="#" data-toggle="modal" data-target="#aboutModal">{% trans "About" %}</a>
+                        </li>
+                        <li class="list-inline-item">&sdot;</li>
+                        <li class="list-inline-item">
+                            <a href="#" data-toggle="modal" data-target="#contactModal">{% trans "Contact" %}</a>
+                        </li>
+                        <li class="list-inline-item">&sdot;</li>
+                        <li class="list-inline-item">
+                            <a href="{% url 'legal_terms' %}">{% trans "Terms of Use and Privacy Policy" %}</a>
+                        </li>
+                    </ul>
+                    <p class="text-muted small mb-4 mb-lg-0">&copy; Predictmarket
+                        2019. {% trans "All Rights Reserved" %}.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</main>
+
+<!-- About Modal -->
+<div class="modal fade" id="aboutModal" tabindex="-1"
+     role="dialog" aria-labelledby="aboutModal"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-title">{% trans "About" %}</h4>
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{% trans "Web application created by the student Antonio Rodríguez Artacho (antrodart@alum.us.es) as part of his final undergraduate project" %}.</p>
+                <p>{% trans "This project was done under the supervision of José Antonio Troyano Jiménez (troyano@us.es), professor of the department of Languages and Operating Systems" %}
+                    (<a target="_blank" href="http://www.lsi.us.es/">http://www.lsi.us.es/</a>).</p>
+                <p>{% trans "University of Seville" %} (<a target="_blank"
+                                                           href="http://www.us.es/">http://www.us.es/</a>).</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1"
+     role="dialog" aria-labelledby="contactModal"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-title">{% trans "Contact" %}</h4>
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{% trans "If you want to inform about a bug, suggestion or any other matter, please feel free to contact us" %}:</p>
+                <p><a href="mailto: predictmarket.us@gmail.com">predictmarket.us@gmail.com</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- i18n form. Entried by static/js/i18n.js -->
+<form action="{% url 'set_language' %}" method="post" id="form_language">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ redirect_to }}"/>
+    <input name="language" type="hidden" value="" id="form_language_lang"/>
+</form>
+
+<!-- Import js -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/i18n.js' %}"></script>
+<script src="{% static 'cookielaw/js/cookielaw.js' %}"></script>
+
+<script>
+    $(document).ready(function () {
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 50) {
+                $('#back-to-top').fadeIn();
+            } else {
+                $('#back-to-top').fadeOut();
+            }
+        });
+        // scroll body to 0px on click
+        $('#back-to-top').click(function () {
+            $('#back-to-top').tooltip('hide');
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+
+        $('#back-to-top').tooltip('show');
+
+    });
+</script>
+
+</body>
+</html>
