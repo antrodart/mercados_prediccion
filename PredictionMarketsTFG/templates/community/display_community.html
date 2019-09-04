@@ -35,7 +35,14 @@
                             {% blocktrans %}Created by{% endblocktrans %}
                             <a href="/user/{{ community.moderator.pk }}/{{ community.moderator.slug }}">
                                 {{ community.moderator.first_name }} {{ community.moderator.last_name }}
-                                ({{ community.moderator.alias }})</a>
+                                ({{ community.moderator.alias }})
+                                {% if community.moderator.is_verified %}
+                                    <img src="{% static 'img/icons/verified-green.png' %}"
+                                         alt="{% trans "Verified user" %}"
+                                         title="{% trans "Verified user" %}"
+                                         style="max-height: 40px;">
+                                {% endif %}
+                            </a>
                             {% trans "on" %} {{ community.creation_date |date }}
                             <p>
                                 {{ community.joinedcommunity_accepted_set.count }}
@@ -223,7 +230,9 @@
                 </div>
                 <div class="modal-body">
                     <p>{% trans "Share the following link to anyone you want to join your community" %}:</p>
-                    <p><a href="https://mercados-de-prediccion.herokuapp.com{% url 'request_to_join_community' community.pk community.slug %}" >https://mercados-de-prediccion.herokuapp.com{% url 'request_to_join_community' community.pk community.slug %}</a></p>
+                    <p>
+                        <a href="https://mercados-de-prediccion.herokuapp.com{% url 'request_to_join_community' community.pk community.slug %}">https://mercados-de-prediccion.herokuapp.com{% url 'request_to_join_community' community.pk community.slug %}</a>
+                    </p>
                 </div>
             </div>
         </div>
