@@ -199,7 +199,9 @@
                                                         <button type="button" class="btn btn-primary"
                                                                 data-toggle="modal"
                                                                 data-target="#binaryMarketsModal"
+                                                                data-marketid="{{ market.pk }}"
                                                                 data-binarymarket="true"
+                                                                data-optionid="{{ option.pk }}"
                                                                 data-optionname="{{ option.name }}"
                                                                 data-form="formId{{ forloop.counter }}"
                                                                 data-assetprice="{{ PRICE }}">
@@ -244,6 +246,8 @@
                                                                     data-toggle="modal"
                                                                     data-target="#binaryMarketsModal"
                                                                     data-binarymarket="true"
+                                                                    data-marketid="{{ market.pk }}"
+                                                                    data-optionid="{{ option.pk }}"
                                                                     data-optionname="{{ option.name }}"
                                                                     data-form="formId{{ forloop.counter }}"
                                                                     data-assetprice="{{ PRICE }}">
@@ -301,6 +305,8 @@
                                                                     data-toggle="modal"
                                                                     data-target="#binaryMarketsModal"
                                                                     data-binarymarket="false"
+                                                                    data-marketid="{{ market.pk }}"
+                                                                    data-optionid="{{ option.pk }}"
                                                                     data-optionname="{{ option.name }}"
                                                                     data-form="formId{{ forloop.counter }}"
                                                                     data-assetpriceyes="{{ YES_PRICE }}"
@@ -412,10 +418,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>{% trans "Quantity" %}: <strong><span id="body-quantity"></span></strong> {% trans "assets" %}.
-                    </p>
-                    <p>{% trans "Price per asset" %}: <span id="body-asset-price"></span> karma.</p>
-                    <p>{% trans "Total price" %}: <strong><span id="body-total-price"></span> karma.</strong></p>
+                    <p>{% trans "Quantity" %}: <strong><span id="body-quantity"></span></strong> {% trans "assets" %}.</p>
+                    <p>{% trans "Total price" %}: <strong><span id="body-total-price">{% trans "Loading..." %}</span></strong></p>
                     <p><span id="body-option-benefits"></span></p>
                 </div>
                 <div class="modal-footer">
@@ -453,6 +457,7 @@
             let quantity = $('#' + form_id).find('#quantity').val();
             let binary = button.data('binarymarket');
             let asset_price;
+            let yes_case;
             if (binary) {
                 asset_price = button.data('assetprice');
                 {% get_current_language as LANGUAGE %}
@@ -463,7 +468,7 @@
                 {% endif %}
             } else {
                 let checkbox_id = button.data('checkboxid');
-                const yes_case = $('#' + checkbox_id).is(":checked");
+                yes_case = $('#' + checkbox_id).is(":checked");
                 if (yes_case) {
                     asset_price = button.data('assetpriceyes');
                 } else {
@@ -471,44 +476,64 @@
                 }
             }
 
-            let total_price = quantity * asset_price;
+            let market_id = button.data('marketid');
+            let option_id = button.data('optionid');
+
+            let total_price = total_buy_cost(market_id, option_id, quantity, yes_case);
 
             const modal = $(this);
             modal.find('#modal-title').text(option_name);
             modal.find('#buysubmit').attr('form', form_id);
             modal.find('#body-quantity').text(quantity);
             modal.find('#body-asset-price').text(asset_price);
-            modal.find('#body-total-price').text(total_price);
-            modal.find('#body-option-benefits').text(option_benefits(asset_price, quantity));
-            console.log("User karma: " + {{ user_karma }});
-            if (total_price >{{ user_karma }}) {
-                modal.find('#body-no-karma').removeAttr('hidden');
-                modal.find('#buysubmit').attr("disabled", "disabled");
-            } else {
-                modal.find('#body-no-karma').attr("hidden", "hidden");
-                modal.find('#buysubmit').removeAttr('disabled');
-            }
         });
 
-        function option_benefits(asset_price, quantity) {
+        function total_buy_cost(market_id, option_id, quantity, is_yes){
+            $.ajax({
+                url: "/ajax/total-buy-cost/",
+                data: {
+                    'market_id': market_id,
+                    'option_id': option_id,
+                    'quantity': quantity,
+                    'is_yes': is_yes
+                },
+                dataType: 'json',
+                success: function (data) {
+                    var returnedData = JSON.parse(data);
+                    let total_price = returnedData.cost;
+                    let modal = $('#binaryMarketsModal');
+                    modal.find('#body-total-price').text(total_price);
+                    modal.find('#body-option-benefits').text(option_benefits(total_price, quantity));
+                    if(total_price > {{ user_karma }}){
+                        modal.find('#body-no-karma').removeAttr('hidden');
+                        modal.find('#buysubmit').attr("disabled", "disabled");
+                    }else{
+                        modal.find('#body-no-karma').attr("hidden", "hidden");
+                        modal.find('#buysubmit').removeAttr('disabled');
+                    }
+                },
+                error: function (data) {
+                    console.log("error");
+                }
+            });
+            return false;
+        }
+
+        function option_benefits(total_buy_price, quantity) {
             let msg1 = "";
             let msg2 = "";
-            let msg3 = "";
-            const benefits = 100 - asset_price;
-            const total_benefits = benefits * quantity;
+            const benefits = (100 * quantity) - total_buy_price;
 
             {% get_current_language as LANGUAGE %}
             {% if LANGUAGE == "en" %}
                 msg1 = "You can earn ";
-                msg2 = " karma per asset. In other words, ";
-                msg3 = " karma in total!";
+                msg2 = " Karma in total! ";
             {% else %}
-                msg1 = "Puedes ganar ";
-                msg2 = " karma por acción. O lo que es lo mismo, ¡";
-                msg3 = " karma en total!";
+                msg1 = "¡Puedes ganar ";
+                msg2 = " Karma en total!";
             {% endif %}
 
-            return msg1 + benefits + msg2 + total_benefits + msg3;
+            return msg1 + benefits + msg2;
         }
     </script>
     <script type="text/javascript">

@@ -570,7 +570,7 @@ def buy_asset_view(request):
 				else:
 					asset.is_yes = False
 
-				user_subtract_karma(user, asset, community, market)
+				user_subtract_karma(user, market, option, asset.quantity, asset.is_yes)
 				if market.is_binary or not market.is_exclusive:
 					recalculate_price_binary_options(option, asset)
 				else:

@@ -1,4 +1,5 @@
 from .models import JoinedCommunity, Asset, Price
+from .total_buy_cost import total_buy_cost
 from django.db.models import Sum, F, Value
 from django.db.models.functions import Coalesce
 from django.core.exceptions import PermissionDenied
@@ -33,17 +34,11 @@ def check_user_has_enough_karma(buy_price, user_karma):
 		raise ValueError("There was a problem with the assets buy: You don't have enough karma.")
 
 
-def user_subtract_karma(user, asset, community, market):
-	if market.is_binary or market.is_exclusive:
-		buy_price = asset.option.get_todays_price().buy_price
-	elif asset.is_yes:
-		buy_price = asset.option.get_todays_price_yes().buy_price
-	else:
-		buy_price = asset.option.get_todays_price_no().buy_price
-	total_buy_price = buy_price * asset.quantity
+def user_subtract_karma(user, market, option, quantity, is_yes):
+	total_buy_price = total_buy_cost(market.pk, option.pk, quantity, is_yes)
 
-	if community:
-		joined_community = JoinedCommunity.objects.get(user=user, community=community)
+	if market.community:
+		joined_community = JoinedCommunity.objects.get(user=user, community=market.community)
 		karma = joined_community.private_karma
 		check_user_has_enough_karma(buy_price=total_buy_price, user_karma=karma)
 		joined_community.private_karma = F('private_karma') - total_buy_price
