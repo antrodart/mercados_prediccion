@@ -229,7 +229,7 @@ class MakeRequestToJoinForm(forms.ModelForm):
 
 class CreateAssetForm(forms.ModelForm):
 	quantity = forms.IntegerField(label=_("Quantity"), help_text=_('The quantity of assets you want to buy.'),
-	                              required=True, min_value=1, initial=1)
+	                              required=True, min_value=1, initial=1, max_value=100)
 	class Meta():
 		model = Asset
 		fields = ('quantity',)

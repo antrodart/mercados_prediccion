@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .total_buy_cost import ajax_total_buy_cost
 
 urlpatterns = [
 	#  Static pages
@@ -46,6 +47,7 @@ urlpatterns = [
 	#  AJAX calls
 	path('ajax/related_markets/', views.ajax_related_markets, name='related_markets'),
 	path('ajax/chart/', views.ajax_charts, name='ajax_charts'),
+	path('ajax/total-buy-cost/', ajax_total_buy_cost, name='ajax_total_buy_cost'),
 
 	#  Bets
 	path('bets/<int:user_id>/<slug:slug>', views.past_bets, name='past_bets'),
